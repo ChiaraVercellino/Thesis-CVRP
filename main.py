@@ -31,7 +31,7 @@ def main():
     # new customers arriving  in a day
     new_customers = 400
     # Days used in simulation
-    n_days = 3
+    n_days = 1
     first_day = True
 
     # number of available small vehicles
