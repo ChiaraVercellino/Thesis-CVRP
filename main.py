@@ -31,7 +31,7 @@ def main():
     # new customers arriving  in a day
     new_customers = 400
     # Days used in simulation
-    n_days = 1
+    n_days = 3
     first_day = True
 
     # number of available small vehicles
@@ -79,7 +79,7 @@ def main():
         
         # ---------------------------------------- VRP optimization ---------------------------------------------------
 
-        data, manager, routing, solution = VRP_optimization(selected_customers, depot, small_vehicles+big_vehicles, kg_capacity)
+        data, manager, routing, solution = VRP_optimization(selected_customers, depot, small_vehicles+big_vehicles, capacity_small)
 
         # ---------------------------------------- Save daily roads----------------------------------------------------
         routes_list = save_routes(new_day, data, manager, routing, solution)

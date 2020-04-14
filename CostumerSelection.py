@@ -9,9 +9,11 @@ def select_customers(day, m3_capacity, kg_capacity, policy):
     avg_m3 = day.customer_df['m3'].mean()
     # calculate average demand in kg
     avg_kg = day.customer_df['kg'].mean()
+    std_kg = day.customer_df['kg'].std()
+    max_kg = max(abs(day.customer_df['kg']-avg_kg))
     # approximate the maximum number of deliveries will be allowed with the available capacities
-    num_deliveries = min(m3_capacity//avg_m3, kg_capacity//avg_kg)
-
+    num_deliveries = min(m3_capacity//avg_m3, kg_capacity//(avg_kg*(1+std_kg/(3*max_kg))))
+    print(num_deliveries)
     # apply the desired policy
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,

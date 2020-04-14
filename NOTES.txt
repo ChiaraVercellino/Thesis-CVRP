@@ -23,15 +23,14 @@ Optimization problem:
         - fixed number of available vehicles (50-60 vehicles)
 
 TO DO:
-1_ Find better values for volumes
 2_ Improve VRP (WIP):
-    - set maximum time for search -> done (300s)
+    - set maximum time for search -> done (30s)
     - set maximum number of costumer per vehicle -> done
     - set maximum lenght of each route -> done
     - set capacity constraint -> done
     - set time constraint -> TO DO
     - set all cost in objective function
-
+3_ Work on num_deliveries
 
 
 

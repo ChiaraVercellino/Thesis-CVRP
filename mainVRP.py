@@ -104,7 +104,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     for vehicle_id in range(vehicles):
         index = routing.End(vehicle_id)
         counter_dimension.CumulVar(index).SetRange(0, 7)
-
+    
     # Add Capacity constraint.
     dimension_name = 'Capacity'
     routing.AddDimensionWithVehicleCapacity(
@@ -118,7 +118,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-    search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+    #search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     
     # Setting maximum time limit for search (in seconds)
     search_parameters.time_limit.seconds = 30
