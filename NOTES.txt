@@ -1,0 +1,38 @@
+Spatial statistics: extract spatial distribution from real data
+https://automating-gis-processes.github.io/2016/Lesson2-geopandas-basics.html
+https://towardsdatascience.com/getting-started-with-geographic-data-science-in-python-part-3-ddf55130840b
+
+VRP code reference:
+https://developers.google.com/optimization/routing/vrp
+
+Simulate data: given distribution simulate client arrivals, demands and their time-windows in days (4-5 days)
+
+Optimization problem:
+    Calculate Euclidean distances between client
+        - maybe some couples of distances can be not saved if they are too high
+        - fill in adjacency matrix -> start with a symmetric one
+    Select which customer to serve
+        - 300 new customers per day -> OK
+        - max number of deliveries to respect capacity constraint and time constraint -> capacity constraint OK
+        - look at probability of other near customers in future
+        - Each customer has demand expressed in: m^3, set up time (related to set up cost), kg, available day -> OK
+    Solve VRP for those customers
+        - objectives: mean distances, stoking times
+        - beware the set-up times, fixed costs
+        - capacity and time constraint
+        - fixed number of available vehicles (50-60 vehicles)
+
+TO DO:
+1_ Find better values for volumes
+2_ Improve VRP (WIP):
+    - set maximum time for search -> done (300s)
+    - set maximum number of costumer per vehicle -> done
+    - set maximum lenght of each route -> done
+    - set capacity constraint -> done
+    - set time constraint -> TO DO
+    - set all cost in objective function
+
+
+
+
+

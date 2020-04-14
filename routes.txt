@@ -1,0 +1,606 @@
+
+ DAY: 1 
+Route for vehicle 0:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 1:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 2:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 3:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 4:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 5:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 6:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 7:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 8:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 9:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 10:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 11:
+ 0 ->  178 ->  188 ->  190 ->  191 ->  184 ->  159 -> 0
+Distance of the route: 188 km
+Load of the route: 2131.97 kg 
+Route for vehicle 12:
+ 0 ->  167 ->  189 ->  195 ->  194 ->  183 ->  175 -> 0
+Distance of the route: 177 km
+Load of the route: 1441.82 kg 
+Route for vehicle 13:
+ 0 ->  172 ->  193 ->  196 ->  197 ->  186 ->  187 -> 0
+Distance of the route: 181 km
+Load of the route: 36.74 kg 
+Route for vehicle 14:
+ 0 ->  169 ->  179 ->  185 ->  192 ->  182 ->  170 -> 0
+Distance of the route: 182 km
+Load of the route: 1459.62 kg 
+Route for vehicle 15:
+ 0 ->  148 ->  166 ->  176 ->  177 ->  173 ->  174 -> 0
+Distance of the route: 144 km
+Load of the route: 1034.72 kg 
+Route for vehicle 16:
+ 0 ->  163 ->  180 ->  181 ->  171 ->  164 ->  142 -> 0
+Distance of the route: 147 km
+Load of the route: 1439.55 kg 
+Route for vehicle 17:
+ 0 ->  116 ->  157 ->  156 ->  168 ->  158 ->  153 -> 0
+Distance of the route: 127 km
+Load of the route: 1131.4 kg 
+Route for vehicle 18:
+ 0 ->  134 ->  135 ->  144 ->  149 ->  152 ->  151 -> 0
+Distance of the route: 123 km
+Load of the route: 1353.1 kg 
+Route for vehicle 19:
+ 0 ->  137 ->  141 ->  145 ->  147 ->  165 ->  139 -> 0
+Distance of the route: 119 km
+Load of the route: 1925.74 kg 
+Route for vehicle 20:
+ 0 ->  110 ->  111 ->  136 ->  138 ->  140 ->  130 -> 0
+Distance of the route: 115 km
+Load of the route: 1122.47 kg 
+Route for vehicle 21:
+ 0 ->  62 ->  106 ->  118 ->  154 ->  150 ->  107 -> 0
+Distance of the route: 113 km
+Load of the route: 1529.18 kg 
+Route for vehicle 22:
+ 0 ->  72 ->  117 ->  120 ->  121 ->  76 ->  75 -> 0
+Distance of the route: 114 km
+Load of the route: 468.62 kg 
+Route for vehicle 23:
+ 0 ->  86 ->  126 ->  127 ->  131 ->  146 ->  143 -> 0
+Distance of the route: 117 km
+Load of the route: 782.52 kg 
+Route for vehicle 24:
+ 0 ->  113 ->  112 ->  103 ->  108 ->  114 ->  102 -> 0
+Distance of the route: 108 km
+Load of the route: 1207.16 kg 
+Route for vehicle 25:
+ 0 ->  84 ->  82 ->  128 ->  129 ->  132 ->  133 -> 0
+Distance of the route: 115 km
+Load of the route: 1951.81 kg 
+Route for vehicle 26:
+ 0 ->  90 ->  89 ->  87 ->  96 ->  115 ->  88 -> 0
+Distance of the route: 110 km
+Load of the route: 1140.53 kg 
+Route for vehicle 27:
+ 0 ->  99 ->  98 ->  92 ->  101 ->  94 ->  91 -> 0
+Distance of the route: 105 km
+Load of the route: 2013.61 kg 
+Route for vehicle 28:
+ 0 ->  66 ->  105 ->  93 ->  109 ->  104 ->  54 -> 0
+Distance of the route: 102 km
+Load of the route: 1348.86 kg 
+Route for vehicle 29:
+ 0 ->  224 ->  23 ->  125 ->  123 ->  155 ->  122 -> 0
+Distance of the route: 142 km
+Load of the route: 939.93 kg 
+Route for vehicle 30:
+ 0 ->  73 ->  74 ->  119 ->  71 ->  70 ->  67 -> 0
+Distance of the route: 105 km
+Load of the route: 1070.08 kg 
+Route for vehicle 31:
+ 0 ->  199 ->  198 ->  1 ->  6 ->  3 ->  11 -> 0
+Distance of the route: 285 km
+Load of the route: 1133.5 kg 
+Route for vehicle 32:
+ 0 ->  51 ->  77 ->  79 ->  78 ->  124 ->  40 -> 0
+Distance of the route: 120 km
+Load of the route: 2482.93 kg 
+Route for vehicle 33:
+ 0 ->  63 ->  68 ->  60 ->  59 ->  64 ->  47 -> 0
+Distance of the route: 97 km
+Load of the route: 551.99 kg 
+Route for vehicle 34:
+ 0 ->  212 ->  213 ->  25 ->  227 ->  24 ->  22 -> 0
+Distance of the route: 135 km
+Load of the route: 1452.99 kg 
+Route for vehicle 35:
+ 0 ->  17 ->  14 ->  15 ->  225 ->  226 ->  219 -> 0
+Distance of the route: 97 km
+Load of the route: 1050.25 kg 
+Route for vehicle 36:
+ 0 ->  45 ->  48 ->  61 ->  65 ->  46 ->  36 -> 0
+Distance of the route: 93 km
+Load of the route: 1428.63 kg 
+Route for vehicle 37:
+ 0 ->  39 ->  38 ->  37 ->  49 ->  50 ->  69 -> 0
+Distance of the route: 102 km
+Load of the route: 1539.94 kg 
+Route for vehicle 38:
+ 0 ->  43 ->  44 ->  58 ->  56 ->  55 ->  42 -> 0
+Distance of the route: 96 km
+Load of the route: 818.85 kg 
+Route for vehicle 39:
+ 0 ->  53 ->  57 ->  97 ->  95 ->  100 ->  33 -> 0
+Distance of the route: 98 km
+Load of the route: 1075.92 kg 
+Route for vehicle 40:
+ 0 ->  200 ->  201 ->  10 ->  13 ->  220 ->  16 -> 0
+Distance of the route: 129 km
+Load of the route: 2257.68 kg 
+Route for vehicle 41:
+ 0 ->  12 ->  30 ->  35 ->  34 ->  29 ->  19 -> 0
+Distance of the route: 81 km
+Load of the route: 649.51 kg 
+Route for vehicle 42:
+ 0 ->  231 ->  230 ->  232 ->  31 ->  32 ->  21 -> 0
+Distance of the route: 84 km
+Load of the route: 809.74 kg 
+Route for vehicle 43:
+ 0 ->  2 ->  205 ->  160 ->  161 ->  162 ->  80 -> 0
+Distance of the route: 172 km
+Load of the route: 682.78 kg 
+Route for vehicle 44:
+ 0 ->  221 ->  41 ->  52 ->  81 ->  83 ->  85 -> 0
+Distance of the route: 110 km
+Load of the route: 1278.36 kg 
+Route for vehicle 45:
+ 0 ->  5 ->  217 ->  215 ->  216 ->  218 ->  20 -> 0
+Distance of the route: 79 km
+Load of the route: 1457.33 kg 
+Route for vehicle 46:
+ 0 ->  229 ->  27 ->  26 ->  228 ->  28 ->  202 -> 0
+Distance of the route: 67 km
+Load of the route: 1277.43 kg 
+Route for vehicle 47:
+ 0 ->  206 ->  8 ->  207 ->  211 ->  214 ->  210 -> 0
+Distance of the route: 63 km
+Load of the route: 1718.68 kg 
+Route for vehicle 48:
+ 0 ->  208 ->  223 ->  222 ->  18 ->  209 -> 0
+Distance of the route: 55 km
+Load of the route: 2052.62 kg 
+Route for vehicle 49:
+ 0 ->  9 ->  7 ->  204 ->  203 ->  4 -> 0
+Distance of the route: 37 km
+Load of the route: 410.71 kg 
+
+ DAY: 2 
+Route for vehicle 0:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 1:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 2:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 3:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 4:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 5:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 6:
+ 0 ->  199 ->  198 ->  190 ->  185 ->  184 ->  186 -> 0
+Distance of the route: 317 km
+Load of the route: 1469.91 kg 
+Route for vehicle 7:
+ 0 ->  158 ->  165 ->  167 ->  168 ->  166 ->  153 -> 0
+Distance of the route: 207 km
+Load of the route: 1816.23 kg 
+Route for vehicle 8:
+ 0 ->  157 ->  156 ->  163 ->  164 ->  155 ->  150 -> 0
+Distance of the route: 161 km
+Load of the route: 1657.73 kg 
+Route for vehicle 9:
+ 0 ->  56 ->  101 ->  154 ->  162 ->  160 ->  159 -> 0
+Distance of the route: 168 km
+Load of the route: 1407.35 kg 
+Route for vehicle 10:
+ 0 ->  129 ->  142 ->  141 ->  152 ->  151 ->  137 -> 0
+Distance of the route: 147 km
+Load of the route: 1359.2 kg 
+Route for vehicle 11:
+ 0 ->  97 ->  98 ->  146 ->  147 ->  127 ->  130 -> 0
+Distance of the route: 139 km
+Load of the route: 1171.55 kg 
+Route for vehicle 12:
+ 0 ->  122 ->  126 ->  145 ->  144 ->  143 ->  138 -> 0
+Distance of the route: 131 km
+Load of the route: 895.06 kg 
+Route for vehicle 13:
+ 0 ->  93 ->  121 ->  123 ->  124 ->  140 ->  139 -> 0
+Distance of the route: 126 km
+Load of the route: 1046.29 kg 
+Route for vehicle 14:
+ 0 ->  103 ->  112 ->  113 ->  110 ->  136 ->  135 -> 0
+Distance of the route: 124 km
+Load of the route: 1059.7 kg 
+Route for vehicle 15:
+ 0 ->  78 ->  83 ->  75 ->  76 ->  118 ->  115 -> 0
+Distance of the route: 110 km
+Load of the route: 571.72 kg 
+Route for vehicle 16:
+ 0 ->  55 ->  63 ->  104 ->  108 ->  111 ->  107 -> 0
+Distance of the route: 115 km
+Load of the route: 33.91 kg 
+Route for vehicle 17:
+ 0 ->  77 ->  81 ->  116 ->  125 ->  120 ->  117 -> 0
+Distance of the route: 119 km
+Load of the route: 482.09 kg 
+Route for vehicle 18:
+ 0 ->  86 ->  80 ->  87 ->  84 ->  119 ->  89 -> 0
+Distance of the route: 110 km
+Load of the route: 294.47 kg 
+Route for vehicle 19:
+ 0 ->  106 ->  105 ->  102 ->  114 ->  109 ->  69 -> 0
+Distance of the route: 109 km
+Load of the route: 770.04 kg 
+Route for vehicle 20:
+ 0 ->  52 ->  253 ->  96 ->  95 ->  128 ->  91 -> 0
+Distance of the route: 122 km
+Load of the route: 356.36 kg 
+Route for vehicle 21:
+ 0 ->  85 ->  92 ->  94 ->  90 ->  48 ->  251 -> 0
+Distance of the route: 112 km
+Load of the route: 1870.61 kg 
+Route for vehicle 22:
+ 0 ->  68 ->  72 ->  64 ->  70 ->  66 ->  247 -> 0
+Distance of the route: 105 km
+Load of the route: 1602.72 kg 
+Route for vehicle 23:
+ 0 ->  46 ->  43 ->  45 ->  47 ->  50 ->  49 -> 0
+Distance of the route: 101 km
+Load of the route: 1673.35 kg 
+Route for vehicle 24:
+ 0 ->  27 ->  53 ->  54 ->  61 ->  62 ->  59 -> 0
+Distance of the route: 103 km
+Load of the route: 1396.27 kg 
+Route for vehicle 25:
+ 0 ->  65 ->  74 ->  71 ->  60 ->  57 ->  58 -> 0
+Distance of the route: 103 km
+Load of the route: 515.14 kg 
+Route for vehicle 26:
+ 0 ->  193 ->  194 ->  195 ->  255 ->  256 ->  257 -> 0
+Distance of the route: 126 km
+Load of the route: 1357.04 kg 
+Route for vehicle 27:
+ 0 ->  229 ->  99 ->  131 ->  149 ->  148 ->  161 -> 0
+Distance of the route: 149 km
+Load of the route: 1043.44 kg 
+Route for vehicle 28:
+ 0 ->  31 ->  237 ->  38 ->  30 ->  73 ->  67 -> 0
+Distance of the route: 100 km
+Load of the route: 2061.2 kg 
+Route for vehicle 29:
+ 0 ->  39 ->  40 ->  36 ->  79 ->  82 ->  88 -> 0
+Distance of the route: 101 km
+Load of the route: 1185.58 kg 
+Route for vehicle 30:
+ 0 ->  3 ->  214 ->  25 ->  228 ->  227 ->  24 -> 0
+Distance of the route: 110 km
+Load of the route: 1244.86 kg 
+Route for vehicle 31:
+ 0 ->  22 ->  222 ->  225 ->  23 ->  226 ->  224 -> 0
+Distance of the route: 101 km
+Load of the route: 1835.52 kg 
+Route for vehicle 32:
+ 0 ->  242 ->  34 ->  243 ->  241 ->  29 ->  240 -> 0
+Distance of the route: 95 km
+Load of the route: 1342.21 kg 
+Route for vehicle 33:
+ 0 ->  44 ->  248 ->  234 ->  41 ->  32 ->  236 -> 0
+Distance of the route: 96 km
+Load of the route: 2536.81 kg 
+Route for vehicle 34:
+ 0 ->  181 ->  206 ->  4 ->  180 ->  5 ->  179 -> 0
+Distance of the route: 97 km
+Load of the route: 574.66 kg 
+Route for vehicle 35:
+ 0 ->  20 ->  245 ->  249 ->  246 ->  244 ->  42 -> 0
+Distance of the route: 93 km
+Load of the route: 1279.33 kg 
+Route for vehicle 36:
+ 0 ->  170 ->  14 ->  211 ->  213 ->  171 ->  13 -> 0
+Distance of the route: 96 km
+Load of the route: 532.5 kg 
+Route for vehicle 37:
+ 0 ->  19 ->  21 ->  252 ->  250 ->  254 ->  51 -> 0
+Distance of the route: 102 km
+Load of the route: 1515.29 kg 
+Route for vehicle 38:
+ 0 ->  16 ->  33 ->  28 ->  239 ->  18 ->  203 -> 0
+Distance of the route: 90 km
+Load of the route: 678.86 kg 
+Route for vehicle 39:
+ 0 ->  202 ->  35 ->  37 ->  235 ->  238 ->  17 -> 0
+Distance of the route: 90 km
+Load of the route: 1708.94 kg 
+Route for vehicle 40:
+ 0 ->  215 ->  231 ->  100 ->  134 ->  133 ->  132 -> 0
+Distance of the route: 127 km
+Load of the route: 572.67 kg 
+Route for vehicle 41:
+ 0 ->  210 ->  172 ->  12 ->  212 ->  223 ->  11 -> 0
+Distance of the route: 92 km
+Load of the route: 720.74 kg 
+Route for vehicle 42:
+ 0 ->  216 ->  169 ->  15 ->  232 ->  233 ->  218 -> 0
+Distance of the route: 91 km
+Load of the route: 708.0 kg 
+Route for vehicle 43:
+ 0 ->  176 ->  8 ->  221 ->  219 ->  220 ->  7 -> 0
+Distance of the route: 87 km
+Load of the route: 295.03 kg 
+Route for vehicle 44:
+ 0 ->  200 ->  205 ->  183 ->  1 ->  182 ->  2 -> 0
+Distance of the route: 90 km
+Load of the route: 1401.29 kg 
+Route for vehicle 45:
+ 0 ->  189 ->  187 ->  188 ->  201 ->  196 ->  191 -> 0
+Distance of the route: 176 km
+Load of the route: 1288.47 kg 
+Route for vehicle 46:
+ 0 ->  207 ->  177 ->  175 ->  174 ->  10 ->  9 -> 0
+Distance of the route: 78 km
+Load of the route: 2026.55 kg 
+Route for vehicle 47:
+ 0 ->  178 ->  6 ->  26 ->  230 ->  217 ->  197 -> 0
+Distance of the route: 92 km
+Load of the route: 1287.73 kg 
+Route for vehicle 48:
+ 0 ->  192 ->  204 ->  209 ->  208 ->  173 -> 0
+Distance of the route: 82 km
+Load of the route: 1105.1 kg 
+Route for vehicle 49:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+
+ DAY: 3 
+Route for vehicle 0:
+ 0 ->  46 ->  79 ->  71 ->  75 ->  73 ->  43 -> 0
+Distance of the route: 125 km
+Load of the route: 1469.73 kg 
+Route for vehicle 1:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 2:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 3:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 4:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 5:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 6:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 7:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 8:
+ 0 ->  130 ->  126 ->  98 ->  114 ->  112 ->  80 -> 0
+Distance of the route: 252 km
+Load of the route: 443.79 kg 
+Route for vehicle 9:
+ 0 ->  82 ->  105 ->  106 ->  100 ->  103 ->  99 -> 0
+Distance of the route: 176 km
+Load of the route: 737.7 kg 
+Route for vehicle 10:
+ 0 ->  97 ->  104 ->  109 ->  108 ->  102 ->  93 -> 0
+Distance of the route: 159 km
+Load of the route: 599.18 kg 
+Route for vehicle 11:
+ 0 ->  252 ->  81 ->  113 ->  110 ->  111 ->  107 -> 0
+Distance of the route: 265 km
+Load of the route: 1518.11 kg 
+Route for vehicle 12:
+ 0 ->  70 ->  94 ->  95 ->  92 ->  96 ->  78 -> 0
+Distance of the route: 140 km
+Load of the route: 474.37 kg 
+Route for vehicle 13:
+ 0 ->  56 ->  86 ->  85 ->  101 ->  91 ->  88 -> 0
+Distance of the route: 135 km
+Load of the route: 505.6 kg 
+Route for vehicle 14:
+ 0 ->  59 ->  60 ->  87 ->  90 ->  89 ->  76 -> 0
+Distance of the route: 128 km
+Load of the route: 1654.97 kg 
+Route for vehicle 15:
+ 0 ->  205 ->  123 ->  1 ->  251 ->  48 ->  49 -> 0
+Distance of the route: 129 km
+Load of the route: 862.36 kg 
+Route for vehicle 16:
+ 0 -> 0
+Distance of the route: 0 km
+Load of the route: 0 kg 
+Route for vehicle 17:
+ 0 ->  55 ->  53 ->  52 ->  62 ->  67 ->  66 -> 0
+Distance of the route: 120 km
+Load of the route: 1821.02 kg 
+Route for vehicle 18:
+ 0 ->  202 ->  249 ->  44 ->  248 ->  45 ->  47 -> 0
+Distance of the route: 120 km
+Load of the route: 927.88 kg 
+Route for vehicle 19:
+ 0 ->  232 ->  245 ->  72 ->  77 ->  74 ->  41 -> 0
+Distance of the route: 118 km
+Load of the route: 1618.53 kg 
+Route for vehicle 20:
+ 0 ->  24 ->  57 ->  68 ->  64 ->  69 ->  58 -> 0
+Distance of the route: 118 km
+Load of the route: 1098.89 kg 
+Route for vehicle 21:
+ 0 ->  30 ->  22 ->  29 ->  23 ->  240 ->  26 -> 0
+Distance of the route: 112 km
+Load of the route: 1736.49 kg 
+Route for vehicle 22:
+ 0 ->  42 ->  34 ->  37 ->  39 ->  36 ->  35 -> 0
+Distance of the route: 113 km
+Load of the route: 1280.8 kg 
+Route for vehicle 23:
+ 0 ->  233 ->  239 ->  247 ->  38 ->  243 ->  242 -> 0
+Distance of the route: 110 km
+Load of the route: 1233.93 kg 
+Route for vehicle 24:
+ 0 ->  4 ->  15 ->  223 ->  16 ->  11 ->  54 -> 0
+Distance of the route: 109 km
+Load of the route: 622.29 kg 
+Route for vehicle 25:
+ 0 ->  20 ->  28 ->  238 ->  65 ->  61 ->  63 -> 0
+Distance of the route: 110 km
+Load of the route: 1361.44 kg 
+Route for vehicle 26:
+ 0 ->  122 ->  2 ->  50 ->  51 ->  83 ->  84 -> 0
+Distance of the route: 134 km
+Load of the route: 373.33 kg 
+Route for vehicle 27:
+ 0 ->  31 ->  32 ->  25 ->  237 ->  27 ->  235 -> 0
+Distance of the route: 106 km
+Load of the route: 662.05 kg 
+Route for vehicle 28:
+ 0 ->  174 ->  204 ->  246 ->  250 ->  244 ->  40 -> 0
+Distance of the route: 114 km
+Load of the route: 1008.19 kg 
+Route for vehicle 29:
+ 0 ->  118 ->  6 ->  21 ->  236 ->  234 ->  33 -> 0
+Distance of the route: 107 km
+Load of the route: 36.04 kg 
+Route for vehicle 30:
+ 0 ->  121 ->  215 ->  216 ->  13 ->  116 ->  19 -> 0
+Distance of the route: 107 km
+Load of the route: 1280.34 kg 
+Route for vehicle 31:
+ 0 ->  231 ->  8 ->  229 ->  119 ->  5 ->  9 -> 0
+Distance of the route: 104 km
+Load of the route: 1319.36 kg 
+Route for vehicle 32:
+ 0 ->  7 ->  10 ->  221 ->  228 ->  227 ->  120 -> 0
+Distance of the route: 105 km
+Load of the route: 1853.64 kg 
+Route for vehicle 33:
+ 0 ->  117 ->  14 ->  12 ->  224 ->  115 ->  18 -> 0
+Distance of the route: 99 km
+Load of the route: 1769.34 kg 
+Route for vehicle 34:
+ 0 ->  200 ->  197 ->  199 ->  201 ->  198 ->  241 -> 0
+Distance of the route: 105 km
+Load of the route: 458.19 kg 
+Route for vehicle 35:
+ 0 ->  183 ->  180 ->  17 ->  230 ->  226 ->  192 -> 0
+Distance of the route: 99 km
+Load of the route: 554.27 kg 
+Route for vehicle 36:
+ 0 ->  178 ->  217 ->  3 ->  214 ->  213 ->  212 -> 0
+Distance of the route: 101 km
+Load of the route: 1783.37 kg 
+Route for vehicle 37:
+ 0 ->  186 ->  185 ->  225 ->  220 ->  219 ->  182 -> 0
+Distance of the route: 99 km
+Load of the route: 1924.13 kg 
+Route for vehicle 38:
+ 0 ->  188 ->  191 ->  184 ->  179 ->  222 ->  190 -> 0
+Distance of the route: 98 km
+Load of the route: 1326.76 kg 
+Route for vehicle 39:
+ 0 ->  173 ->  171 ->  170 ->  196 ->  194 ->  195 -> 0
+Distance of the route: 100 km
+Load of the route: 644.56 kg 
+Route for vehicle 40:
+ 0 ->  156 ->  163 ->  162 ->  175 ->  203 ->  176 -> 0
+Distance of the route: 112 km
+Load of the route: 1543.44 kg 
+Route for vehicle 41:
+ 0 ->  189 ->  193 ->  187 ->  181 ->  169 ->  172 -> 0
+Distance of the route: 93 km
+Load of the route: 983.84 kg 
+Route for vehicle 42:
+ 0 ->  165 ->  210 ->  211 ->  218 ->  209 ->  177 -> 0
+Distance of the route: 104 km
+Load of the route: 560.79 kg 
+Route for vehicle 43:
+ 0 ->  129 ->  131 ->  146 ->  134 ->  135 ->  145 -> 0
+Distance of the route: 108 km
+Load of the route: 447.14 kg 
+Route for vehicle 44:
+ 0 ->  143 ->  157 ->  155 ->  154 ->  158 ->  144 -> 0
+Distance of the route: 92 km
+Load of the route: 1013.67 kg 
+Route for vehicle 45:
+ 0 ->  147 ->  164 ->  207 ->  208 ->  206 ->  148 -> 0
+Distance of the route: 106 km
+Load of the route: 795.02 kg 
+Route for vehicle 46:
+ 0 ->  141 ->  151 ->  152 ->  153 ->  161 ->  142 -> 0
+Distance of the route: 79 km
+Load of the route: 1116.24 kg 
+Route for vehicle 47:
+ 0 ->  140 ->  150 ->  166 ->  167 ->  168 ->  149 -> 0
+Distance of the route: 84 km
+Load of the route: 1244.08 kg 
+Route for vehicle 48:
+ 0 ->  137 ->  138 ->  136 ->  160 ->  159 ->  139 -> 0
+Distance of the route: 69 km
+Load of the route: 1249.25 kg 
+Route for vehicle 49:
+ 0 ->  124 ->  125 ->  127 ->  128 ->  132 ->  133 -> 0
+Distance of the route: 75 km
+Load of the route: 339.7 kg 
