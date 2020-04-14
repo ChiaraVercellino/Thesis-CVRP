@@ -87,7 +87,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
         350,  # vehicle maximum travel distance
         True,  # start cumul to zero
         dimension_name)
-    distance_dimension = routing.GetDimensionOrDie(dimension_name)
+    #distance_dimension = routing.GetDimensionOrDie(dimension_name)
     # If I want to minimize the longest route
     # distance_dimension.SetGlobalSpanCostCoefficient(100)
 
@@ -113,7 +113,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
         data['vehicle_capacities'],  # vehicle maximum capacities
         True,  # start cumul to zero
         dimension_name)
-    capacity_dimension = routing.GetDimensionOrDie(dimension_name)
+    #capacity_dimension = routing.GetDimensionOrDie(dimension_name)
     
     
     # Setting first solution heuristic.
