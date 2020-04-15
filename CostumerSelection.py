@@ -3,17 +3,17 @@
 # SHOULD use a function that takes as input different mode
 
 
-def select_customers(day, m3_capacity, kg_capacity, policy):
-    # maybe later add argument available_time
-    # calculate average demand in m^3
-    avg_m3 = day.customer_df['m3'].mean()
-    # calculate average demand in kg
+def select_customers(day, h_capacity, kg_capacity, policy):
+    # calculate average demand and standard deviation (kg)
     avg_kg = day.customer_df['kg'].mean()
     std_kg = day.customer_df['kg'].std()
-    max_kg = max(abs(day.customer_df['kg']-avg_kg))
+    # calculate average set_up_times and standard deviation (min)
+    avg_set_up = day.customer_df['set_up_time'].mean()
+    std_set_up = day.customer_df['set_up_time'].std()
     # approximate the maximum number of deliveries will be allowed with the available capacities
-    num_deliveries = min(m3_capacity//avg_m3, kg_capacity//(avg_kg*(1+std_kg/(3*max_kg))))
+    num_deliveries = min(0.5*h_capacity//avg_set_up, kg_capacity//avg_kg)
     print(num_deliveries)
+    num_deliveries=130
     # apply the desired policy
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,
@@ -25,13 +25,15 @@ def select_customers(day, m3_capacity, kg_capacity, policy):
         print('Policy not yet implemented')
 
     # check if I've respected total capacities
-    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, m3_capacity)
+    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.5*h_capacity)
     # iterate until the constraint is satisfied
     while not constraints_respected:
         # If capacity is not respected I have to eliminate some customer
         selected_idx, selected_customers, new_customer_df = _remove_client(selected_customers, new_customer_df,
                                                                            day.current_day, selected_idx)
-        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, m3_capacity)
+        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.5*h_capacity)
+        num_deliveries -= 1
+    
     # add labels corresponding to nodes in graph
     selected_customers['customer_label'] = range(1, len(selected_customers)+1)
     # update data frame
@@ -81,12 +83,12 @@ def _postpone_client(line, this_day, served_clients=[], single_client=False):
 
 
 # check if the selected customers are allowed by aggregate capacities
-def _check_capacity_constraints(selected_customers_df, kg_capacity, m3_capacity):
+def _check_capacity_constraints(selected_customers_df, kg_capacity, h_capacity):
     tot_kg = selected_customers_df['kg'].sum()
-    tot_m3 = selected_customers_df['m3'].sum()
+    tot_h = selected_customers_df['set_up_time'].sum()
     kg_constraint = tot_kg <= kg_capacity
-    m3_constraint = tot_m3 <= m3_capacity
-    return kg_constraint and m3_constraint
+    h_constraint = tot_h <= h_capacity
+    return kg_constraint and h_constraint
 
 
 # remove additional clients from selected one and put it again in the queue

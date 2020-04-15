@@ -12,8 +12,12 @@ def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
     data = {}
     clients_coords = select_clients_df[['x', 'y']].to_numpy()
     coords = np.vstack ((depot, clients_coords)) 
-    # create distances' matrix
+    # create matrix of times
+    set_up_time = np.array([0])
+    set_up_time = np.append(set_up_time, select_clients_df[['set_up_time']].to_numpy()*60)
+    set_up_time_matrix = np.tile(set_up_time,(len(set_up_time),1))
     data['distance_matrix'] = distance.cdist(coords, coords)
+    data['distance_matrix'] += set_up_time_matrix
     data['num_vehicles'] = vehicles
     data['depot'] = 0
      # add demands in kg
@@ -24,6 +28,7 @@ def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
 
 def _print_solution(data, manager, routing, solution):
     """Prints solution on console."""
+    #print('Objective: {}'.format(solution.ObjectiveValue()))
     max_route_distance = 0
     total_distance = 0
     total_load = 0
@@ -39,9 +44,9 @@ def _print_solution(data, manager, routing, solution):
                 previous_index, index, vehicle_id) 
         total_distance += route_distance
         max_route_distance = max(max_route_distance, route_distance)
-    print('Total distance of all routes: {} km'.format(total_distance))
-    print('Total load of all routes: {} kg'.format(round(total_load,2)))
-    print('Maximum of the route distances: {} km'.format(max_route_distance))
+    print('Total travel and setup time of all routes: {} h'.format(round(total_distance/60,2)))
+    print('Total load of all routes: {} kg'.format(round(total_load, 2)))
+    print('Maximum of the route travel time: {} h'.format(round(max_route_distance/60,2)))
 
 
 def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
@@ -79,12 +84,12 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     demand_callback_index = routing.RegisterUnaryTransitCallback(demand_callback)
 
 
-    # Add Distance constraint.
-    dimension_name = 'Distance'
+    # Add Time constraint.
+    dimension_name = 'Time'
     routing.AddDimension(
         transit_callback_index,
         0,  # no slack
-        350,  # vehicle maximum travel distance
+        600,  # vehicle maximum travel time and setup time (in minutes)
         True,  # start cumul to zero
         dimension_name)
     #distance_dimension = routing.GetDimensionOrDie(dimension_name)
@@ -97,13 +102,13 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     routing.AddDimension(
         plus_one_callback_index,
         0,  # null capacity slack
-        7,  # vehicle maximum capacities
+        5,  # vehicle maximum capacities
         True,  # start cumul to zero
         dimension_name)
     counter_dimension = routing.GetDimensionOrDie(dimension_name)
     for vehicle_id in range(vehicles):
         index = routing.End(vehicle_id)
-        counter_dimension.CumulVar(index).SetRange(0, 7)
+        counter_dimension.CumulVar(index).SetRange(0, 5)
     
     # Add Capacity constraint.
     dimension_name = 'Capacity'
