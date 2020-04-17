@@ -11,9 +11,7 @@ def select_customers(day, h_capacity, kg_capacity, policy):
     avg_set_up = day.customer_df['set_up_time'].mean()
     std_set_up = day.customer_df['set_up_time'].std()
     # approximate the maximum number of deliveries will be allowed with the available capacities
-    num_deliveries = min(0.5*h_capacity//avg_set_up, kg_capacity//avg_kg)
-    print(num_deliveries)
-    num_deliveries=130
+    num_deliveries = min(0.65*h_capacity//avg_set_up, kg_capacity//avg_kg)
     # apply the desired policy
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,
@@ -25,13 +23,13 @@ def select_customers(day, h_capacity, kg_capacity, policy):
         print('Policy not yet implemented')
 
     # check if I've respected total capacities
-    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.5*h_capacity)
+    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.65*h_capacity)
     # iterate until the constraint is satisfied
     while not constraints_respected:
         # If capacity is not respected I have to eliminate some customer
         selected_idx, selected_customers, new_customer_df = _remove_client(selected_customers, new_customer_df,
                                                                            day.current_day, selected_idx)
-        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.5*h_capacity)
+        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.65*h_capacity)
         num_deliveries -= 1
     
     # add labels corresponding to nodes in graph

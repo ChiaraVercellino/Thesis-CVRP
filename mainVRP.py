@@ -14,7 +14,7 @@ def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
     coords = np.vstack ((depot, clients_coords)) 
     # create matrix of times
     set_up_time = np.array([0])
-    set_up_time = np.append(set_up_time, select_clients_df[['set_up_time']].to_numpy()*60)
+    set_up_time = np.append(set_up_time, select_clients_df[['set_up_time']].to_numpy())
     set_up_time_matrix = np.tile(set_up_time,(len(set_up_time),1))
     data['distance_matrix'] = distance.cdist(coords, coords)
     data['distance_matrix'] += set_up_time_matrix
@@ -89,12 +89,12 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     routing.AddDimension(
         transit_callback_index,
         0,  # no slack
-        600,  # vehicle maximum travel time and setup time (in minutes)
+        480,  # vehicle maximum travel time and setup time (in minutes)
         True,  # start cumul to zero
         dimension_name)
-    #distance_dimension = routing.GetDimensionOrDie(dimension_name)
+    #time_dimension = routing.GetDimensionOrDie(dimension_name)
     # If I want to minimize the longest route
-    # distance_dimension.SetGlobalSpanCostCoefficient(100)
+    #time_dimension.SetGlobalSpanCostCoefficient(10000)
 
     # Add constraint on number of clients served by each vehicle
     plus_one_callback_index = routing.RegisterUnaryTransitCallback(lambda index : 1)
@@ -123,7 +123,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
-    #search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+    search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.CHRISTOFIDES)
     
     # Setting maximum time limit for search (in seconds)
     search_parameters.time_limit.seconds = 30

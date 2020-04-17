@@ -28,8 +28,8 @@ TO DO:
     - set maximum number of costumer per vehicle -> done
     - set maximum lenght of each route -> done
     - set capacity constraint -> done
-    - set time constraint -> WIP: I'm assuming vehicles with 60km/h velocities
-    - set all cost in objective function
+    - set time constraint -> donw: I'm assuming vehicles with 60km/h velocities
+    - objective function -> minimize total travel and set up times and number of vehicles
 3_ Work on num_deliveries
 
 

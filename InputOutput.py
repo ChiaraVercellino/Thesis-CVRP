@@ -73,7 +73,7 @@ def save_routes(day, data, manager, routing, solution, file_path='routes.txt'):
                 previous_index, index, vehicle_id)
         plan_output += '{}\n'.format(manager.IndexToNode(index))
         single_route.append(manager.IndexToNode(index))
-        plan_output += 'Distance of the route: {} h\n'.format(round(route_distance/60,2))
+        plan_output += 'Travel and service time of the route: {} h\n'.format(round(route_distance/60,2))
         plan_output += 'Load of the route: {} kg \n'.format(round(route_load,2))
         with open(file_path, 'a') as fp:          
             fp.write(plan_output)

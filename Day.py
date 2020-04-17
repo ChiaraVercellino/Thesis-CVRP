@@ -47,7 +47,7 @@ class Day:
         # add a column corresponding to the number of client to simulate for each cell
         selected_cells['demands'] = demands_cell[demands_cell > 0]
         # initialize empty coordinates
-        customers_data = {'x': [], 'y': [], 'm3': [], 'kg': [], 'set_up_time': [], 'last_day': [], 'yet_postponed': []}
+        customers_data = {'x': [], 'y': [], 'kg': [], 'set_up_time': [], 'last_day': [], 'yet_postponed': []}
         # simulate coordinates for each customer
         selected_cells.apply(lambda line: self._simulate_clients_parameters(line.x, line.length, line.y, line.height,
                                                                             line.demands, customers_data), axis=1)
@@ -72,17 +72,14 @@ class Day:
         # see whether the demand is for a big or small object
         big = np.random.binomial(n=1, size=num_clients, p=0.5)
         # set time windows in day for each customer
-        custom_data['last_day'] += np.random.randint(low=Day.current_day+3, high=Day.current_day+5,
-                                                     size=num_clients).tolist()
+        custom_data['last_day'] += np.random.randint(low=Day.current_day+3, high=Day.current_day+5,size=num_clients).tolist()
         # at the beginning no customer has been postponed
         custom_data['yet_postponed'] = False
         for cl in range(num_clients):
-            # save demand in m^3
-            custom_data['m3'] += np.random.uniform(1+199*big[cl], 3+277*big[cl], 1).tolist()
             # save demand in kg
-            custom_data['kg'] += np.random.uniform(1+199*big[cl], 10+590*big[cl], 1).tolist()
+            custom_data['kg'] += np.random.randint(low=1+199*big[cl], high=10+590*big[cl],size=1).tolist()
             # calculate set up times
-            custom_data['set_up_time'] += np.random.uniform(0.15+0.85*big[cl], 1.0+3.5*big[cl], 1).tolist()
+            custom_data['set_up_time'] += np.random.randint(low=15+45*big[cl], high=60+210*big[cl],size=1).tolist()
         return custom_data
 
 

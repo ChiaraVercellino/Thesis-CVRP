@@ -38,9 +38,9 @@ def main():
     capacity_small = 10*100
     # initialize vehicles
     kg_capacity = small_vehicles*capacity_small
-    # total available hours
-    h_capacity = 10*small_vehicles
-    print(f'Total available capacity: {kg_capacity} kg, {h_capacity} h')    
+    # total available time (min)
+    h_capacity = 8*60*small_vehicles
+    print(f'Total available capacity: {kg_capacity} kg, {h_capacity} min')    
     
 
     for _ in range(n_days):
