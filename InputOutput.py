@@ -35,6 +35,7 @@ def load_distribution(file_path):
 
 # Save the simulated data of each customer
 def save_data_costumers(day, file_path):
+    file_path = "./Solution/" + file_path
     # append new data to the previous ones
     with open(file_path, 'a') as fp:
         fp.write(f'\n DAY: {day.current_day} \n')
@@ -43,7 +44,7 @@ def save_data_costumers(day, file_path):
 
 
 # Save selected customers customer
-def save_selected_costumers(day, selected_customers, file_path='selected_customers.txt'):
+def save_selected_costumers(day, selected_customers, file_path='./Solution/selected_customers.txt'):
     # append new data to the previous ones
     with open(file_path, 'a') as fp:
         fp.write(f'\n DAY: {day.current_day} \n')
@@ -52,7 +53,7 @@ def save_selected_costumers(day, selected_customers, file_path='selected_custome
 
 
 # save routes found by VRP solver
-def save_routes(day, data, manager, routing, solution, file_path='routes.txt'):
+def save_routes(day, data, manager, routing, solution, file_path='./Solution/routes.sol'):
     with open(file_path, 'a') as fp:            
         fp.write(f'\n DAY: {day.current_day} \n')
     routes_list = []
@@ -101,7 +102,7 @@ def plot_routes(customers, depot, route_list, day):
     # draw labels
     nx.draw_networkx_labels(G, pos,  font_size=6)
     # save graph
-    path = "route_day_"+str(day)+".png"
+    path = "./Solution/route_day_"+str(day)+".png"
     plt.savefig(path)
 
 

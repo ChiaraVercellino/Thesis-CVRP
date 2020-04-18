@@ -33,5 +33,17 @@ TO DO:
 3_ Work on num_deliveries
 
 
+VRPH, version 1.0
+Copyright 2010 Chris Groer
+Distributed under Common Public License 1.0
 
+Usage: vrp_ej.exe -f vrp_file -j num_ejected -t num_trials -m method [-s sol_file -out out_file -n num_heur_sols -v]
+         num_ejected should be something less than 20 or so
+         num_trials can be fairly large as the procedure is fast (say 1000)
+         method must be 0 (RANDOM search), 1 (REGRET search)
+         Options:
+         Can start with a solution in sol_file or it will generate an initial
+            solution for you
+         Can write the final best solution discovered to out_file
+         Adding -v will print verbose output
 

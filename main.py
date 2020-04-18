@@ -5,7 +5,9 @@ import sys
 from InputOutput import load_distribution, save_data_costumers, save_selected_costumers, save_routes, plot_routes
 from CostumerSelection import select_customers
 from Day import Day
-from mainVRP import VRP_optimization
+from VRP_optimization.mainVRP import VRP_optimization
+from VRP_optimization.main_VRPH import main_VRPH
+from VRP_optimization.main_VRPortools import main_VRPortools
 
 
 def main():
@@ -15,11 +17,11 @@ def main():
     policy = sys.argv[3]
 
     # empty pre-existent files
-    with open(output_path, 'r+') as fp:
+    with open('./Solution/'+output_path, 'r+') as fp:
         fp.truncate(0)    
-    with open('selected_customers.txt', 'r+') as fp:
+    with open('./Solution/selected_customers.txt', 'r+') as fp:
         fp.truncate(0)
-    with open('routes.txt', 'r+') as fp:
+    with open('./Solution/routes.sol', 'r+') as fp:
         fp.truncate(0)
 
 # ------------------------------------------------ DATA LOADING -------------------------------------------------------
@@ -30,7 +32,7 @@ def main():
     # new customers arriving  in a day
     new_customers = 400
     # Days used in simulation
-    n_days = 3
+    n_days = 1
     first_day = True
 
     # number of available small vehicles
@@ -69,11 +71,13 @@ def main():
         
         # ---------------------------------------- VRP optimization ---------------------------------------------------
 
-        data, manager, routing, solution = VRP_optimization(selected_customers, depot, small_vehicles, capacity_small)
+        #data, manager, routing, solution = VRP_optimization(selected_customers, depot, small_vehicles, capacity_small)
+        main_VRPH(selected_customers, depot, small_vehicles, capacity_small)
+        data, manager, routing, solution = main_VRPortools(selected_customers, depot, small_vehicles, capacity_small)
 
         # ---------------------------------------- Save daily roads----------------------------------------------------
-        routes_list = save_routes(new_day, data, manager, routing, solution)
-        plot_routes(selected_customers, depot, routes_list, updated_day.current_day)
+        #routes_list = save_routes(new_day, data, manager, routing, solution)
+        #plot_routes(selected_customers, depot, routes_list, updated_day.current_day)
 
 if __name__ == '__main__':
     main()
