@@ -71,12 +71,12 @@ def main():
         
         # ---------------------------------------- VRP optimization ---------------------------------------------------
 
-        #data, manager, routing, solution = VRP_optimization(selected_customers, depot, small_vehicles, capacity_small)
-        main_VRPH(selected_customers, depot, small_vehicles, capacity_small)
-        data, manager, routing, solution = main_VRPortools(selected_customers, depot, small_vehicles, capacity_small)
+        data, manager, routing, solution = VRP_optimization(selected_customers, depot, small_vehicles, capacity_small)
+        #main_VRPH(selected_customers, depot, small_vehicles, capacity_small)
+        #data, manager, routing, solution = main_VRPortools(selected_customers, depot, small_vehicles, capacity_small)
 
         # ---------------------------------------- Save daily roads----------------------------------------------------
-        #routes_list = save_routes(new_day, data, manager, routing, solution)
+        routes_list = save_routes(new_day, data, manager, routing, solution)
         #plot_routes(selected_customers, depot, routes_list, updated_day.current_day)
 
 if __name__ == '__main__':

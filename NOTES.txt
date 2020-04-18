@@ -32,6 +32,7 @@ TO DO:
     - objective function -> minimize total travel and set up times and number of vehicles
 3_ Work on num_deliveries
 
+OBS: ortools work with integer objective function
 
 VRPH, version 1.0
 Copyright 2010 Chris Groer

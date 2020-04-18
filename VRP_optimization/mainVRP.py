@@ -28,7 +28,7 @@ def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
 
 def _print_solution(data, manager, routing, solution):
     """Prints solution on console."""
-    #print('Objective: {}'.format(solution.ObjectiveValue()))
+    print('Objective: {}'.format(solution.ObjectiveValue()))
     max_route_distance = 0
     total_distance = 0
     total_load = 0
