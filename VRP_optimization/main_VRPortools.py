@@ -12,7 +12,7 @@ def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
     data = {}
     clients_coords = select_clients_df[['x', 'y']].to_numpy()
     coords = np.vstack ((depot, clients_coords)) 
-    data['distance_matrix'] = distance.cdist(coords, coords)
+    data['distance_matrix'] = 1000*distance.cdist(coords, coords)
     data['num_vehicles'] = vehicles
     data['depot'] = 0
      # add demands in kg
@@ -38,9 +38,9 @@ def _print_solution(data, manager, routing, solution):
                 previous_index, index, vehicle_id) 
         total_distance += route_distance
         max_route_distance = max(max_route_distance, route_distance)
-    print('Total distance of all routes: {} km'.format(total_distance))
+    print('Total distance of all routes: {} km'.format(total_distance/1000))
     print('Total load of all routes: {} kg'.format(round(total_load, 2)))
-    print('Maximum of the route distance: {} km'.format(max_route_distance))
+    print('Maximum of the route distance: {} km'.format(max_route_distance/1000))
 
 
 def main_VRPortools(select_clients_df, depot, vehicles, capacity_kg):
@@ -69,8 +69,7 @@ def main_VRPortools(select_clients_df, depot, vehicles, capacity_kg):
     # Define cost of each arc = cost of each travel.
     routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
-    def demand_callback(from_index):
-        """Returns the demand of the node."""
+    """def demand_callback(from_index):
         # Convert from routing variable Index to demands NodeIndex.
         from_node = manager.IndexToNode(from_index)
         return data['demands'][from_node]
@@ -84,8 +83,21 @@ def main_VRPortools(select_clients_df, depot, vehicles, capacity_kg):
         0,  # null capacity slack
         data['vehicle_capacities'],  # vehicle maximum capacities
         True,  # start cumul to zero
+        dimension_name)"""
+
+    # Add constraint on number of clients served by each vehicle
+    plus_one_callback_index = routing.RegisterUnaryTransitCallback(lambda index : 1)
+    dimension_name = 'Counter'
+    routing.AddDimension(
+        plus_one_callback_index,
+        0,  # null capacity slack
+        6,  # vehicle maximum capacities
+        True,  # start cumul to zero
         dimension_name)
-    #capacity_dimension = routing.GetDimensionOrDie(dimension_name)
+    counter_dimension = routing.GetDimensionOrDie(dimension_name)
+    for vehicle_id in range(vehicles):
+        index = routing.End(vehicle_id)
+        counter_dimension.CumulVar(index).SetRange(0, 6)
     
     
     # Setting first solution heuristic.

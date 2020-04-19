@@ -47,4 +47,7 @@ Usage: vrp_ej.exe -f vrp_file -j num_ejected -t num_trials -m method [-s sol_fil
             solution for you
          Can write the final best solution discovered to out_file
          Adding -v will print verbose output
-
+Usage: vrp_init.exe -f vrp_file -m method [-c]
+         method should be 0 for CW, 1 for Sweep
+         If -c option is given, then all routes are cleaned up at the end
+                 by running intra-route improvements
