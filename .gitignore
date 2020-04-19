@@ -1,6 +1,6 @@
-.venv
-.vscode
+.venv/
+.vscode/
 
 __pycache__/
 
-*.png
+*.png/
