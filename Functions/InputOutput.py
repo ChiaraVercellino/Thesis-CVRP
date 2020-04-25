@@ -2,11 +2,54 @@ import pandas as pd
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import sys
+
+
+# Parse command line and check if the arguments are correct
+def check_arguments(argv):   
+    error = False
+    input_path = ''
+    policy = ''
+    n_days= ''
+    if len(argv)==6:
+        # file with initial distribution of clients
+        input_path = argv[1]
+        if argv[2]=="-p" and (argv[3]=="EP" or argv[3]=="DP"):
+            # policy for customer selections
+            policy = argv[3]
+        else:
+            sys.stderr.write("Error: inserted policy\n")
+            error = True
+        if argv[4]=="-d":
+            # number of simulated days
+            n_days = int(argv[5])
+        else:
+            sys.stderr.write("Error: number of days\n")
+            error = True
+    else:
+        error = True
+    if error:
+        sys.stderr.write("Run code with command line arguments:\n input_file_path -p policy -d days_simulation\n WHERE:\n\
+        - input_file_path is the file containing density distribution (i.e. grid.txt)\n\
+        - policy is the desired policy to select which customers to serve \n\
+        \t EP : early policy\n \t\t DP : delayed policy\n\
+        - days_simulation is the number of day you want to simulate")
+    return error, input_path, policy, n_days
+    
+    
+# Clean pre-existing files
+def clean_files():    
+    with open('./Data/simulated_clients.txt', 'r+') as fp:
+        fp.truncate(0)    
+    with open('./Data/selected_customers.txt', 'r+') as fp:
+        fp.truncate(0)
+    with open('./Solution/routes.sol', 'r+') as fp:
+        fp.truncate(0)
 
 
 # Read data distribution from file in file_path and create the corresponding data frame
 def load_distribution(file_path):
-
+    file_path = './Data/'+file_path
     with open(file_path, "r") as fp:
         # initialize empty dictionary
         data_lines = {'cell_name': [], 'x': [], 'y': [], 'length': [], 'height': [], 'probability': []}
@@ -24,7 +67,6 @@ def load_distribution(file_path):
                 data_lines['height'].append(float(elements[4]))
                 data_lines['probability'].append(float(elements[5]))
     df = pd.DataFrame(data_lines)
-
     # make all probabilities sum up to 1
     total_prob = df['probability'].sum()
     df['probability'] = df['probability'].apply(lambda x: x/total_prob)
@@ -33,27 +75,11 @@ def load_distribution(file_path):
     return df, depot
 
 
-# Save the simulated data of each customer
-def save_data_costumers(day, file_path):
-    file_path = "./Solution/" + file_path
-    # append new data to the previous ones
-    with open(file_path, 'a') as fp:
-        fp.write(f'\n DAY: {day.current_day} \n')
-        # write all data frame to in a file
-        fp.write(day.customer_df.to_string(header=True, index=True))
-
-
-# Save selected customers customer
-def save_selected_costumers(day, selected_customers, file_path='./Solution/selected_customers.txt'):
-    # append new data to the previous ones
-    with open(file_path, 'a') as fp:
-        fp.write(f'\n DAY: {day.current_day} \n')
-        # write all data frame to in a file
-        fp.write(selected_customers.to_string(header=True, index=True))
-
-
-# save routes found by VRP solver
+# Save routes found by VRP solver
 def save_routes(day, data, manager, routing, solution, file_path='./Solution/routes.sol'):
+    max_route_distance = 0
+    total_distance = 0
+    total_load = 0
     with open(file_path, 'a') as fp:            
         fp.write(f'\n DAY: {day.current_day} \n')
     routes_list = []
@@ -76,38 +102,17 @@ def save_routes(day, data, manager, routing, solution, file_path='./Solution/rou
         single_route.append(manager.IndexToNode(index))
         plan_output += 'Travel and service time of the route: {} h\n'.format(round(route_distance/60,2))
         plan_output += 'Load of the route: {} kg \n'.format(round(route_load,2))
+        total_distance += route_distance
+        total_load += route_load
+        max_route_distance = max(max_route_distance, route_distance)
         with open(file_path, 'a') as fp:          
             fp.write(plan_output)
         routes_list.append(single_route)
+    with open(file_path, 'a') as fp:          
+            fp.write('Total travel and setup time of all routes: {} h\n'.format(round(total_distance/60,2)))
+            fp.write('Total load of all routes: {} kg\n'.format(round(total_load, 2)))
+            fp.write('Maximum of the route travel time: {} h\n'.format(round(max_route_distance/60,2)))
     return routes_list
 
 
-# plot found routes
-def plot_routes(customers, depot, route_list, day):
-    # create a dictionary with position of each costumer
-    pos={0: depot}
-    customers.apply(lambda client_line: _add_client(client_line, pos), axis=1)
-    G=nx.Graph()
-    # add nodes to graph
-    G.add_nodes_from(pos.keys())
-    # add coordinates to nodes
-    for n, p in pos.items():
-        G.nodes[n]['pos'] = p
-    # add edges in graph
-    for route in route_list:
-        edges = list(zip(route, route[1:] + route[:1]))
-        G.add_edges_from(edges)
-    # draw and dispay graph
-    nx.draw(G, pos, node_size=2.0)
-    # draw labels
-    nx.draw_networkx_labels(G, pos,  font_size=6)
-    # save graph
-    path = "./Solution/route_day_"+str(day)+".png"
-    plt.savefig(path)
-
-
-def _add_client(client_line, pos):
-    pos[client_line.customer_label] = [client_line.x, client_line.y]
-    return client_line
-    
     

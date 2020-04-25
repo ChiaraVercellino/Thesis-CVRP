@@ -8,31 +8,25 @@ https://developers.google.com/optimization/routing/vrp
 Simulate data: given distribution simulate client arrivals, demands and their time-windows in days (4-5 days)
 
 Optimization problem:
-    Calculate Euclidean distances between client
-        - maybe some couples of distances can be not saved if they are too high
-        - fill in adjacency matrix -> start with a symmetric one
     Select which customer to serve
-        - 300 new customers per day -> OK
-        - max number of deliveries to respect capacity constraint and time constraint -> capacity constraint OK
+        - 400 new customers per day 
+        - max number of deliveries to respect capacity constraint and time constraint
         - look at probability of other near customers in future
-        - Each customer has demand expressed in: m^3, set up time (related to set up cost), kg, available day -> OK
+        - Each customer has demand expressed in: set up time (related to set up cost), kg, available day
     Solve VRP for those customers
-        - objectives: mean distances, stoking times
-        - beware the set-up times, fixed costs
-        - capacity and time constraint
-        - fixed number of available vehicles (50-60 vehicles)
+        - set maximum time for VRP solver: 30 sec
+        - set maximum number of costumers per vehicle: 5 customers
+        - set maximum total time of each route: 480 min (8 h)
+        - set capacity constraint per vehicle: 1000 kg
+        - I'm assuming vehicles with 60km/h velocities
+        - objective function: minimize total travel and set up times and number of vehicles
+        OBS: ortools work with integer objective function
 
 TO DO:
-2_ Improve VRP (WIP):
-    - set maximum time for search -> done (30s)
-    - set maximum number of costumer per vehicle -> done
-    - set maximum lenght of each route -> done
-    - set capacity constraint -> done
-    - set time constraint -> donw: I'm assuming vehicles with 60km/h velocities
-    - objective function -> minimize total travel and set up times and number of vehicles
-3_ Work on num_deliveries
+1_ Work on num_deliveries such that CVRP is always feasible: WIP
+2_ Implement new policy
+3_ Make code work also with other policies for customers selection
 
-OBS: ortools work with integer objective function
 
 VRPH, version 1.0
 Copyright 2010 Chris Groer

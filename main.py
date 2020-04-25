@@ -1,10 +1,10 @@
 # import sys to deal with command line arguments
 import sys
 
-# import functions made by me
-from InputOutput import load_distribution, save_data_costumers, save_selected_costumers, save_routes, plot_routes
-from CostumerSelection import select_customers
-from Day import Day
+# import functions
+from Functions.InputOutput import load_distribution, save_routes, clean_files, check_arguments
+from Functions.CostumerSelection import select_customers
+from Classes.Day import Day
 from VRP_optimization.mainVRP import VRP_optimization
 from VRP_optimization.main_VRPH import main_VRPH
 from VRP_optimization.main_VRPortools import main_VRPortools
@@ -12,17 +12,11 @@ from VRP_optimization.main_VRPortools import main_VRPortools
 
 def main():
     # parse command line arguments
-    input_path = sys.argv[1]
-    output_path = sys.argv[2]
-    policy = sys.argv[3]
-
+    error, input_path, policy, n_days = check_arguments(sys.argv)
+    if error:
+        return
     # empty pre-existent files
-    with open('./Solution/'+output_path, 'r+') as fp:
-        fp.truncate(0)    
-    with open('./Solution/selected_customers.txt', 'r+') as fp:
-        fp.truncate(0)
-    with open('./Solution/routes.sol', 'r+') as fp:
-        fp.truncate(0)
+    clean_files()
 
 # ------------------------------------------------ DATA LOADING -------------------------------------------------------
     # load distribution and depot position from input file
@@ -31,22 +25,20 @@ def main():
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day
     new_customers = 400
-    # Days used in simulation
-    n_days = 1
     first_day = True
 
-    # number of available small vehicles
-    small_vehicles = 50
-    capacity_small = 10*100
-    # initialize vehicles
-    kg_capacity = small_vehicles*capacity_small
+    # number of available vehicles
+    vehicles = 50
+    # capacity of each vehicle
+    capacity = 10*100
+    # total available capacity (kg)
+    kg_capacity = vehicles*capacity
     # total available time (min)
-    h_capacity = 8*60*small_vehicles
-    print(f'Total available capacity: {kg_capacity} kg, {h_capacity} min')    
+    min_capacity = 8*60*vehicles
+    #print(f'Total available capacity: {kg_capacity} kg, {min_capacity} min')    
     
 
     for _ in range(n_days):
-
         # Instantiate a new day
         if first_day:
             new_day = Day(new_customers, first_day, data_frame)
@@ -55,29 +47,30 @@ def main():
             # append new customers to the ones of previous day
             new_day = Day(new_customers, previous_df=new_day.customer_df)
 
-        # save simulated data
-        save_data_costumers(new_day, output_path)
+        # save simulated clients' data
+        new_day.save_data_costumers()
 
         # ---------------------------------------- Customers selection ------------------------------------------------
 
         # select customers accordingly to the desired policy
-        selected_customers, selected_indexes, updated_day = select_customers(new_day, h_capacity, kg_capacity, policy)
+        updated_day = select_customers(new_day, min_capacity, kg_capacity, policy)
         # save selected customer to pass to VRP solver
-        save_selected_costumers(new_day, selected_customers)
+        updated_day.save_selected_costumers()
         # delete served customer
-        updated_day.delete_served_customers(selected_indexes)
+        updated_day.delete_served_customers()
         # update the day
         new_day = updated_day
         
         # ---------------------------------------- VRP optimization ---------------------------------------------------
 
-        #data, manager, routing, solution = VRP_optimization(selected_customers, depot, small_vehicles, capacity_small)
-        main_VRPH(selected_customers, depot, small_vehicles, capacity_small)
-        data, manager, routing, solution = main_VRPortools(selected_customers, depot, small_vehicles, capacity_small)
+        data, manager, routing, solution = VRP_optimization(new_day.selected_customers, depot, vehicles, capacity)
 
         # ---------------------------------------- Save daily roads----------------------------------------------------
-        #routes_list = save_routes(new_day, data, manager, routing, solution)
-        #plot_routes(selected_customers, depot, routes_list, updated_day.current_day)
+        if solution:
+            routes_list = save_routes(new_day, data, manager, routing, solution)
+
+    return
+
 
 if __name__ == '__main__':
     main()

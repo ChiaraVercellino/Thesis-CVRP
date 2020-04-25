@@ -31,12 +31,13 @@ def select_customers(day, h_capacity, kg_capacity, policy):
                                                                            day.current_day, selected_idx)
         constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.65*h_capacity)
         num_deliveries -= 1
-    
     # add labels corresponding to nodes in graph
     selected_customers['customer_label'] = range(1, len(selected_customers)+1)
     # update data frame
     day.customer_df = new_customer_df
-    return selected_customers, selected_idx, day
+    day.selected_customers = selected_customers
+    day.selected_indexes = selected_idx
+    return day
 
 
 # serve all customers as soon as demand happens

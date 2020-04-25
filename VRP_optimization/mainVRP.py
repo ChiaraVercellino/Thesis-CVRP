@@ -26,33 +26,9 @@ def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
     return data
 
 
-def _print_solution(data, manager, routing, solution):
-    """Prints solution on console."""
-    print('Objective: {}'.format(solution.ObjectiveValue()))
-    max_route_distance = 0
-    total_distance = 0
-    total_load = 0
-    for vehicle_id in range(data['num_vehicles']):
-        index = routing.Start(vehicle_id)
-        route_distance = 0
-        while not routing.IsEnd(index):
-            node_index = manager.IndexToNode(index)
-            total_load += data['demands'][node_index]
-            previous_index = index
-            index = solution.Value(routing.NextVar(index))
-            route_distance += routing.GetArcCostForVehicle(
-                previous_index, index, vehicle_id) 
-        total_distance += route_distance
-        max_route_distance = max(max_route_distance, route_distance)
-    print('Total travel and setup time of all routes: {} h'.format(round(total_distance/60,2)))
-    print('Total load of all routes: {} kg'.format(round(total_load, 2)))
-    print('Maximum of the route travel time: {} h'.format(round(max_route_distance/60,2)))
-
-
 def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     """Solve the VRP problem."""
     # Instantiate the data problem.
-    print('VRP begins')
     data = _create_data_model(select_clients_df, depot, vehicles, capacity_kg)
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -102,13 +78,13 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     routing.AddDimension(
         plus_one_callback_index,
         0,  # null capacity slack
-        5,  # vehicle maximum capacities
+        6,  # vehicle maximum capacities
         True,  # start cumul to zero
         dimension_name)
     counter_dimension = routing.GetDimensionOrDie(dimension_name)
     for vehicle_id in range(vehicles):
         index = routing.End(vehicle_id)
-        counter_dimension.CumulVar(index).SetRange(0, 5)
+        counter_dimension.CumulVar(index).SetRange(0, 6)
     
     # Add Capacity constraint.
     dimension_name = 'Capacity'
@@ -132,10 +108,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     solution = routing.SolveWithParameters(search_parameters)
 
     # Print solution on console.
-    if solution:
-        #pass
-        _print_solution(data, manager, routing, solution)
-    else:
-        print('no solution found')
+    if not(solution):
+        print('CVRP error: No solution found')
 
     return  data, manager, routing, solution

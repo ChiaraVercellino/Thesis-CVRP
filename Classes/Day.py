@@ -33,6 +33,8 @@ class Day:
             self.customer_df = new_customer_df
         else:
             self.customer_df = previous_df.append(new_customer_df, ignore_index=True)
+        self.selected_customers = pd.DataFrame()
+        self.selected_indexes = []
 
     # ------------------------------------------ PRIVATE METHODS ------------------------------------------------------
 
@@ -55,10 +57,26 @@ class Day:
 
     # ------------------------------------------ PUBLIC METHODS -------------------------------------------------------
 
-    # update data frame dropping served customers
-    def delete_served_customers(self, indexes_customers):
+    # Update data frame dropping served customers
+    def delete_served_customers(self):
         # drop customer indexes of selected customer
-        self.customer_df = self.customer_df.drop(indexes_customers)
+        self.customer_df = self.customer_df.drop(self.selected_indexes)
+
+    # Save the simulated data of each customer
+    def save_data_costumers(self, file_path='./Data/simulated_clients.txt'):
+        # append new data to the previous ones
+        with open(file_path, 'a') as fp:
+            fp.write(f'\n DAY: {self.current_day} \n')
+            # write all data frame to in a file
+            fp.write(self.customer_df.to_string(header=True, index=True))
+
+    # Save selected customers customer
+    def save_selected_costumers(self, file_path='./Data/selected_customers.txt'):
+        # append new data to the previous ones
+        with open(file_path, 'a') as fp:
+            fp.write(f'\n DAY: {self.current_day} \n')
+            # write all data frame to in a file
+            fp.write(self.selected_customers.to_string(header=True, index=True))
 
     # ------------------------------------------ STATIC METHODS -------------------------------------------------------
 
