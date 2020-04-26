@@ -107,8 +107,4 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
 
-    # Print solution on console.
-    if not(solution):
-        print('CVRP error: No solution found')
-
     return  data, manager, routing, solution

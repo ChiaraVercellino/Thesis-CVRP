@@ -23,9 +23,8 @@ Optimization problem:
         OBS: ortools work with integer objective function
 
 TO DO:
-1_ Work on num_deliveries such that CVRP is always feasible: WIP
-2_ Implement new policy
-3_ Make code work also with other policies for customers selection
+1_ Implement new policy
+2_ Make code work also with other policies for customers selection
 
 
 VRPH, version 1.0

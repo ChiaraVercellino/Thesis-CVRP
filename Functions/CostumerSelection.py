@@ -2,7 +2,6 @@
 # MUST select all customer that are at the end of their available days
 # SHOULD use a function that takes as input different mode
 
-
 def select_customers(day, h_capacity, kg_capacity, policy):
     # calculate average demand and standard deviation (kg)
     avg_kg = day.customer_df['kg'].mean()
@@ -11,7 +10,7 @@ def select_customers(day, h_capacity, kg_capacity, policy):
     avg_set_up = day.customer_df['set_up_time'].mean()
     std_set_up = day.customer_df['set_up_time'].std()
     # approximate the maximum number of deliveries will be allowed with the available capacities
-    num_deliveries = min(0.65*h_capacity//avg_set_up, kg_capacity//avg_kg)
+    num_deliveries = min(0.7*h_capacity//avg_set_up, kg_capacity//avg_kg)
     # apply the desired policy
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,
@@ -23,13 +22,13 @@ def select_customers(day, h_capacity, kg_capacity, policy):
         print('Policy not yet implemented')
 
     # check if I've respected total capacities
-    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.65*h_capacity)
+    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.7*h_capacity)
     # iterate until the constraint is satisfied
     while not constraints_respected:
         # If capacity is not respected I have to eliminate some customer
         selected_idx, selected_customers, new_customer_df = _remove_client(selected_customers, new_customer_df,
                                                                            day.current_day, selected_idx)
-        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.65*h_capacity)
+        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.7*h_capacity)
         num_deliveries -= 1
     # add labels corresponding to nodes in graph
     selected_customers['customer_label'] = range(1, len(selected_customers)+1)
@@ -37,6 +36,12 @@ def select_customers(day, h_capacity, kg_capacity, policy):
     day.customer_df = new_customer_df
     day.selected_customers = selected_customers
     day.selected_indexes = selected_idx
+    return day
+
+
+def remove_client_VRP(day):
+    day.selected_indexes, day.selected_customers, day.customer_df = _remove_client(day.selected_customers, day.customer_df,\
+     day.current_day, day.selected_indexes)
     return day
 
 
@@ -95,7 +100,10 @@ def _remove_client(selected_costumers, costumers, this_day, selected_indexes):
     last_client = selected_costumers.tail(1)
     # check if I have to postpone the client
     last_client = last_client.apply(lambda line: _postpone_client(line, this_day, single_client=True), axis=1)
-    costumers = costumers.append(last_client)
+    # update costumer in costumers' dataframe
+    costumers.at[selected_indexes[-1], 'last_day'] = last_client.iloc[0]['last_day']   
+    costumers.at[selected_indexes[-1], 'yet_postponed'] = last_client.iloc[0]['yet_postponed']
+    # update selected customers
     selected_costumers.drop(selected_costumers.tail(1).index, inplace=True)
     del selected_indexes[-1]
     return selected_indexes, selected_costumers, costumers

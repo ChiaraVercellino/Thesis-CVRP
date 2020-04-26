@@ -3,7 +3,7 @@ import sys
 
 # import functions
 from Functions.InputOutput import load_distribution, save_routes, clean_files, check_arguments
-from Functions.CostumerSelection import select_customers
+from Functions.CostumerSelection import select_customers, remove_client_VRP
 from Classes.Day import Day
 from VRP_optimization.mainVRP import VRP_optimization
 from VRP_optimization.main_VRPH import main_VRPH
@@ -39,6 +39,7 @@ def main():
     
 
     for _ in range(n_days):
+        
         # Instantiate a new day
         if first_day:
             new_day = Day(new_customers, first_day, data_frame)
@@ -47,27 +48,35 @@ def main():
             # append new customers to the ones of previous day
             new_day = Day(new_customers, previous_df=new_day.customer_df)
 
+        print(f'Simulated day {new_day.current_day}')
         # save simulated clients' data
         new_day.save_data_costumers()
-
         # ---------------------------------------- Customers selection ------------------------------------------------
 
         # select customers accordingly to the desired policy
         updated_day = select_customers(new_day, min_capacity, kg_capacity, policy)
-        # save selected customer to pass to VRP solver
-        updated_day.save_selected_costumers()
-        # delete served customer
-        updated_day.delete_served_customers()
-        # update the day
-        new_day = updated_day
         
         # ---------------------------------------- VRP optimization ---------------------------------------------------
+        solution = False
+        # iterate until a feasible solution is reached
+        while not(solution):
+            data, manager, routing, solution = VRP_optimization(updated_day.selected_customers, depot, vehicles, capacity)
+            if not(solution):                
+                updated_day = remove_client_VRP(updated_day)
 
-        data, manager, routing, solution = VRP_optimization(new_day.selected_customers, depot, vehicles, capacity)
+        # ---------------------------------------- Save daily roads ---------------------------------------------------
 
-        # ---------------------------------------- Save daily roads----------------------------------------------------
-        if solution:
-            routes_list = save_routes(new_day, data, manager, routing, solution)
+        # save daily roads
+        routes_list = save_routes(new_day, data, manager, routing, solution)
+
+        # --------------------------------------- Final updates -------------------------------------------------------
+        
+        # save selected customer passed to VRP solver
+        updated_day.save_selected_costumers()        
+        # delete served customer
+        updated_day.delete_served_customers()        
+        # update the day
+        new_day = updated_day
 
     return
 
