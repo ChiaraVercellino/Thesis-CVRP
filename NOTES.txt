@@ -24,7 +24,16 @@ Optimization problem:
 
 TO DO:
 1_ Implement new policy
-2_ Make code work also with other policies for customers selection
+2_ Work on random seed for VRP optimization
+3_ Compare policies
+
+30 days simulation
+EP:
+- objective function: 654512
+- postponed clients: 0
+DP:
+- objective function: 580017
+- postponed clients: 6760
 
 
 VRPH, version 1.0

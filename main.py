@@ -24,13 +24,14 @@ def main():
 
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day
-    new_customers = 400
+    new_customers = 180
+    total_obj_fun = 0
     first_day = True
 
     # number of available vehicles
     vehicles = 50
     # capacity of each vehicle
-    capacity = 10*100
+    capacity = 1000
     # total available capacity (kg)
     kg_capacity = vehicles*capacity
     # total available time (min)
@@ -54,8 +55,8 @@ def main():
         # ---------------------------------------- Customers selection ------------------------------------------------
 
         # select customers accordingly to the desired policy
-        updated_day = select_customers(new_day, min_capacity, kg_capacity, policy)
-        
+        updated_day, num_postponed = select_customers(new_day, min_capacity, kg_capacity, policy)
+
         # ---------------------------------------- VRP optimization ---------------------------------------------------
         solution = False
         # iterate until a feasible solution is reached
@@ -77,6 +78,13 @@ def main():
         updated_day.delete_served_customers()        
         # update the day
         new_day = updated_day
+
+        # --------------------------------------- Objective function --------------------------------------------------
+        # In DP we start serving customers from the 4th day, we need to do a right comparison among the policies
+        total_obj_fun += solution.ObjectiveValue()
+
+    print(f'Total objective function: {total_obj_fun}')
+    print(f'Total number of postponed costumers: {num_postponed}')
 
     return
 

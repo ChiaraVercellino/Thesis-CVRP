@@ -2,6 +2,8 @@
 # MUST select all customer that are at the end of their available days
 # SHOULD use a function that takes as input different mode
 
+num_postponed = 0
+
 def select_customers(day, h_capacity, kg_capacity, policy):
     # calculate average demand and standard deviation (kg)
     avg_kg = day.customer_df['kg'].mean()
@@ -36,7 +38,7 @@ def select_customers(day, h_capacity, kg_capacity, policy):
     day.customer_df = new_customer_df
     day.selected_customers = selected_customers
     day.selected_indexes = selected_idx
-    return day
+    return day, num_postponed
 
 
 def remove_client_VRP(day):
@@ -81,6 +83,8 @@ def _postpone_client(line, this_day, served_clients=[], single_client=False):
     else:
         boolean = this_day == line.last_day and line.name not in served_clients
     if boolean:
+        global num_postponed
+        num_postponed += 1
         line.last_day += 1
         line.yet_postponed = True
     return line
