@@ -5,7 +5,7 @@ import numpy as np
 # To sample from a multinomial distribution
 from numpy.random import multinomial
 # To set seed for random generator (replicability)
-np.random.seed(3)
+np.random.seed(1)
 
 # deactivate chained warning
 pd.options.mode.chained_assignment = None
@@ -98,7 +98,7 @@ class Day:
             # save demand in kg
             custom_data['kg'] += np.random.randint(low=5+195*big[cl], high=10+490*big[cl],size=1).tolist()
             # calculate set up times
-            custom_data['set_up_time'] += np.random.randint(low=15+45*big[cl], high=60+210*big[cl],size=1).tolist()
+            custom_data['set_up_time'] += np.random.randint(low=15+45*big[cl], high=45+135*big[cl],size=1).tolist()
         return custom_data
 
 

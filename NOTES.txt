@@ -1,40 +1,42 @@
-Spatial statistics: extract spatial distribution from real data
-https://automating-gis-processes.github.io/2016/Lesson2-geopandas-basics.html
-https://towardsdatascience.com/getting-started-with-geographic-data-science-in-python-part-3-ddf55130840b
-
-VRP code reference:
-https://developers.google.com/optimization/routing/vrp
+ALGORITHM
 
 Simulate data: given distribution simulate client arrivals, demands and their time-windows in days (4-5 days)
 
 Optimization problem:
     Select which customer to serve
-        - 400 new customers per day 
+        - 230 new customers per day 
         - max number of deliveries to respect capacity constraint and time constraint
         - look at probability of other near customers in future
         - Each customer has demand expressed in: set up time (related to set up cost), kg, available day
     Solve VRP for those customers
-        - set maximum time for VRP solver: 30 sec
+        - set maximum time for VRP solver: 30 sec (never used, less than 1 sec)
         - set maximum number of costumers per vehicle: 5 customers
         - set maximum total time of each route: 480 min (8 h)
         - set capacity constraint per vehicle: 1000 kg
         - I'm assuming vehicles with 60km/h velocities
         - objective function: minimize total travel and set up times and number of vehicles
-        OBS: ortools work with integer objective function
+        OBS: ortools works with integer objective function
 
 TO DO:
-1_ Implement new policy
-2_ Work on random seed for VRP optimization
-3_ Compare policies
+1_ Implement new policy: select customer looking at their distance from depot and if they are distant look at probability of future near customers.
+                         Take into account also set up times, for distant customers with large set up time add other customers could lead to
+                         unfeasibility. Postpone client is a bad thing: don't wait for future customers, coming later then last available day.
 
-30 days simulation
+
+100 days simulation, seed 1 (first 10 days not considered in simulation)
 EP:
-- objective function: 654512
+- objective function: 1927135
 - postponed clients: 0
+- mean of empty vehicles per day: 1.5824175824175823
+- time for simulation: 00:12:53
 DP:
-- objective function: 580017
-- postponed clients: 6760
+- objective function: 1928764
+- postponed clients: 21178
+- mean of empty vehicles per day: 1.4835164835164836
+- mean of served cliets: 210.6153846153846
+- time for simulation: 00:12:56
 
+--------------------------------------------------------------------------------------------------------------------------------------------------
 
 VRPH, version 1.0
 Copyright 2010 Chris Groer
@@ -53,3 +55,14 @@ Usage: vrp_init.exe -f vrp_file -m method [-c]
          method should be 0 for CW, 1 for Sweep
          If -c option is given, then all routes are cleaned up at the end
                  by running intra-route improvements
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+VRP code reference:
+https://developers.google.com/optimization/routing/vrp
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+Spatial statistics: extract spatial distribution from real data:
+https://automating-gis-processes.github.io/2016/Lesson2-geopandas-basics.html
+https://towardsdatascience.com/getting-started-with-geographic-data-science-in-python-part-3-ddf55130840b

@@ -1,5 +1,5 @@
 Run code with command line arguments:
-input_file_path -p policy -d days_simulation
+main.py input_file_path -p policy -d days_simulation
 
 WHERE:
 - input_file_path is the file containing density distribution (i.e. grid.txt)

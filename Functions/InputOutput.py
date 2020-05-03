@@ -80,6 +80,7 @@ def save_routes(day, data, manager, routing, solution, file_path='./Solution/rou
     max_route_distance = 0
     total_distance = 0
     total_load = 0
+    num_empty_route = 0
     with open(file_path, 'a') as fp:            
         fp.write(f'\n DAY: {day.current_day} \n')
     routes_list = []
@@ -89,7 +90,9 @@ def save_routes(day, data, manager, routing, solution, file_path='./Solution/rou
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
         route_distance = 0
         route_load = 0
+        empty_route = 0
         while not routing.IsEnd(index):
+            empty_route += 1
             node_index = manager.IndexToNode(index)
             route_load += data['demands'][node_index]
             single_route.append(manager.IndexToNode(index))
@@ -105,6 +108,8 @@ def save_routes(day, data, manager, routing, solution, file_path='./Solution/rou
         total_distance += route_distance
         total_load += route_load
         max_route_distance = max(max_route_distance, route_distance)
+        if empty_route<=1 :
+            num_empty_route += 1
         with open(file_path, 'a') as fp:          
             fp.write(plan_output)
         routes_list.append(single_route)
@@ -112,7 +117,7 @@ def save_routes(day, data, manager, routing, solution, file_path='./Solution/rou
             fp.write('Total travel and setup time of all routes: {} h\n'.format(round(total_distance/60,2)))
             fp.write('Total load of all routes: {} kg\n'.format(round(total_load, 2)))
             fp.write('Maximum of the route travel time: {} h\n'.format(round(max_route_distance/60,2)))
-    return routes_list
+    return routes_list, num_empty_route
 
 
     

@@ -1,5 +1,9 @@
 # import sys to deal with command line arguments
 import sys
+# import to calculate average
+from statistics import mean
+# import to calculate time for simulation
+import time
 
 # import functions
 from Functions.InputOutput import load_distribution, save_routes, clean_files, check_arguments
@@ -10,7 +14,9 @@ from VRP_optimization.main_VRPH import main_VRPH
 from VRP_optimization.main_VRPortools import main_VRPortools
 
 
-def main():
+def main():  
+    # starting time for simulation  
+    start = time.time()
     # parse command line arguments
     error, input_path, policy, n_days = check_arguments(sys.argv)
     if error:
@@ -24,7 +30,7 @@ def main():
 
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day
-    new_customers = 180
+    new_customers = 215
     total_obj_fun = 0
     first_day = True
 
@@ -36,10 +42,12 @@ def main():
     kg_capacity = vehicles*capacity
     # total available time (min)
     min_capacity = 8*60*vehicles
-    #print(f'Total available capacity: {kg_capacity} kg, {min_capacity} min')    
-    
+    # initialize vector for couting empty vehicles in each day 
+    num_empty_route = [0]*n_days
+    # initialize vector for couting served clients in each day 
+    num_served_clients = [0]*n_days
 
-    for _ in range(n_days):
+    for day in range(n_days):
         
         # Instantiate a new day
         if first_day:
@@ -64,11 +72,13 @@ def main():
             data, manager, routing, solution = VRP_optimization(updated_day.selected_customers, depot, vehicles, capacity)
             if not(solution):                
                 updated_day = remove_client_VRP(updated_day)
+        # save number of served clients
+        num_served_clients[day] = len(updated_day.selected_customers)
 
         # ---------------------------------------- Save daily roads ---------------------------------------------------
 
         # save daily roads
-        routes_list = save_routes(new_day, data, manager, routing, solution)
+        routes_list, num_empty_route[day] = save_routes(new_day, data, manager, routing, solution)
 
         # --------------------------------------- Final updates -------------------------------------------------------
         
@@ -81,10 +91,17 @@ def main():
 
         # --------------------------------------- Objective function --------------------------------------------------
         # In DP we start serving customers from the 4th day, we need to do a right comparison among the policies
-        total_obj_fun += solution.ObjectiveValue()
+        if new_day.current_day > 10:
+            total_obj_fun += solution.ObjectiveValue()
 
     print(f'Total objective function: {total_obj_fun}')
     print(f'Total number of postponed costumers: {num_postponed}')
+    print(f'Average of empty vehicles: {mean(num_empty_route[9:])}')
+    print(f'Average of served customers: {mean(num_served_clients[9:])}') 
+    # ending time for simulation  
+    end = time.time()
+    str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
+    print('Time for simlation: '+str_time)
 
     return
 
