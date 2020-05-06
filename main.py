@@ -12,6 +12,8 @@ from Classes.Day import Day
 from VRP_optimization.mainVRP import VRP_optimization
 from VRP_optimization.main_VRPH import main_VRPH
 from VRP_optimization.main_VRPortools import main_VRPortools
+from Functions.CostumerCompatibility import select_compatible_cells
+
 # import constant variables
 import constant
 
@@ -30,6 +32,11 @@ def main():
     # load distribution and depot position from input file
     data_frame, depot = load_distribution(input_path)
 
+    # parameter to tune rho < 0.5 otherwise empty lists
+    rho = 0.45
+    compatibility_list = select_compatible_cells(data_frame, depot, rho)
+    print(compatibility_list[0][:])
+    
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day
     new_customers = constant.NUM_CUSTOMERS
