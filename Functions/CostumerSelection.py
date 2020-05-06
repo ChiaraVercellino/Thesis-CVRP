@@ -1,10 +1,10 @@
-# select which customers to serve:
-# MUST select all customer that are at the end of their available days
-# SHOULD use a function that takes as input different mode
+import constant
 
 num_postponed = 0
 
 def select_customers(day, h_capacity, kg_capacity, policy):
+    # percentage for set_up times
+    perc = constant.PERCENTAGE
     # calculate average demand and standard deviation (kg)
     avg_kg = day.customer_df['kg'].mean()
     std_kg = day.customer_df['kg'].std()
@@ -12,7 +12,7 @@ def select_customers(day, h_capacity, kg_capacity, policy):
     avg_set_up = day.customer_df['set_up_time'].mean()
     std_set_up = day.customer_df['set_up_time'].std()
     # approximate the maximum number of deliveries will be allowed with the available capacities
-    num_deliveries = min(0.7*h_capacity//avg_set_up, kg_capacity//avg_kg)
+    num_deliveries = min(perc*h_capacity//avg_set_up, kg_capacity//avg_kg)
     # apply the desired policy
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,
@@ -24,13 +24,13 @@ def select_customers(day, h_capacity, kg_capacity, policy):
         print('Policy not yet implemented')
 
     # check if I've respected total capacities
-    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.7*h_capacity)
+    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*h_capacity)
     # iterate until the constraint is satisfied
     while not constraints_respected:
         # If capacity is not respected I have to eliminate some customer
         selected_idx, selected_customers, new_customer_df = _remove_client(selected_customers, new_customer_df,
                                                                            day.current_day, selected_idx)
-        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, 0.7*h_capacity)
+        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*h_capacity)
         num_deliveries -= 1
     # add labels corresponding to nodes in graph
     selected_customers['customer_label'] = range(1, len(selected_customers)+1)
@@ -74,6 +74,11 @@ def _delayed_policy(customer_df, this_day, num_deliveries):
         # It is possible that some urgent clients are not served: for those ones I increment last_day by one
         customer_df = customer_df.apply(lambda line: _postpone_client(line, this_day, selected_indexes), axis=1)
     return selected_customers, selected_indexes, customer_df
+
+
+# serve customers according to probability of future demands of neighbours
+def _neighbourhood_policy(customer_df, this_day, num_deliveries):
+    pass
 
 
 # postpone client which we should have served this day, but we couldn't

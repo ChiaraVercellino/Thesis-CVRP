@@ -5,7 +5,7 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 from scipy.spatial import distance
 import numpy as np
-
+import constant
 
 def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
     """Stores the data for the problem."""
@@ -65,7 +65,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     routing.AddDimension(
         transit_callback_index,
         0,  # no slack
-        480,  # vehicle maximum travel time and setup time (in minutes)
+        constant.TIME,  # vehicle maximum travel time and setup time (in minutes)
         True,  # start cumul to zero
         dimension_name)
     #time_dimension = routing.GetDimensionOrDie(dimension_name)
@@ -78,13 +78,13 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     routing.AddDimension(
         plus_one_callback_index,
         0,  # null capacity slack
-        6,  # vehicle maximum capacities
+        constant.CUSTOMER_CAPACITY+1,  # vehicle maximum capacities
         True,  # start cumul to zero
         dimension_name)
     counter_dimension = routing.GetDimensionOrDie(dimension_name)
     for vehicle_id in range(vehicles):
         index = routing.End(vehicle_id)
-        counter_dimension.CumulVar(index).SetRange(0, 6)
+        counter_dimension.CumulVar(index).SetRange(0, constant.CUSTOMER_CAPACITY+1)
     
     # Add Capacity constraint.
     dimension_name = 'Capacity'

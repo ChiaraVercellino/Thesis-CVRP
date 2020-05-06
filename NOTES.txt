@@ -25,16 +25,17 @@ TO DO:
 
 100 days simulation, seed 1 (first 10 days not considered in simulation)
 EP:
-- objective function: 1927135
+- objective function: 518152
 - postponed clients: 0
-- mean of empty vehicles per day: 1.5824175824175823
-- time for simulation: 00:12:53
+- mean of empty vehicles per day: 1.6593406593406594
+- mean of served cliets: 210.17582417582418
+- time for simulation: 00:09:55
 DP:
-- objective function: 1928764
-- postponed clients: 21178
-- mean of empty vehicles per day: 1.4835164835164836
-- mean of served cliets: 210.6153846153846
-- time for simulation: 00:12:56
+- objective function: 515211
+- postponed clients: 6377
+- mean of empty vehicles per day: 1.7692307692307692
+- mean of served cliets: 208.85714285714286
+- time for simulation: 00:09:38
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 
