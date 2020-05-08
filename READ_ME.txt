@@ -6,6 +6,7 @@ WHERE:
 - policy is the desired policy to select which customers to serve
     - EP : early policy
     - DP : delayed policy
+    - NP : neighbourhood policy
 - days_simulation is the number of day you want to simulate
 
 OBS:

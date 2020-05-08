@@ -30,12 +30,12 @@ def main():
 
 # ------------------------------------------------ DATA LOADING -------------------------------------------------------
     # load distribution and depot position from input file
-    data_frame, depot = load_distribution(input_path)
-
+    distribution_df, depot = load_distribution(input_path)
+    compatibility_list = []
     # parameter to tune rho < 0.5 otherwise empty lists
-    rho = 0.45
-    compatibility_list = select_compatible_cells(data_frame, depot, rho)
-    print(compatibility_list[0][:])
+    if policy == "NP":
+        rho = 0.45
+        compatibility_list = select_compatible_cells(distribution_df, depot, rho)
     
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day
@@ -63,7 +63,7 @@ def main():
         
         # Instantiate a new day
         if first_day:
-            new_day = Day(new_customers, first_day, data_frame)
+            new_day = Day(new_customers, first_day, distribution_df)
             first_day = False
         else:
             # append new customers to the ones of previous day
@@ -75,7 +75,7 @@ def main():
         # ---------------------------------------- Customers selection ------------------------------------------------
 
         # select customers accordingly to the desired policy
-        updated_day, num_postponed = select_customers(new_day, min_capacity, kg_capacity, policy)
+        updated_day, num_postponed = select_customers(new_day, min_capacity, kg_capacity, policy, compatibility_list, distribution_df.probability)
 
         # ---------------------------------------- VRP optimization ---------------------------------------------------
         solution = False

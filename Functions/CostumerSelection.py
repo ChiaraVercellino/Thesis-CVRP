@@ -2,7 +2,7 @@ import constant
 
 num_postponed = 0
 
-def select_customers(day, h_capacity, kg_capacity, policy):
+def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probabilities):
     # percentage for set_up times
     perc = constant.PERCENTAGE
     # calculate average demand and standard deviation (kg)
@@ -21,7 +21,8 @@ def select_customers(day, h_capacity, kg_capacity, policy):
         selected_customers, selected_idx, new_customer_df = _delayed_policy(day.customer_df, day.current_day,
                                                                             num_deliveries)
     else:
-        print('Policy not yet implemented')
+        selected_customers, selected_idx, new_customer_df = _neighbourhood_policy(day.customer_df, day.current_day,
+                                                                            num_deliveries, compatibility, probabilities)
 
     # check if I've respected total capacities
     constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*h_capacity)
@@ -77,9 +78,15 @@ def _delayed_policy(customer_df, this_day, num_deliveries):
 
 
 # serve customers according to probability of future demands of neighbours
-def _neighbourhood_policy(customer_df, this_day, num_deliveries):
-    pass
-
+def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, probabilities):
+    all_cells = set(customer_df['cell'])
+    customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell], this_day, all_cells, probabilities), axis=1)
+    customer_df = customer_df.sort_values(by=['index'], axis=0, ascending=[False], ignore_index=False)
+    selected_customers = customer_df.head(int(num_deliveries))
+    selected_indexes = selected_customers.index.tolist()
+    # It is possible that some urgent clients are not served: for those ones I increment last_day by one
+    customer_df = customer_df.apply(lambda line: _postpone_client(line, this_day, selected_indexes), axis=1)
+    return selected_customers, selected_indexes, customer_df
 
 # postpone client which we should have served this day, but we couldn't
 def _postpone_client(line, this_day, served_clients=[], single_client=False):
@@ -117,3 +124,29 @@ def _remove_client(selected_costumers, costumers, this_day, selected_indexes):
     del selected_indexes[-1]
     return selected_indexes, selected_costumers, costumers
 
+
+# calculate index to associate at each customer for selection
+def _index_selection(line, compatibility, day, all_cells, probabilities):
+    last_day = line.last_day
+    # convert into a set the compatible cell of the client
+    compatibility = set(compatibility)
+    # compute set of compatible cells that are not active this day
+    not_present_cell = compatibility.difference(all_cells)
+    # compute time distance
+    availability = last_day-day
+    # cardinality of compatible cells not yet active
+    cardinality = len(not_present_cell)
+    M = 2
+    gamma = 1
+    if availability>0:
+        if cardinality>0:
+            line['index'] = 1/availability*(1+1/cardinality*(cardinality-probabilities[list(not_present_cell)].sum()))
+        else:
+            line['index'] = M/availability
+    else:
+        if line.yet_postponed == False:
+            line['index'] = M
+        else:
+            line['index'] = M+gamma
+    return line
+    

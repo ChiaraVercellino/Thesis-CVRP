@@ -50,9 +50,9 @@ class Day:
         # add a column corresponding to the number of client to simulate for each cell
         selected_cells['demands'] = demands_cell[demands_cell > 0]
         # initialize empty coordinates
-        customers_data = {'x': [], 'y': [], 'kg': [], 'set_up_time': [], 'last_day': [], 'yet_postponed': []}
+        customers_data = {'x': [], 'y': [], 'kg': [], 'set_up_time': [], 'last_day': [], 'yet_postponed': [], 'cell': []}
         # simulate coordinates for each customer
-        selected_cells.apply(lambda line: self._simulate_clients_parameters(line.x, line.length, line.y, line.height,
+        selected_cells.apply(lambda line: self._simulate_clients_parameters(line.cell_name, line.x, line.length, line.y, line.height,
                                                                             line.demands, customers_data), axis=1)
         return customers_data
 
@@ -83,7 +83,10 @@ class Day:
 
     @staticmethod
     # Simulate the position of num_clients customers using a uniform distribution on the cell
-    def _simulate_clients_parameters(x, dx, y, dy, num_clients, custom_data):
+    def _simulate_clients_parameters(cell_name, x, dx, y, dy, num_clients, custom_data):
+        num_clients = np.int_(num_clients)
+        # save the cell
+        custom_data['cell'] += [np.int(cell_name)]*num_clients
         # save all x coordinates
         custom_data['x'] += np.random.uniform(x, x + dx, num_clients).tolist()
         # save all y coordinates

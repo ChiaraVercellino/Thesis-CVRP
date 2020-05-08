@@ -14,7 +14,7 @@ def check_arguments(argv):
     if len(argv)==6:
         # file with initial distribution of clients
         input_path = argv[1]
-        if argv[2]=="-p" and (argv[3]=="EP" or argv[3]=="DP"):
+        if argv[2]=="-p" and (argv[3]=="EP" or argv[3]=="DP" or argv[3]=="NP"):
             # policy for customer selections
             policy = argv[3]
         else:
@@ -32,7 +32,7 @@ def check_arguments(argv):
         sys.stderr.write("Run code with command line arguments:\n input_file_path -p policy -d days_simulation\n WHERE:\n\
         - input_file_path is the file containing density distribution (i.e. grid.txt)\n\
         - policy is the desired policy to select which customers to serve \n\
-        \t EP : early policy\n \t\t DP : delayed policy\n\
+        \t EP : early policy\n \t\t DP : delayed policy\n \t\t NP : neighbourhood policy\n\
         - days_simulation is the number of day you want to simulate")
     return error, input_path, policy, n_days
     
@@ -60,7 +60,7 @@ def load_distribution(file_path):
                 # Read non empty lines
                 elements = line.split('\t')
                 # assign each value to the corresponding column
-                data_lines['cell_name'].append(elements[0])
+                data_lines['cell_name'].append(int(elements[0].split('#',1)[1])-1)
                 data_lines['x'].append(float(elements[1]))
                 data_lines['y'].append(float(elements[2]))
                 data_lines['length'].append(float(elements[4]))

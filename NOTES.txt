@@ -21,6 +21,7 @@ TO DO:
 1_ Implement new policy: select customer looking at their distance from depot and if they are distant look at probability of future near customers.
                          Take into account also set up times, for distant customers with large set up time add other customers could lead to
                          unfeasibility. Postpone client is a bad thing: don't wait for future customers, coming later then last available day.
+                         Work on number of customer to select, I need a different approach with respect to previous policy
 
 
 100 days simulation, seed 1 (first 10 days not considered in simulation)
@@ -36,6 +37,12 @@ DP:
 - mean of empty vehicles per day: 1.7692307692307692
 - mean of served cliets: 208.85714285714286
 - time for simulation: 00:09:38
+NP:
+- objective function: 517448
+- postponed clients: 0
+- mean of empty vehicles per day: 1.7142857142857142
+- mean of served cliets: 210.06593406593407
+- time for simulation: 00:11:30
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 
