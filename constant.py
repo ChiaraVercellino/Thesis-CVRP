@@ -12,3 +12,10 @@ TIME = 480
 CUSTOMER_CAPACITY = 5
 # percentage of capacity for customers' selection
 PERCENTAGE = 0.67
+
+# ---------------------------------------------------- PARAMETERS TO TUNE ------------------------------------------------------------------------
+
+threshold = 0.9875
+rho = 0.45
+M = 2
+gamma = 1

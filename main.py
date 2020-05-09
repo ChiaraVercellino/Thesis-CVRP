@@ -34,8 +34,7 @@ def main():
     compatibility_list = []
     # parameter to tune rho < 0.5 otherwise empty lists
     if policy == "NP":
-        rho = 0.45
-        compatibility_list = select_compatible_cells(distribution_df, depot, rho)
+        compatibility_list = select_compatible_cells(distribution_df, depot, constant.rho)
     
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day

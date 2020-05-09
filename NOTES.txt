@@ -18,7 +18,8 @@ Optimization problem:
         OBS: ortools works with integer objective function
 
 TO DO:
-1_ Implement new policy: select customer looking at their distance from depot and if they are distant look at probability of future near customers.
+1_ Tune parameter of NP policy
+2_ Implement new policy: select customer looking at their distance from depot and if they are distant look at probability of future near customers.
                          Take into account also set up times, for distant customers with large set up time add other customers could lead to
                          unfeasibility. Postpone client is a bad thing: don't wait for future customers, coming later then last available day.
                          Work on number of customer to select, I need a different approach with respect to previous policy
@@ -38,11 +39,11 @@ DP:
 - mean of served cliets: 208.85714285714286
 - time for simulation: 00:09:38
 NP:
-- objective function: 517448
+- objective function: 514596
 - postponed clients: 0
-- mean of empty vehicles per day: 1.7142857142857142
-- mean of served cliets: 210.06593406593407
-- time for simulation: 00:11:30
+- mean of empty vehicles per day: 1.7252747252747254
+- mean of served cliets: 209.74725274725276
+- time for simulation: 00:10:16
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 

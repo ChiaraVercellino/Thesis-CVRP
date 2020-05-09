@@ -82,6 +82,8 @@ def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, 
     all_cells = set(customer_df['cell'])
     customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell], this_day, all_cells, probabilities), axis=1)
     customer_df = customer_df.sort_values(by=['index'], axis=0, ascending=[False], ignore_index=False)
+    num_convenient_deliveries = len(customer_df[customer_df['index']>=constant.threshold])
+    num_deliveries = min(num_deliveries, num_convenient_deliveries)
     selected_customers = customer_df.head(int(num_deliveries))
     selected_indexes = selected_customers.index.tolist()
     # It is possible that some urgent clients are not served: for those ones I increment last_day by one
@@ -136,8 +138,8 @@ def _index_selection(line, compatibility, day, all_cells, probabilities):
     availability = last_day-day
     # cardinality of compatible cells not yet active
     cardinality = len(not_present_cell)
-    M = 2
-    gamma = 1
+    M = constant.M
+    gamma = constant.gamma
     if availability>0:
         if cardinality>0:
             line['index'] = 1/availability*(1+1/cardinality*(cardinality-probabilities[list(not_present_cell)].sum()))
