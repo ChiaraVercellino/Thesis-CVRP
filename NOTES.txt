@@ -39,11 +39,15 @@ DP:
 - mean of served cliets: 208.85714285714286
 - time for simulation: 00:09:38
 NP:
-- objective function: 514596
+- objective function: 511538
 - postponed clients: 0
-- mean of empty vehicles per day: 1.7252747252747254
-- mean of served cliets: 209.74725274725276
-- time for simulation: 00:10:16
+- mean of empty vehicles per day: 1.89010989010989
+- mean of served cliets: 209.0989010989011
+- time for simulation: 00:11:14
+
+NP outperform EP:
+- decrease objective function of 1.29 %
+- save on average 73,48 km a day
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 

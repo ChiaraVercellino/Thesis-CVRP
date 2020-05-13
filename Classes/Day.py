@@ -4,8 +4,6 @@ import pandas as pd
 import numpy as np
 # To sample from a multinomial distribution
 from numpy.random import multinomial
-# To set seed for random generator (replicability)
-np.random.seed(1)
 
 # deactivate chained warning
 pd.options.mode.chained_assignment = None
@@ -20,11 +18,14 @@ class Day:
     # ------------------------------------------ CONSTRUCTOR ----------------------------------------------------------
 
     def __init__(self, num_customers, first_day=False, df_distribution=[], previous_df=[]):
-        # each new day is a new day
-        Day.current_day += 1
         # Initialize distribution data frame
         if first_day:
-            Day.df_distribution = df_distribution
+            Day.df_distribution = df_distribution            
+            # To set seed for random generator (replicability)
+            np.random.seed(1)
+            Day.current_day = 0
+        # each new day is a new day
+        Day.current_day += 1
         # Simulate new customer for the current day
         new_customers = self._simulate_customers(num_customers)
         # Convert dictionary to data frame
@@ -50,7 +51,7 @@ class Day:
         # add a column corresponding to the number of client to simulate for each cell
         selected_cells['demands'] = demands_cell[demands_cell > 0]
         # initialize empty coordinates
-        customers_data = {'x': [], 'y': [], 'kg': [], 'set_up_time': [], 'last_day': [], 'yet_postponed': [], 'cell': []}
+        customers_data = {'x': [], 'y': [], 'kg': [], 'set_up_time': [], 'last_day': [], 'yet_postponed': [], 'cell': [], 'index': []}
         # simulate coordinates for each customer
         selected_cells.apply(lambda line: self._simulate_clients_parameters(line.cell_name, line.x, line.length, line.y, line.height,
                                                                             line.demands, customers_data), axis=1)
@@ -87,6 +88,8 @@ class Day:
         num_clients = np.int_(num_clients)
         # save the cell
         custom_data['cell'] += [np.int(cell_name)]*num_clients
+        # initialize index
+        custom_data['index'] += [0]*num_clients
         # save all x coordinates
         custom_data['x'] += np.random.uniform(x, x + dx, num_clients).tolist()
         # save all y coordinates
