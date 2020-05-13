@@ -5,6 +5,9 @@ import numpy as np
 # To sample from a multinomial distribution
 from numpy.random import multinomial
 
+# import constant for seed of pseudo-random generator
+import constant
+
 # deactivate chained warning
 pd.options.mode.chained_assignment = None
 
@@ -22,7 +25,7 @@ class Day:
         if first_day:
             Day.df_distribution = df_distribution            
             # To set seed for random generator (replicability)
-            np.random.seed(1)
+            np.random.seed(constant.SEED)
             Day.current_day = 0
         # each new day is a new day
         Day.current_day += 1

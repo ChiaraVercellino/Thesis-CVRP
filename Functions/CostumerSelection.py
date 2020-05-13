@@ -2,7 +2,7 @@ import constant
 
 num_postponed = 0
 
-def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probabilities, threshold):
+def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probabilities):
     # percentage for set_up times
     perc = constant.PERCENTAGE
     # calculate average demand and standard deviation (kg)
@@ -22,7 +22,7 @@ def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probab
                                                                             num_deliveries)
     else:
         selected_customers, selected_idx, new_customer_df = _neighbourhood_policy(day.customer_df, day.current_day,
-                                                                            num_deliveries, compatibility, probabilities, threshold)
+                                                                            num_deliveries, compatibility, probabilities)
 
     # check if I've respected total capacities
     constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*h_capacity)
@@ -78,11 +78,11 @@ def _delayed_policy(customer_df, this_day, num_deliveries):
 
 
 # serve customers according to probability of future demands of neighbours
-def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, probabilities, threshold):
+def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, probabilities):
     all_cells = set(customer_df['cell'])
     customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell], this_day, all_cells, probabilities), axis=1)
     customer_df = customer_df.sort_values(by=['index'], axis=0, ascending=[False], ignore_index=False)
-    num_convenient_deliveries = len(customer_df[customer_df['index']>=threshold])
+    num_convenient_deliveries = len(customer_df[customer_df['index']>=constant.threshold])
     num_deliveries = min(num_deliveries, num_convenient_deliveries)
     selected_customers = customer_df.head(int(num_deliveries))
     selected_indexes = selected_customers.index.tolist()
