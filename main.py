@@ -4,6 +4,8 @@ import sys
 from statistics import mean
 # import to calculate time for simulation
 import time
+# import to set random seed
+import numpy as np
 
 # import functions
 from Functions.InputOutput import load_distribution, save_routes, clean_files, check_arguments
@@ -17,6 +19,7 @@ from Functions.CostumerCompatibility import select_compatible_cells
 # import constant variables
 import constant
 
+np.random.seed(constant.SEED)
 
 def main():
     # starting time for simulation  
@@ -38,7 +41,7 @@ def main():
     
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day
-    new_customers = constant.NUM_CUSTOMERS
+    new_customers = np.random.randint(low=constant.AVG_CUSTOMERS-30, high=constant.AVG_CUSTOMERS+30, size=1)
     # number of available vehicles
     vehicles = constant.NUM_VEHICLES
     # capacity of each vehicle

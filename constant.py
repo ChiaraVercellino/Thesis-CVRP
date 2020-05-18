@@ -1,5 +1,5 @@
 # number of custumers arriving in each day
-NUM_CUSTOMERS = 210
+AVG_CUSTOMERS = 210
 # number of days not to consider in objective function
 NUM_DAYS = 10
 # number of vehicles for CVRP

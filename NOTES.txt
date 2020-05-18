@@ -4,7 +4,7 @@ Simulate data: given distribution simulate client arrivals, demands and their ti
 
 Optimization problem:
     Select which customer to serve
-        - 230 new customers per day 
+        - new customers per day: U([180,240])
         - max number of deliveries to respect capacity constraint and time constraint
         - look at probability of other near customers in future
         - Each customer has demand expressed in: set up time (related to set up cost), kg, available day
