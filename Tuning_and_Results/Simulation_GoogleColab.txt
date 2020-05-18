@@ -1,0 +1,170 @@
+SEED = [1, 77, 3578, 33, 15, 64, 329, 66, 139, 10]
+
+Policy = "NP"
+Threshold = 0.998
+
+Total objective function: 514993
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6593406593406594
+Average of served customers: 209.73626373626374
+Average of cycles: 3.61
+Save 2436
+Total objective function: 490509
+Total number of postponed costumers: 0
+Average of empty vehicles: 4.230769230769231
+Average of served customers: 197.57142857142858
+Average of cycles: 3.74
+Save 7054
+Total objective function: 472147
+Total number of postponed costumers: 0
+Average of empty vehicles: 6.065934065934066
+Average of served customers: 189.76923076923077
+Average of cycles: 2.57
+Save 3603
+Total objective function: 478786
+Total number of postponed costumers: 0
+Average of empty vehicles: 4.802197802197802
+Average of served customers: 195.12087912087912
+Average of cycles: 2.59
+Save 3770
+Total objective function: 456616
+Total number of postponed costumers: 0
+Average of empty vehicles: 7.373626373626373
+Average of served customers: 182.5164835164835
+Average of cycles: 1.77
+Save 5281
+Total objective function: 444803
+Total number of postponed costumers: 0
+Average of empty vehicles: 8.637362637362637
+Average of served customers: 178.8901098901099
+Average of cycles: 2.15
+Save 2639
+Total objective function: 458044
+Total number of postponed costumers: 0
+Average of empty vehicles: 7.362637362637362
+Average of served customers: 183.7912087912088
+Average of cycles: 2.03
+Save 3664‬
+Total objective function: 485977
+Total number of postponed costumers: 0
+Average of empty vehicles: 4.769230769230769
+Average of served customers: 195.73626373626374
+Average of cycles: 2.33
+Save 3480‬
+Total objective function: 446485
+Total number of postponed costumers: 0
+Average of empty vehicles: 8.582417582417582
+Average of served customers: 177.53846153846155
+Average of cycles: 1.75
+Save 4662‬
+Total objective function: 460410
+Total number of postponed costumers: 0
+Average of empty vehicles: 7.153846153846154
+Average of served customers: 184.71428571428572
+Average of cycles: 2.17
+Save 2045‬
+
+Policy = "DP"
+Total objective function: 516303
+Total number of postponed costumers: 16381
+Average of empty vehicles: 1.7142857142857142
+Average of served customers: 209.3846153846154
+Average of cycles: 3.65
+Total objective function: 494319
+Total number of postponed costumers: 148
+Average of empty vehicles: 4.142857142857143
+Average of served customers: 198.04395604395606
+Average of cycles: 1.55
+Total objective function: 475146
+Total number of postponed costumers: 28
+Average of empty vehicles: 5.923076923076923
+Average of served customers: 189.82417582417582
+Average of cycles: 1.23
+Total objective function: 484368
+Total number of postponed costumers: 156
+Average of empty vehicles: 4.571428571428571
+Average of served customers: 194.9010989010989
+Average of cycles: 1.75
+Total objective function: 459823
+Total number of postponed costumers: 12
+Average of empty vehicles: 7.131868131868132
+Average of served customers: 183.03296703296704
+Average of cycles: 1.01
+Total objective function: 446923
+Total number of postponed costumers: 0
+Average of empty vehicles: 8.505494505494505
+Average of served customers: 179.07692307692307
+Average of cycles: 1
+Total objective function: 461698
+Total number of postponed costumers: 19
+Average of empty vehicles: 7.252747252747253
+Average of served customers: 183.97802197802199
+Average of cycles: 1.07
+Total objective function: 489369
+Total number of postponed costumers: 79
+Average of empty vehicles: 4.747252747252747
+Average of served customers: 194.72527472527472
+Average of cycles: 1.44
+Total objective function: 449242
+Total number of postponed costumers: 3
+Average of empty vehicles: 8.296703296703297
+Average of served customers: 178.93406593406593
+Average of cycles: 1.03
+Total objective function: 461182
+Total number of postponed costumers: 9
+Average of empty vehicles: 7.208791208791209
+Average of served customers: 184.1098901098901
+Average of cycles: 1.04
+
+Policy = "EP"
+
+Total objective function: 517429
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.5384615384615385
+Average of served customers: 209.82417582417582
+Average of cycles: 4.47
+Total objective function: 497563
+Total number of postponed costumers: 0
+Average of empty vehicles: 3.791208791208791
+Average of served customers: 198
+Average of cycles: 1.26
+Total objective function: 475750
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.791208791208791
+Average of served customers: 190
+Average of cycles: 1
+Total objective function: 482556
+Total number of postponed costumers: 0
+Average of empty vehicles: 4.714285714285714
+Average of served customers: 195
+Average of cycles: 1.07
+Total objective function: 461897
+Total number of postponed costumers: 0
+Average of empty vehicles: 7.175824175824176
+Average of served customers: 183
+Average of cycles: 1.01
+Total objective function: 447442
+Total number of postponed costumers: 0
+Average of empty vehicles: 8.461538461538462
+Average of served customers: 179
+Average of cycles: 1
+Total objective function: 461708
+Total number of postponed costumers: 0
+Average of empty vehicles: 7.241758241758242
+Average of served customers: 184
+Average of cycles: 1
+Total objective function: 489475
+Total number of postponed costumers: 0
+Average of empty vehicles: 4.7032967032967035
+Average of served customers: 195
+Average of cycles: 1.24
+Total objective function: 451147
+Total number of postponed costumers: 0
+Average of empty vehicles: 8.23076923076923
+Average of served customers: 179
+Average of cycles: 1
+Total objective function: 462455
+Total number of postponed costumers: 0
+Average of empty vehicles: 7.1208791208791204
+Average of served customers: 184
+Average of cycles: 1

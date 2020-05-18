@@ -1,0 +1,371 @@
+Tuning on google colab:
+Threshold grid = [0.991 0.992 0.993 0.994 0.995 0.996 0.997 0.998]
+Best Threshold = 0.993
+
+SEED 1: best 511456 (0.993)
+Total objective function: 511456
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.901098901098901
+Average of served customers: 209.24175824175825
+Total objective function: 511456
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.901098901098901
+Average of served customers: 209.24175824175825
+Total objective function: 511456
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.901098901098901
+Average of served customers: 209.24175824175825
+Total objective function: 511573
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.9120879120879122
+Average of served customers: 209.30769230769232
+Total objective function: 511573
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.9120879120879122
+Average of served customers: 209.30769230769232
+Total objective function: 511573
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.9120879120879122
+Average of served customers: 209.30769230769232
+Total objective function: 513159
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6923076923076923
+Average of served customers: 209.1868131868132
+Total objective function: 512459
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.956043956043956
+Average of served customers: 208.94505494505495
+Total objective function: 512525
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.967032967032967
+Average of served customers: 208.74725274725276
+
+SEED 77: best 508960 (0.993)
+Total objective function: 509709
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.9230769230769231
+Average of served customers: 209.65934065934067
+Total objective function: 509709
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.9230769230769231
+Average of served customers: 209.65934065934067
+Total objective function: 508960
+Total number of postponed costumers: 0
+Average of empty vehicles: 2.010989010989011
+Average of served customers: 209.65934065934067
+Total objective function: 509301
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.978021978021978
+Average of served customers: 209.65934065934067
+Total objective function: 509301
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.978021978021978
+Average of served customers: 209.65934065934067
+Total objective function: 509301
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.978021978021978
+Average of served customers: 209.65934065934067
+Total objective function: 509112
+Total number of postponed costumers: 0
+Average of empty vehicles: 2
+Average of served customers: 209.5164835164835
+Total objective function: 510268
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.9230769230769231
+Average of served customers: 209.24175824175825
+Total objective function: 511356
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.89010989010989
+Average of served customers: 209.41758241758242
+
+SEED 3578: best 513186 (0.997)
+Total objective function: 513579
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6043956043956045
+Average of served customers: 209.03296703296704
+Total objective function: 513579
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6043956043956045
+Average of served customers: 209.03296703296704
+Total objective function: 513579
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6043956043956045
+Average of served customers: 209.03296703296704
+Total objective function: 513579
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6043956043956045
+Average of served customers: 209.03296703296704
+Total objective function: 513579
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6043956043956045
+Average of served customers: 209.03296703296704
+Total objective function: 513579
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6043956043956045
+Average of served customers: 209.03296703296704
+Total objective function: 513186
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7802197802197801
+Average of served customers: 209.13186813186815
+Total objective function: 514038
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7472527472527473
+Average of served customers: 209.02197802197801
+Total objective function: 514971
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7252747252747254
+Average of served customers: 208.98901098901098
+
+SEED 33, best: 513273 (0.994)
+Total objective function: 515249
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.5384615384615385
+Average of served customers: 208.16483516483515
+Total objective function: 515249
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.5384615384615385
+Average of served customers: 208.16483516483515
+Total objective function: 515249
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.5384615384615385
+Average of served customers: 208.16483516483515
+Total objective function: 513163
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.835164835164835
+Average of served customers: 207.46153846153845
+Total objective function: 513273
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7582417582417582
+Average of served customers: 207.57142857142858
+Total objective function: 513363
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7692307692307692
+Average of served customers: 207.57142857142858
+Total objective function: 514205
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6483516483516483
+Average of served customers: 208.24175824175825
+Total objective function: 514935
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7252747252747254
+Average of served customers: 207.75824175824175
+Total objective function: 516161
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.5714285714285714
+Average of served customers: 208.12087912087912
+
+SEED 15: best 512380 (0.995)
+Total objective function: 512874
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.9120879120879122
+Average of served customers: 208.27472527472528
+Total objective function: 512874
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.9120879120879122
+Average of served customers: 208.27472527472528
+Total objective function: 512440
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.978021978021978
+Average of served customers: 208.1868131868132
+Total objective function: 513427
+Total number of postponed costumers: 0
+Average of empty vehicles: 2.043956043956044
+Average of served customers: 208.14285714285714
+Total objective function: 512380
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.967032967032967
+Average of served customers: 208.12087912087912
+Total objective function: 513735
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7472527472527473
+Average of served customers: 209.25274725274724
+Total objective function: 514572
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8571428571428572
+Average of served customers: 208.52747252747253
+
+SEED 64: best 510271 (0.995)
+Total objective function: 511623
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7912087912087913
+Average of served customers: 210.0879120879121
+Total objective function: 511623
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7912087912087913
+Average of served customers: 210.0879120879121
+Total objective function: 511623
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7912087912087913
+Average of served customers: 210.0879120879121
+Total objective function: 511607
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.901098901098901
+Average of served customers: 209.92307692307693
+Total objective function: 510271
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.89010989010989
+Average of served customers: 209.46153846153845
+Total objective function: 512559
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7692307692307692
+Average of served customers: 209.74725274725276
+Total objective function: 512304
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8461538461538463
+Average of served customers: 209.57142857142858
+Total objective function: 512543
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8681318681318682
+Average of served customers: 209.95604395604394
+Total objective function: 515449
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6813186813186813
+Average of served customers: 209.9120879120879
+
+SEED 329: best 509673 (0.993 0.994)
+Total objective function: 511314
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8461538461538463
+Average of served customers: 209.57142857142858
+Total objective function: 509553
+Total number of postponed costumers: 0
+Average of empty vehicles: 2.010989010989011
+Average of served customers: 209.1978021978022
+Total objective function: 509673
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.956043956043956
+Average of served customers: 209.63736263736263
+Total objective function: 509673
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.956043956043956
+Average of served customers: 209.63736263736263
+Total objective function: 511067
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8681318681318682
+Average of served customers: 209.4945054945055
+Total objective function: 510991
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8571428571428572
+Average of served customers: 209.5164835164835
+Total objective function: 510888
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.934065934065934
+Average of served customers: 209.17582417582418
+Total objective function: 510027
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.945054945054945
+Average of served customers: 209.35164835164835
+Total objective function: 511796
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.901098901098901
+Average of served customers: 209.45054945054946
+
+SEED 66: best 513148 (0.997)
+Total objective function: 515653
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.934065934065934
+Average of served customers: 209.4065934065934
+Total objective function: 515653
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.934065934065934
+Average of served customers: 209.4065934065934
+Total objective function: 515477
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.956043956043956
+Average of served customers: 209.4065934065934
+Total objective function: 514097
+Total number of postponed costumers: 0
+Average of empty vehicles: 2.076923076923077
+Average of served customers: 209.3956043956044
+Total objective function: 513361
+Total number of postponed costumers: 0
+Average of empty vehicles: 2.120879120879121
+Average of served customers: 209.2087912087912
+Total objective function: 514010
+Total number of postponed costumers: 0
+Average of empty vehicles: 2.087912087912088
+Average of served customers: 209.2087912087912
+Total objective function: 513148
+Total number of postponed costumers: 0
+Average of empty vehicles: 2.065934065934066
+Average of served customers: 209.13186813186815
+Total objective function: 514268
+Total number of postponed costumers: 0
+Average of empty vehicles: 2.120879120879121
+Average of served customers: 208.6153846153846
+Total objective function: 516269
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.989010989010989
+Average of served customers: 208.84615384615384
+
+SEED 139: best 512691 (0.998)
+Total objective function: 512954
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7912087912087913
+Average of served customers: 208.26373626373626
+Total objective function: 512954
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7912087912087913
+Average of served customers: 208.26373626373626
+Total objective function: 513870
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7032967032967032
+Average of served customers: 208.34065934065933
+Total objective function: 513870
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7032967032967032
+Average of served customers: 208.34065934065933
+Total objective function: 513870
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7032967032967032
+Average of served customers: 208.34065934065933
+Total objective function: 513870
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.6923076923076923
+Average of served customers: 208.35164835164835
+Total objective function: 514083
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.7032967032967032
+Average of served customers: 208.47252747252747
+Total objective function: 512691
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.901098901098901
+Average of served customers: 208.23076923076923
+
+SEED 10: best 510492 (0.996)
+Total objective function: 510778
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8461538461538463
+Average of served customers: 209.2967032967033
+Total objective function: 510778
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8461538461538463
+Average of served customers: 209.2967032967033
+Total objective function: 510778
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8461538461538463
+Average of served customers: 209.2967032967033
+Total objective function: 511317
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.89010989010989
+Average of served customers: 209.17582417582418
+Total objective function: 511317
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.89010989010989
+Average of served customers: 209.17582417582418
+Total objective function: 510492
+Total number of postponed costumers: 0
+Average of empty vehicles: 2
+Average of served customers: 208.8901098901099
+Total objective function: 511411
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.901098901098901
+Average of served customers: 208.9120879120879
+Total objective function: 512196
+Total number of postponed costumers: 0
+Average of empty vehicles: 1.8681318681318682
+Average of served customers: 208.94505494505495
+
+seed = [1, 77, 3578, 33, 15, 64, 329, 66, 139, 10]
+
+Best Threshold = 0.993

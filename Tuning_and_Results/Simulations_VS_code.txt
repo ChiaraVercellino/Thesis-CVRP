@@ -1,0 +1,88 @@
+Results with fixed number of new clients (=210) and best threshold for seed 1 (=0.998)
+
+100 days simulation, seed 1 (first 10 days not considered in simulation)
+EP:
+- objective function: 518152
+- postponed clients: 0
+- mean of empty vehicles per day: 1.6593406593406594
+- mean of served clients: 210.17582417582418
+DP:
+- objective function: 515211
+- postponed clients: 6377
+- mean of empty vehicles per day: 1.7692307692307692
+- mean of served clients: 208.85714285714286
+NP:
+- objective function: 511538
+- postponed clients: 0
+- mean of empty vehicles per day: 1.89010989010989
+- mean of served clients: 209.0989010989011
+
+NP outperforms EP:
+- decrease objective function of 1.29 %
+- save on average 73,48 km a day
+
+
+100 days simulation, seed 77 (first 10 days not considered in simulation)
+EP:
+- objective function: 514990
+- postponed clients: 0
+- mean of empty vehicles per day: 1.8241758241758241
+- mean of served clients: 209.65934065934067
+DP:
+- objective function: 515358
+- postponed clients: 1626
+- mean of empty vehicles per day: 1.7472527472527473
+- mean of served clients: 209.85714285714286
+NP:
+- objective function: 507297
+- postponed clients: 0
+- mean of empty vehicles per day: 2.120879120879121
+- mean of served clients: 209.30769230769232
+
+NP outperforms EP:
+- decrease objective function of  1.51 %
+- save on average 85.48 km a day
+
+
+100 days simulation, seed 3578 (first 10 days not considered in simulation)
+EP:
+- objective function: 515696
+- postponed clients: 0
+- mean of empty vehicles per day: 1.7472527472527473
+- mean of served clients: 209.14285714285714
+DP:
+- objective function: 513248
+- postponed clients: 11704
+- mean of empty vehicles per day: 1.901098901098901
+- mean of served clients: 207.82417582417582
+NP:
+- objective function: 514482
+- postponed clients: 0
+- mean of empty vehicles per day: 1.7692307692307692
+- mean of served clients: 208.78021978021977
+
+NP outperforms EP:
+- decrease objective function of 0.24 %
+- save on average 13.48 km a day
+
+
+100 days simulation, seed 33 (first 10 days not considered in simulation)
+EP:
+- objective function: 515607
+- postponed clients: 0
+- mean of empty vehicles per day: 1.7692307692307692
+- mean of served clients: 207.32967032967034
+DP:
+- objective function: 515509
+- postponed clients: 15515
+- mean of empty vehicles per day: 1.901098901098901
+- mean of served clients: 207.1098901098901
+NP:
+- objective function: 514383
+- postponed clients: 0
+- mean of empty vehicles per day: 1.7142857142857142
+- mean of served clients: 207.9010989010989
+
+NP outperform EP:
+- decrease objective function of 0.24 %
+- save on average 13,6 km a day
