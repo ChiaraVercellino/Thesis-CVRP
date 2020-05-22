@@ -23,6 +23,7 @@ TO DO:
                          Take into account also set up times, for distant customers with large set up time add other customers could lead to
                          unfeasibility. Postpone client is a bad thing: don't wait for future customers, coming later then last available day.
                          Work on number of customer to select, I need a different approach with respect to previous policy
+3_ Try RL approach to solve VRP
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -54,3 +55,4 @@ https://developers.google.com/optimization/routing/vrp
 Spatial statistics: extract spatial distribution from real data:
 https://automating-gis-processes.github.io/2016/Lesson2-geopandas-basics.html
 https://towardsdatascience.com/getting-started-with-geographic-data-science-in-python-part-3-ddf55130840b
+

@@ -41,7 +41,7 @@ def main():
     
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day
-    new_customers = np.random.randint(low=constant.AVG_CUSTOMERS-30, high=constant.AVG_CUSTOMERS+30, size=1)
+    new_customers = np.random.randint(low=constant.AVG_CUSTOMERS-20, high=constant.AVG_CUSTOMERS+20, size=1)
     # number of available vehicles
     vehicles = constant.NUM_VEHICLES
     # capacity of each vehicle
