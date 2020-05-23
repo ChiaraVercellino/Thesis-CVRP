@@ -90,32 +90,45 @@ NP outperform EP:
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
-Simulation with seed = 33, best threshold = 0.998 tuned on Google Colab, random new clients = U([175, 215])
+Simulation with seed = 33, threshold = 0.998, threshold_1 = 1.0, random new clients = U([175, 215])
 
 POLICY NP
-Total objective function: 478579
+Total objective function: 485003
 Total number of postponed costumers: 0
-Average of empty vehicles: 4.846153846153846
-Average of served customers: 195.14285714285714
-Average of cycles: 2.39
-Time for simlation: 00:11:35
+Average of empty vehicles: 4.626373626373627
+Average of served customers: 195.58241758241758
+Average of cycles: 2.73
+Average of travel cost: 5329
+Time for simlation: 00:10:52
+
+POLICY NP_1
+Total objective function: 487465
+Total number of postponed costumers: 0
+Average of empty vehicles: 4.637362637362638
+Average of served customers: 194.94505494505495
+Average of cycles: 2.55
+Average of travel cost: 5356
+Time for simlation: 00:13:43
 
 POLICY EP
-Total objective function: 481740
+Total objective function: 487091
 Total number of postponed costumers: 0
 Average of empty vehicles: 4.78021978021978
 Average of served customers: 195
 Average of cycles: 1.14
-Time for simlation: 00:10:53
+Average of travel cost: 5352
+Time for simlation: 00:08:41
 
 POLICY DP
-Total objective function: 484130
+Total objective function: 489154
 Total number of postponed costumers: 151
 Average of empty vehicles: 4.670329670329671
 Average of served customers: 194.9010989010989
 Average of cycles: 1.62
-Time for simlation: 00:10:26
+Average of travel cost: 5375
+Time for simlation: 00:09:08
 
 NP outperform EP:
-- decrease objective function of 0.66 %
-- save on average 31,61 km a day
+- decrease objective function of 0.33 %
+- save on average 23 km a day
+

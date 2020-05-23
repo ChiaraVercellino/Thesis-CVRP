@@ -2,7 +2,7 @@ import constant
 
 num_postponed = 0
 
-def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probabilities):
+def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probabilities, compatibility_index, depot_distance):
     # percentage for set_up times
     perc = constant.PERCENTAGE
     # calculate average demand and standard deviation (kg)
@@ -17,12 +17,16 @@ def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probab
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,
                                                                           num_deliveries)
-    elif policy == "DP":
+    if policy == "DP":
         selected_customers, selected_idx, new_customer_df = _delayed_policy(day.customer_df, day.current_day,
                                                                             num_deliveries)
-    else:
+    if policy == "NP":
         selected_customers, selected_idx, new_customer_df = _neighbourhood_policy(day.customer_df, day.current_day,
                                                                             num_deliveries, compatibility, probabilities)
+    if policy == "NP_1":
+        selected_customers, selected_idx, new_customer_df = _neighbourhood_policy_1(day.customer_df, day.current_day,
+                                                                            num_deliveries, compatibility, probabilities,
+                                                                            compatibility_index, depot_distance)
 
     # check if I've respected total capacities
     constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*h_capacity)
@@ -79,8 +83,8 @@ def _delayed_policy(customer_df, this_day, num_deliveries):
 
 # serve customers according to probability of future demands of neighbours
 def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, probabilities):
-    all_cells = set(customer_df['cell'])
-    customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell], this_day, all_cells, probabilities), axis=1)
+    all_cells = set(customer_df['cell']-1)
+    customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell-1], this_day, all_cells, probabilities), axis=1)
     customer_df = customer_df.sort_values(by=['index'], axis=0, ascending=[False], ignore_index=False)
     num_convenient_deliveries = len(customer_df[customer_df['index']>=constant.threshold])
     num_deliveries = min(num_deliveries, num_convenient_deliveries)
@@ -89,6 +93,22 @@ def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, 
     # It is possible that some urgent clients are not served: for those ones I increment last_day by one
     customer_df = customer_df.apply(lambda line: _postpone_client(line, this_day, selected_indexes), axis=1)
     return selected_customers, selected_indexes, customer_df
+
+
+# serve customers according to probability of future demands of neighbours: version 2
+def _neighbourhood_policy_1(customer_df, this_day, num_deliveries, compatibility, probabilities, compatibility_index, depot_distance):
+    all_cells = set(customer_df['cell']-1)
+    customer_df = customer_df.apply(lambda line: _index_selection_1(line, compatibility[line.cell-1], this_day, all_cells, probabilities,\
+                                                                    compatibility_index, depot_distance), axis=1)
+    customer_df = customer_df.sort_values(by=['index'], axis=0, ascending=[False], ignore_index=False)
+    num_convenient_deliveries = len(customer_df[customer_df['index']>=constant.threshold_1])
+    num_deliveries = min(num_deliveries, num_convenient_deliveries)
+    selected_customers = customer_df.head(int(num_deliveries))
+    selected_indexes = selected_customers.index.tolist()
+    # It is possible that some urgent clients are not served: for those ones I increment last_day by one
+    customer_df = customer_df.apply(lambda line: _postpone_client(line, this_day, selected_indexes), axis=1)
+    return selected_customers, selected_indexes, customer_df
+
 
 # postpone client which we should have served this day, but we couldn't
 def _postpone_client(line, this_day, served_clients=[], single_client=False):
@@ -150,5 +170,35 @@ def _index_selection(line, compatibility, day, all_cells, probabilities):
             line['index'] = M
         else:
             line['index'] = M+gamma
+    return line
+
+
+# calculate index to associate at each customer for selection: version 2
+def _index_selection_1(line, compatibility, day, all_cells, probabilities, compatibility_index, depot_distance):
+    # average of new costumers
+    N = constant.AVG_CUSTOMERS
+    # last available day
+    last_day = line.last_day
+    # convert into a set the compatible cell of the client
+    compatibility = set(compatibility)
+    # compute set of possible future compatible costumers
+    future_costumers = compatibility.difference(all_cells)
+    # compute set of actual compatible costumers
+    present_costumers = compatibility.difference(future_costumers)
+    # compute time distance
+    T = last_day-day
+    # cell of the considered costumer
+    cell = line.cell
+    # cumpute savings with present_costumers
+    present_savings = compatibility_index[cell-1][list(present_costumers)].sum()
+    # compute expected future savings
+    exp_future_savings = (1-(1-probabilities[list(future_costumers)])**(T*N)) @ compatibility_index[cell-1][list(future_costumers)]
+    distance_perc = (depot_distance[cell]+line.set_up_time)/(max(depot_distance)+45+135)
+
+    if T>0:
+        line['index'] = 1/T*distance_perc*(present_savings-exp_future_savings)
+    else:
+        line['index'] = constant.M
+    
     return line
     

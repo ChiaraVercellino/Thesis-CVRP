@@ -24,4 +24,4 @@ def select_compatible_cells(df_distribution, depot, rho):
                 # customer in the same cell are always compatible
                 compatibility_index[i][j] = 1                             
         compatibility_list.append(np.where(compatibility_index[i] > rho)[0])
-    return compatibility_list
+    return compatibility_list, compatibility_index, distance_matrix[0]

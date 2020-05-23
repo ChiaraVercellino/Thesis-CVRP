@@ -35,9 +35,11 @@ def main():
     # load distribution and depot position from input file
     distribution_df, depot = load_distribution(input_path)
     compatibility_list = []
+    compatibility_index = []
+    depot_distance = []
     # parameter to tune rho < 0.5 otherwise empty lists
-    if policy == "NP":
-        compatibility_list = select_compatible_cells(distribution_df, depot, constant.rho)
+    if policy == "NP" or policy == "NP_1":
+        compatibility_list, compatibility_index, depot_distance = select_compatible_cells(distribution_df, depot, constant.rho)
     
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
     # new customers arriving  in a day
@@ -57,6 +59,8 @@ def main():
     num_served_clients = [0]*n_days
     # number of while cycles in each day
     num_cycles = [0]*n_days
+    # daily cost
+    daily_obj = [0]*n_days
     # initialize objective function
     total_obj_fun = 0
     first_day = True
@@ -78,7 +82,7 @@ def main():
 
         # select customers accordingly to the desired policy
         updated_day, num_postponed = select_customers(new_day, min_capacity, kg_capacity, policy, compatibility_list,\
-                distribution_df.probability)
+                distribution_df.probability, compatibility_index, depot_distance)
 
         # ---------------------------------------- VRP optimization ---------------------------------------------------
         solution = False
@@ -109,14 +113,16 @@ def main():
 
         # --------------------------------------- Objective function --------------------------------------------------
         # In DP we start serving customers from the 4th day, we need to do a right comparison among the policies
-        if new_day.current_day > constant.NUM_DAYS:
-            total_obj_fun += solution.ObjectiveValue()-total_time
+        daily_obj[day] = solution.ObjectiveValue()-total_time
+        if new_day.current_day >= constant.NUM_DAYS:
+            total_obj_fun += daily_obj[day]
 
     print(f'Total objective function: {total_obj_fun}')
     print(f'Total number of postponed costumers: {num_postponed}')
-    print(f'Average of empty vehicles: {mean(num_empty_route[9:])}')
-    print(f'Average of served customers: {mean(num_served_clients[9:])}') 
+    print(f'Average of empty vehicles: {mean(num_empty_route[constant.NUM_DAYS-1:])}')
+    print(f'Average of served customers: {mean(num_served_clients[constant.NUM_DAYS-1:])}') 
     print(f'Average of cycles: {mean(num_cycles)}') 
+    print(f'Average of travel cost: {mean(daily_obj[constant.NUM_DAYS-1:])}') 
     # ending time for simulation  
     end = time.time()
     str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))

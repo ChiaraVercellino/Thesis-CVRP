@@ -18,12 +18,7 @@ Optimization problem:
         OBS: ortools works with integer objective function
 
 TO DO:
-1_ New measure: average cost per day
-2_ Implement new policy: select customer looking at their distance from depot and if they are distant look at probability of future near customers.
-                         Take into account also set up times, for distant customers with large set up time add other customers could lead to
-                         unfeasibility. Postpone client is a bad thing: don't wait for future customers, coming later then last available day.
-                         Work on number of customer to select, I need a different approach with respect to previous policy
-3_ Try RL approach to solve VRP
+1_ Try RL approach to solve VRP
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 
