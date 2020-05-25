@@ -196,7 +196,7 @@ def _index_selection_1(line, compatibility, day, all_cells, probabilities, compa
     distance_perc = (depot_distance[cell]+line.set_up_time)/(max(depot_distance)+45+135)
 
     if T>0:
-        line['index'] = 1/T*distance_perc*(present_savings-exp_future_savings)
+        line['index'] = 1/T*((1-distance_perc)*present_savings-distance_perc*exp_future_savings)
     else:
         line['index'] = constant.M
     
