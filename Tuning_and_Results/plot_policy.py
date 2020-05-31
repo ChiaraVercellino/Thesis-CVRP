@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+# BEST VALUE: 0.7, 0.9
+
 # possible value for threshold
 thresholds = [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2]
 # seeds used in simulation
@@ -49,7 +51,9 @@ for seed in range(num_sim):
     plt.savefig(path)
 
 best_index = best_threshold.index(max(best_threshold))
+print('Number of times each threshold brings to best result')
 print(best_threshold)
+print('Number of times each threshold brings a result is worse than other policies')
 print(worse_result)
 print(f'Best threshold: {thresholds[best_index]}')
 print(f'Absolute differences: {abs_diff}')

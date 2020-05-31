@@ -13,11 +13,11 @@ CUSTOMER_CAPACITY = 5
 # percentage of capacity for customers' selection
 PERCENTAGE = 0.67
 # seed for simulations
-SEED = 33
+SEED = 57
 
 # ------------------------------------------------ TUNED PARAMETERS POLICY NP--------------------------------------------------------------------
 
-threshold = 0.998
+threshold = 0.93
 rho = 0.45
 M = 5
 gamma = 1
