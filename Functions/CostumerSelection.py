@@ -17,13 +17,13 @@ def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probab
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,
                                                                           num_deliveries)
-    if policy == "DP":
+    elif policy == "DP":
         selected_customers, selected_idx, new_customer_df = _delayed_policy(day.customer_df, day.current_day,
                                                                             num_deliveries)
-    if policy == "NP":
+    elif policy == "NP":
         selected_customers, selected_idx, new_customer_df = _neighbourhood_policy(day.customer_df, day.current_day,
                                                                             num_deliveries, compatibility, probabilities)
-    if policy == "NP_1":
+    elif policy == "NP_1":
         selected_customers, selected_idx, new_customer_df = _neighbourhood_policy_1(day.customer_df, day.current_day,
                                                                             num_deliveries, compatibility, probabilities,
                                                                             compatibility_index, depot_distance)
