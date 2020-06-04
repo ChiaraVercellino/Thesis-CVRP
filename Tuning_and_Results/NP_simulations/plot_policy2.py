@@ -4,7 +4,7 @@ import numpy as np
 # BEST THRESHOLD = 0.93
 
 # possible value for threshold
-thresholds = [0.9, 0.91, 0.92, 0.93, 0.94]
+thresholds = [0.993, 0.995, 0.997, 0.999]
 # seeds used in simulation
 seeds = [1, 77, 3578, 33, 15, 64, 329, 66, 139, 10]
 # number of simulations
@@ -15,13 +15,13 @@ num_thresholds = len(thresholds)
 # cumulative objective function using EP for each seed
 EP_obj = [486906, 491178, 489381, 492801, 495742, 490375, 486036, 493420, 492239, 491389]
 # cumulative objective function using DP for each seed
-DP_obj = []
+DP_obj = [487395, 493362, 491733, 493610, 494879, 491976, 490072, 492229, 490692, 490183]
 # cumulative objective function using NP for each seed with different threshold value
-NP_obj = [[], [],\
-     [], [],\
-          [], [],\
-               [], [],\
-                   [], []]
+NP_obj = [[485136, 485260, 484014, 481909], [490148, 489743, 487896, 486623],\
+     [489085, 488900, 488388, 486065], [489971, 490695, 488961, 489066],\
+          [492580, 493102, 492915, 492163], [489254, 490082, 489577, 487838],\
+               [486843, 486680, 486039, 485816], [491544, 491709, 490698, 490212],\
+                   [491086, 490474, 490004, 487572], [485875, 486361, 485884, 485461]]
 
 best_threshold = [0]*num_thresholds
 worse_result = [0]*num_thresholds

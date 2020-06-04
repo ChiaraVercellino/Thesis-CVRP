@@ -44,3 +44,12 @@ Average of served customers: 187.6153846153846
 Average of cycles: 1
 Average of travel cost: 5222
 Time for simlation: 00:09:26
+
+Policy NP_1: no threshold_1
+Total objective function: 482801
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.725274725274725
+Average of served customers: 190
+Average of cycles: 1
+Average of travel cost: 5305
+Time for simlation: 00:10:54
