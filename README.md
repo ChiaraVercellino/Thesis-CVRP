@@ -1,4 +1,4 @@
-**CVRP with stochastic customers over time**
+#CVRP with stochastic customers over time
 
 The problem is solved in 2 stages:
 - Selection of custumers to serve in the current day
