@@ -22,6 +22,7 @@ import constant
 np.random.seed(constant.SEED)
 
 def main():
+
     # starting time for simulation  
     start = time.time()
     # parse command line arguments
@@ -32,6 +33,7 @@ def main():
     clean_files()
 
 # ------------------------------------------------ DATA LOADING -------------------------------------------------------
+
     # load distribution and depot position from input file
     distribution_df, depot = load_distribution(input_path)
     compatibility_list = []
@@ -42,8 +44,9 @@ def main():
         compatibility_list, compatibility_index, depot_distance = select_compatible_cells(distribution_df, depot, constant.rho)
     
 # ------------------------------------------------- SIMULATION --------------------------------------------------------
-    # new customers arriving  in a day
-    new_customers = np.random.randint(low=constant.AVG_CUSTOMERS-20, high=constant.AVG_CUSTOMERS+20, size=1)
+
+    # new customers arriving in each day
+    new_customers = np.random.randint(low=constant.AVG_CUSTOMERS-20, high=constant.AVG_CUSTOMERS+20, size=n_days)
     # number of available vehicles
     vehicles = constant.NUM_VEHICLES
     # capacity of each vehicle
@@ -69,15 +72,16 @@ def main():
         
         # Instantiate a new day
         if first_day:
-            new_day = Day(new_customers, first_day, distribution_df)
+            new_day = Day(new_customers[day], first_day, distribution_df)
             first_day = False
         else:
             # append new customers to the ones of previous day
-            new_day = Day(new_customers, previous_df=new_day.customer_df)
+            new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
         print(f'Simulated day {new_day.current_day}')
         # save simulated clients' data
         new_day.save_data_costumers()
+
         # ---------------------------------------- Customers selection ------------------------------------------------
 
         # select customers accordingly to the desired policy
@@ -112,10 +116,13 @@ def main():
         new_day = updated_day
 
         # --------------------------------------- Objective function --------------------------------------------------
+
         # In DP we start serving customers from the 4th day, we need to do a right comparison among the policies
         daily_obj[day] = solution.ObjectiveValue()-total_time
         if new_day.current_day >= constant.NUM_DAYS:
             total_obj_fun += daily_obj[day]
+
+    # ------------------------------------------------ STATISICS -------------------------------------------------------
 
     print(f'Total objective function: {total_obj_fun}')
     print(f'Total number of postponed costumers: {num_postponed}')

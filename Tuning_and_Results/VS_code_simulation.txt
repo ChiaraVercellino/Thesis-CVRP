@@ -1,55 +1,56 @@
 seed = 57
 
 Policy EP:
-Total objective function: 483306
+Total objective function: 494652
 Total number of postponed costumers: 0
-Average of empty vehicles: 5.604395604395604
-Average of served customers: 189.98901098901098
-Average of cycles: 1.01
-Average of travel cost: 5311
-Time for simlation: 00:08:09
+Average of empty vehicles: 4.417582417582418
+Average of served customers: 194.16483516483515
+Average of cycles: 1.59
+Average of travel cost: 5435
+Time for simlation: 00:10:49
 
 Policy DP:
-Total objective function: 481333
-Total number of postponed costumers: 55
-Average of empty vehicles: 5.9010989010989015
-Average of served customers: 189.82417582417582
-Average of cycles: 1.24
-Average of travel cost: 5289
-Time for simlation: 00:08:48
+Total objective function: 493377
+Total number of postponed costumers: 181
+Average of empty vehicles: 4.527472527472527
+Average of served customers: 194.28571428571428
+Average of cycles: 1.51
+Average of travel cost: 5421
+Time for simlation: 00:11:05
 
 Policy NP: threshold=0.998, M=5, gamma=1
-Total objective function: 478921
+Total objective function: 489649
 Total number of postponed costumers: 0
-Average of empty vehicles: 5.923076923076923
-Average of served customers: 189.30769230769232
-Average of cycles: 2.37
-Average of travel cost: 5262
-Time for simlation: 00:10:19
+Average of empty vehicles: 4.736263736263736
+Average of served customers: 193.8021978021978
+Average of cycles: 2.91
+Average of travel cost: 5380
+Time for simlation: 00:11:24
 
-Policy NP_1: threshold_1=0.9
-Total objective function: 479966
+Policy NP: threshold=0.9993, M=5, gamma=1
+Total objective function: 490158
 Total number of postponed costumers: 0
-Average of empty vehicles: 5.978021978021978
-Average of served customers: 188.83516483516485
-Average of cycles: 1
-Average of travel cost: 5274
-Time for simlation: 00:10:47
+Average of empty vehicles: 4.648351648351649
+Average of served customers: 194.16483516483515
+Average of cycles: 2.33
+Average of travel cost: 5386
+Time for simlation: 00:12:29
 
-Policy NP_1: threshold_1=0.4
-Total objective function: 475216
+Policy NP_1: threshold=-0.1
+Total objective function: 481921
 Total number of postponed costumers: 0
-Average of empty vehicles: 6.450549450549451
-Average of served customers: 187.6153846153846
-Average of cycles: 1
-Average of travel cost: 5222
-Time for simlation: 00:09:26
+Average of empty vehicles: 5.758241758241758
+Average of served customers: 189.6153846153846
+Average of cycles: 1.01
+Average of travel cost: 5295
+Time for simlation: 00:10:23
 
-Policy NP_1: no threshold_1
-Total objective function: 482801
+Policy NP_1: threshold=-0.12
+Total objective function: 482794
 Total number of postponed costumers: 0
-Average of empty vehicles: 5.725274725274725
-Average of served customers: 190
-Average of cycles: 1
+Average of empty vehicles: 5.65934065934066
+Average of served customers: 189.58241758241758
+Average of cycles: 1.05
 Average of travel cost: 5305
-Time for simlation: 00:10:54
+Time for simlation: 00:12:27
+
