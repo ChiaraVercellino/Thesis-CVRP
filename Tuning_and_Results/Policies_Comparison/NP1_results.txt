@@ -1,0 +1,199 @@
+Threshold: -0.12
+Total objective function: 478398
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.835164835164835
+Average of served customers: 189.5934065934066
+Average of cycles: 1.03
+Average of travel cost: 5257
+
+Threshold: -0.12
+Total objective function: 485175
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.461538461538462
+Average of served customers: 191.21978021978023
+Average of cycles: 1.17
+Average of travel cost: 5331
+
+Threshold: -0.12
+Total objective function: 482327
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.725274725274725
+Average of served customers: 190.67032967032966
+Average of cycles: 1.01
+Average of travel cost: 5300
+
+Threshold: -0.12
+Total objective function: 479078
+Total number of postponed costumers: 0
+Average of empty vehicles: 6.010989010989011
+Average of served customers: 191.26373626373626
+Average of cycles: 1.03
+Average of travel cost: 5264
+
+Threshold: -0.12
+Total objective function: 478542
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.835164835164835
+Average of served customers: 190.52747252747253
+Average of cycles: 1
+Average of travel cost: 5258
+
+Threshold: -0.12
+Total objective function: 476891
+Total number of postponed costumers: 0
+Average of empty vehicles: 6.21978021978022
+Average of served customers: 189.94505494505495
+Average of cycles: 1.01
+Average of travel cost: 5240
+
+Threshold: -0.12
+Total objective function: 482203
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.417582417582418
+Average of served customers: 191.2087912087912
+Average of cycles: 1.04
+Average of travel cost: 5298
+
+Threshold: -0.12
+Total objective function: 488135
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.230769230769231
+Average of served customers: 191.92307692307693
+Average of cycles: 1.21
+Average of travel cost: 5364
+
+Threshold: -0.12
+Total objective function: 480268
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.945054945054945
+Average of served customers: 190.01098901098902
+Average of cycles: 1.01
+Average of travel cost: 5277
+
+Threshold: -0.12
+Total objective function: 476502
+Total number of postponed costumers: 0
+Average of empty vehicles: 6.318681318681318
+Average of served customers: 188.12087912087912
+Average of cycles: 1.01
+Average of travel cost: 5236
+
+Threshold: -0.12
+Total objective function: 482964
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.670329670329671
+Average of served customers: 189.3186813186813
+Average of cycles: 1.02
+Average of travel cost: 5307
+
+Threshold: -0.12
+Total objective function: 474095
+Total number of postponed costumers: 0
+Average of empty vehicles: 6.274725274725275
+Average of served customers: 189.07692307692307
+Average of cycles: 1.03
+Average of travel cost: 5209
+
+Threshold: -0.12
+Total objective function: 488355
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.197802197802198
+Average of served customers: 192.27472527472528
+Average of cycles: 1.14
+Average of travel cost: 5366
+
+Threshold: -0.12
+Total objective function: 476245
+Total number of postponed costumers: 0
+Average of empty vehicles: 6
+Average of served customers: 190.82417582417582
+Average of cycles: 1
+Average of travel cost: 5233
+
+Threshold: -0.12
+Total objective function: 483315
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.483516483516484
+Average of served customers: 191.3846153846154
+Average of cycles: 1.1
+Average of travel cost: 5311
+
+Threshold: -0.12
+Total objective function: 480265
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.989010989010989
+Average of served customers: 189.45054945054946
+Average of cycles: 1.03
+Average of travel cost: 5277
+
+Threshold: -0.12
+Total objective function: 473015
+Total number of postponed costumers: 0
+Average of empty vehicles: 6.483516483516484
+Average of served customers: 189.8131868131868
+Average of cycles: 1.05
+Average of travel cost: 5197
+
+Threshold: -0.12
+Total objective function: 482383
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.5054945054945055
+Average of served customers: 189.75824175824175
+Average of cycles: 1.02
+Average of travel cost: 5300
+
+Threshold: -0.12
+Total objective function: 478425
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.9010989010989015
+Average of served customers: 190.72527472527472
+Average of cycles: 1.09
+Average of travel cost: 5257
+
+Threshold: -0.12
+Total objective function: 478376
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.945054945054945
+Average of served customers: 189.53846153846155
+Average of cycles: 1.03
+Average of travel cost: 5256
+
+Threshold: -0.12
+Total objective function: 485720
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.43956043956044
+Average of served customers: 190.93406593406593
+Average of cycles: 1.08
+Average of travel cost: 5337
+
+Threshold: -0.12
+Total objective function: 481754
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.846153846153846
+Average of served customers: 189.72527472527472
+Average of cycles: 1.05
+Average of travel cost: 5294
+
+Threshold: -0.12
+Total objective function: 478360
+Total number of postponed costumers: 0
+Average of empty vehicles: 6.032967032967033
+Average of served customers: 188.75824175824175
+Average of cycles: 1.05
+Average of travel cost: 5256
+
+Threshold: -0.12
+Total objective function: 482019
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.417582417582418
+Average of served customers: 191.47252747252747
+Average of cycles: 1.1
+Average of travel cost: 5296
+
+Threshold: -0.12
+Total objective function: 478425
+Total number of postponed costumers: 0
+Average of empty vehicles: 5.9010989010989015
+Average of served customers: 190.72527472527472
+Average of cycles: 1.09
+Average of travel cost: 5257
