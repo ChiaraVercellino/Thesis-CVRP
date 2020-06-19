@@ -29,7 +29,7 @@ def check_arguments(argv):
     else:
         error = True
     if error:
-        print(argv[0])
+        print(argv)
         sys.stderr.write("Run code with command line arguments:\n input_file_path -p policy -d days_simulation\n WHERE:\n\
         - input_file_path is the file containing density distribution (i.e. grid.txt)\n\
         - policy is the desired policy to select which customers to serve \n\
