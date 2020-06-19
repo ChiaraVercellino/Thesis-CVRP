@@ -2,7 +2,7 @@
 
 We are addressing to a Capacitated Vehicles Routing Problem (CVRP) with customers' arriaval that are Stochastic over time.
 
-The customers are simulated on a rectangular region 205x215 km^2, the region is divided in cells of dimensions 5×5 km^2, the probability of customers belonging to a cell and the definitions of cells' coordinates are defined by input file `grid.txt`. Each day we simulate the number of new customers using a Uniform distribution, whose parameters can be modified in file `constant.py`. Then their positions on the region of interest is performed by a Multinomial distribution, to specify the cells they're coming from; finally a Uniform distribution on both dimension of each cell specify the coordinates of each new customers.
+The customers are simulated on a rectangular region 205x215 km<sup>2</sup>, the region is divided in cells of dimensions 5×5 km<sup>2</sup>, the probability of customers belonging to a cell and the definitions of cells' coordinates are defined by input file `grid.txt`. Each day we simulate the number of new customers using a Uniform distribution, whose parameters can be modified in file `constant.py`. Then their positions on the region of interest is performed by a Multinomial distribution, to specify the cells they're coming from; finally a Uniform distribution on both dimension of each cell specify the coordinates of each new customers.
 
 Each day we select the custumers to serve, among the pending ones, and than we solve a CVRP with deterministic information about customers' positions, demands (kg) and service time (min) 
 
@@ -43,7 +43,18 @@ WHERE:
 
 ### Prerequisites and Installing
 
-To execute the simulator you need to install the following libraries. The following commands will install them in the selected virtual environment. The `ortools` library cannot be installed correctly using PyCharm editor, it's suggested to use VS code with python extension and C++ toolset.
+To execute the simulator you need Python and the following libraries installed:
+* ortools
+* time
+* statistics
+* numpy
+* future
+* matplotlib
+* pandas
+
+ The `ortools` library cannot be installed correctly using PyCharm editor, it's suggested to use VSCode with Python extensions and C++ toolset.
+
+The following commands will install the required libraries in the selected virtual environment.
 
 ```
 pip install ortools
@@ -87,10 +98,9 @@ python main.py grid.txt -p NP_1 -d 100
 
 ## Licensing and Authors
 
-This code for CVRP simulation is written in Python.
+This code for CVRP simulation is written in Python. It was mostly developed during Master Thesis at the Politecnico di Torino with supervisor Paolo Brandimarte.
 The author of the code is
 * [ChiaraVercellino](https://github.com/ChiaraVercellino) - *chia.vercellino@gmail.com*
-It was mostly developed during Master Thesis at the Politecnico di Torino with supervisor Paolo Brandimarte.
 
 ## Acknowledgments
 
