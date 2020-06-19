@@ -1,3 +1,65 @@
+""" 
+MAIN
+
+Problem definition:
+We consider Capacitated Vehicle Routing Problem (CVRP) with stochastics customers that show up day by day. The set of future customers
+is not known a priori, but a spatial distribution is supposed to be known.
+The objective funtion is to minimize the total cost of service up the last day of simulation.
+So we want to minimize:
+- Total travel time
+- Total number of vehicles used
+The constraints we are taking into account are:
+- Total capacity on each vehicle (kg)
+- Maximum number of customer each vehicle can serve in a day
+- Total working time of each vehicle: service time + travel time
+
+
+Summary:
+The distribution of customers' arrivals, the policy for customer selection and the number of days for simulation are givem as input
+parameters as command line arguments.
+The we simulate the arrivals of the customers and select which ones to serve day by day.
+Once selected the customers to serve, a CVRP is solved to minimize the travel cost and the total number of vehicles to use.
+The simulated customers, the ones selected for CVRP and the best routes found day by day are saved in output files.
+Some statistics about the simulation are printed on the standard output.
+
+
+Main steps of simulation:
+
+1) INITIALIZATION: read command-line arguments, empty pre-existent simulation file, initialize variables used in simulation
+2) DATA LOADING: read customers' distribution from input file
+Optional) NP & NP_1: costruct variables that are needed only for policy NP and NP_1
+3) SIMULATION: each day
+    - Customers simulation: simulate new customers and save data related to pending customers in the current day
+    - Customers selection: select which customers to serve in the current day.
+                          The following selection policies are available:
+                          - EP: early policy, each customer is served as soon as he makes a request
+                          - DP: delayed policy, each customer is served in the last day of his availability period
+                          - NP: neighbourhood policy: to each pending customer is associated a index that takes into account
+                                                      the distribution of his neighbours. Customers are then selected by
+                                                      decreasing index
+                          - NP_1: neighbourhood policy bis: to each pending customer is associated a index that takes into account
+                                                            the distribution of his neighbours, the amount of its demand in terms
+                                                            of service time and its distance from the depot. Customers are then 
+                                                            selected by decreasing index
+    - CVRP optimization: find a feasible solution to CVRP problem with the selected customers or a subset of them
+    - Save daily routes: append to solution file the new best routes find by CVRP solver
+    - Final updates: save the information related to selected customers that lead to a feasible solution of CVRP and
+                     delete from pending customers the served ones
+    - Objective function: update value of objective function adding up the daily travel time
+4) STATISTICS: compute final statistics
+    - Total objective funcion: total minutes of travel time along all days of simulation
+    - Total number of postponed customers: each time that a customer cannot be served within his last available day it is postponed to
+    following day
+    - Average of empty vehicles: mean over the number of vehicles used each day of simulation
+    - Average of served customers: mean over the number of customers served each day
+    - Average of cycles: there is a cycle over CVRP solver that guarantees the feasibility of the daily solution, each time that the
+                         problem is unfeasible a customer is removed from the list of the customers to serve in the current day and 
+                         the solution with CVRP solver is tried again and the number of daily cycles is incremented by one.
+    - Average of travel cost: mean over the daily travel time 
+    - Time for simulation: total time to run simulation (hh:mm:ss)
+
+"""
+
 # import sys to deal with command line arguments
 import sys
 # import to calculate average
@@ -23,6 +85,8 @@ np.random.seed(constant.SEED)
 
 def main():
 
+# ------------------------------------------------ INITIALIZATION -------------------------------------------------------
+
     # starting time for simulation  
     start = time.time()
     # parse command line arguments
@@ -31,19 +95,6 @@ def main():
         return
     # empty pre-existent files
     clean_files()
-
-# ------------------------------------------------ DATA LOADING -------------------------------------------------------
-
-    # load distribution and depot position from input file
-    distribution_df, depot = load_distribution(input_path)
-    compatibility_list = []
-    compatibility_index = []
-    depot_distance = []
-    # parameter to tune rho < 0.5 otherwise empty lists
-    if policy == "NP" or policy == "NP_1":
-        compatibility_list, compatibility_index, depot_distance = select_compatible_cells(distribution_df, depot, constant.rho)
-    
-# ------------------------------------------------- SIMULATION --------------------------------------------------------
 
     # new customers arriving in each day
     new_customers = np.random.randint(low=constant.AVG_CUSTOMERS-20, high=constant.AVG_CUSTOMERS+20, size=n_days)
@@ -68,8 +119,26 @@ def main():
     total_obj_fun = 0
     first_day = True
 
+# ------------------------------------------------ DATA LOADING -------------------------------------------------------
+
+    # load distribution and depot position from input file
+    distribution_df, depot = load_distribution(input_path)
+
+# ------------------------------------------------ NP & NP_1 variables -------------------------------------------------------
+
+    compatibility_list = []
+    compatibility_index = []
+    depot_distance = []
+    # parameter to tune rho < 0.5 otherwise empty lists
+    if policy == "NP" or policy == "NP_1":
+        compatibility_list, compatibility_index, depot_distance = select_compatible_cells(distribution_df, depot, constant.rho)
+    
+# ------------------------------------------------- SIMULATION ---------------------------------------------------------
+
     for day in range(n_days):
         
+        # ---------------------------------------- Customers simulation ------------------------------------------------
+
         # Instantiate a new day
         if first_day:
             new_day = Day(new_customers[day], first_day, distribution_df)
@@ -80,6 +149,7 @@ def main():
 
         print(f'Simulated day {new_day.current_day}')
         # save simulated clients' data
+
         new_day.save_data_costumers()
 
         # ---------------------------------------- Customers selection ------------------------------------------------
@@ -88,7 +158,7 @@ def main():
         updated_day, num_postponed = select_customers(new_day, min_capacity, kg_capacity, policy, compatibility_list,\
                 distribution_df.probability, compatibility_index, depot_distance)
 
-        # ---------------------------------------- VRP optimization ---------------------------------------------------
+        # ---------------------------------------- CVRP optimization ---------------------------------------------------
         solution = False
         # iterate until a feasible solution is reached
         while not(solution):
@@ -101,7 +171,7 @@ def main():
         # save total set-up time for served customers
         total_time = updated_day.selected_customers.set_up_time.sum()
 
-        # ---------------------------------------- Save daily roads ---------------------------------------------------
+        # ---------------------------------------- Save daily routes --------------------------------------------------
 
         # save daily roads
         routes_list, num_empty_route[day] = save_routes(new_day, data, manager, routing, solution)

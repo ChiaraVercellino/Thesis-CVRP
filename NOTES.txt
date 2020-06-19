@@ -9,16 +9,13 @@ Optimization problem:
         - look at probability of other near customers in future
         - Each customer has demand expressed in: set up time (related to set up cost), kg, available day
     Solve VRP for those customers
-        - set maximum time for VRP solver: 30 sec (never used, less than 1 sec)
+        - set maximum time for VRP solver: 10 sec (never used, less than 1 sec)
         - set maximum number of costumers per vehicle: 5 customers
         - set maximum total time of each route: 480 min (8 h)
         - set capacity constraint per vehicle: 1000 kg
         - I'm assuming vehicles with 60km/h velocities
         - objective function: minimize total travel and set up times and number of vehicles
         OBS: ortools works with integer objective function
-
-TO DO:
-1_ Try RL approach to solve VRP
 
 --------------------------------------------------------------------------------------------------------------------------------------------------
 

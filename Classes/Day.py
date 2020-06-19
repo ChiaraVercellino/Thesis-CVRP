@@ -98,16 +98,18 @@ class Day:
         # save all y coordinates
         custom_data['y'] += np.random.uniform(y, y + dy, num_clients).tolist()
         # see whether the demand is for a big or small object
-        big = np.random.binomial(n=1, size=num_clients, p=0.5)
+        big = np.random.binomial(n=1, size=num_clients, p=constant.PROB_BIG)
         # set time windows in day for each customer
         custom_data['last_day'] += np.random.randint(low=Day.current_day+3, high=Day.current_day+5,size=num_clients).tolist()
         # at the beginning no customer has been postponed
         custom_data['yet_postponed'] = False
         for cl in range(num_clients):
             # save demand in kg
-            custom_data['kg'] += np.random.randint(low=5+195*big[cl], high=10+490*big[cl],size=1).tolist()
+            custom_data['kg'] += np.random.randint(low=constant.SMALL_KG_MIN+constant.BIG_KG_MIN*big[cl],\
+                 high=constant.SMALL_KG_MAX+constant.BIG_KG_MAX*big[cl],size=1).tolist()
             # calculate set up times
-            custom_data['set_up_time'] += np.random.randint(low=15+45*big[cl], high=45+135*big[cl],size=1).tolist()
+            custom_data['set_up_time'] += np.random.randint(low=constant.SMALL_TIME_MIN+constant.BIG_TIME_MIN*big[cl],\
+                 high=constant.SMALL_TIME_MAX+constant.BIG_TIME_MAX*big[cl],size=1).tolist()
         return custom_data
 
 

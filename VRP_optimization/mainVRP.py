@@ -102,7 +102,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.CHRISTOFIDES)
     
     # Setting maximum time limit for search (in seconds)
-    search_parameters.time_limit.seconds = 30
+    search_parameters.time_limit.seconds = constant.TIME_LIMIT
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
