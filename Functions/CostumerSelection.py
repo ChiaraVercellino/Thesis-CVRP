@@ -52,6 +52,7 @@ def remove_client_VRP(day):
     return day
 
 # -------------------------------------------------------- PRIVATE METHODS ---------------------------------------------------------------------
+
 # serve all customers as soon as demand happens
 def _early_policy(customer_df, this_day, num_deliveries):
     # serve all possible customers, order them by urgency
