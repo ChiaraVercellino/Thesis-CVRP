@@ -1,8 +1,7 @@
 import pandas as pd
 import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
 import sys
+import os
 
 
 # Parse command line and check if the arguments are correct
@@ -39,13 +38,18 @@ def check_arguments(argv):
     
     
 # Clean pre-existing files
-def clean_files():    
-    with open('./Data/simulated_clients.txt', 'r+') as fp:
-        fp.truncate(0)    
-    with open('./Data/selected_customers.txt', 'r+') as fp:
-        fp.truncate(0)
-    with open('./Solution/routes.sol', 'r+') as fp:
-        fp.truncate(0)
+def clean_files(): 
+    file1 = open('./Data/simulated_clients.txt', 'w+') 
+    file1.close()
+
+    file2 = open('./Data/selected_customers.txt', 'w+') 
+    file2.close()
+
+    if not os.path.exists('Solution'):
+        os.mkdir('Solution')
+
+    file3 = open('./Solution/routes.sol', 'w+') 
+    file3.close()    
 
 
 # Read data distribution from file in file_path and create the corresponding data frame

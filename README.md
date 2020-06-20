@@ -90,7 +90,7 @@ python main.py grid.txt -p NP -d 100
 python main.py grid.txt -p NP_1 -d 100
 ```
 
-Best results in terms of objective functions are obtained using policy NP_1, as can be seen in the following plots
+Best results in terms of objective functions are obtained using policy NP_1, as can be seen in the following plots.
 
 ![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Tuning_and_Results/Policies_Comparison/obj_fun_daily_histogram_NS.png)
 ![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Tuning_and_Results/Policies_Comparison/obj_fun_histogram_NS.png)
@@ -104,7 +104,7 @@ Best results in terms of objective functions are obtained using policy NP_1, as 
 
 ## Licensing and Authors
 
-This code for CVRP simulation is written in Python. It was mostly developed during Master Thesis at the Politecnico di Torino with supervisor Paolo Brandimarte.
+This code for CVRP simulation is written in Python. It was developed during Master Thesis at the Politecnico di Torino with supervisor Paolo Brandimarte.
 The author of the code is
 * [ChiaraVercellino](https://github.com/ChiaraVercellino) - *chia.vercellino@gmail.com*
 
