@@ -1,9 +1,6 @@
 .venv/
 .vscode/
-
 __pycache__/
-
-Solution/
-Data/
-
+*.sol
+*.txt
 *.png
