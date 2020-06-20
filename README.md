@@ -90,6 +90,12 @@ python main.py grid.txt -p NP -d 100
 python main.py grid.txt -p NP_1 -d 100
 ```
 
+Best results in terms of objective functions are obtained using policy NP_1, as can be seen in the following plots
+
+![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Tuning_and_Results/Policies_Comparison/obj_fun_daily_histogram_NS.png)
+![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Tuning_and_Results/Policies_Comparison/obj_fun_histogram_NS.png)
+![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Tuning_and_Results/Policies_Comparison/vehicles_daily_histogram_NS.png)
+
 ## Built With
 
 * [Python] https://www.python.org/downloads/
