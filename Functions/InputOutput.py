@@ -117,7 +117,7 @@ def save_routes(day, data, manager, routing, solution, file_path='./Solution/rou
         with open(file_path, 'a') as fp:          
             fp.write(plan_output)
     with open(file_path, 'a') as fp:          
-            fp.write('Total travel and setup time of all routes: {} h\n'.format(round(total_distance/60,2)))
+            fp.write('Total travel and service time of all routes: {} h\n'.format(round(total_distance/60,2)))
             fp.write('Total load of all routes: {} kg\n'.format(round(total_load, 2)))
             fp.write('Maximum of the route travel time: {} h\n'.format(round(max_route_distance/60,2)))
     return num_empty_route

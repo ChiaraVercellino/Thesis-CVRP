@@ -202,7 +202,7 @@ def main():
         # save number of served customers
         num_served_clients[day] = len(updated_day.selected_customers)
         # save total service time for served customers
-        total_time = updated_day.selected_customers.set_up_time.sum()
+        total_time = updated_day.selected_customers.service_time.sum()
 
         # ---------------------------------------- Save daily routes --------------------------------------------------
 

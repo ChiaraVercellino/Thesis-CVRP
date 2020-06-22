@@ -3,16 +3,16 @@ import constant
 num_postponed = 0
 
 def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probabilities, compatibility_index, depot_distance):
-    # percentage for set_up times
+    # percentage for service times
     perc = constant.PERCENTAGE
     # calculate average demand and standard deviation (kg)
     avg_kg = day.customer_df['kg'].mean()
     std_kg = day.customer_df['kg'].std()
-    # calculate average set_up_times and standard deviation (min)
-    avg_set_up = day.customer_df['set_up_time'].mean()
-    std_set_up = day.customer_df['set_up_time'].std()
+    # calculate average service_times and standard deviation (min)
+    avg_service = day.customer_df['service_time'].mean()
+    std_service = day.customer_df['service_time'].std()
     # approximate the maximum number of deliveries will be allowed with the available capacities
-    num_deliveries = min(perc*h_capacity//avg_set_up, kg_capacity//avg_kg)
+    num_deliveries = min(perc*h_capacity//avg_service, kg_capacity//avg_kg)
     # apply the desired policy
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,
@@ -128,7 +128,7 @@ def _postpone_client(line, this_day, served_clients=[], single_client=False):
 # check if the selected customers are allowed by aggregate capacities
 def _check_capacity_constraints(selected_customers_df, kg_capacity, h_capacity):
     tot_kg = selected_customers_df['kg'].sum()
-    tot_h = selected_customers_df['set_up_time'].sum()
+    tot_h = selected_customers_df['service_time'].sum()
     kg_constraint = tot_kg <= kg_capacity
     h_constraint = tot_h <= h_capacity
     return kg_constraint and h_constraint
@@ -194,7 +194,7 @@ def _index_selection_1(line, compatibility, day, all_cells, probabilities, compa
     present_savings = compatibility_index[cell-1][list(present_costumers)].sum()
     # compute expected future savings
     exp_future_savings = (1-(1-probabilities[list(future_costumers)])**(T*N)) @ compatibility_index[cell-1][list(future_costumers)]
-    distance_perc = (depot_distance[cell]+line.set_up_time)/(max(depot_distance)+45+135)
+    distance_perc = (depot_distance[cell]+line.service_time)/(max(depot_distance)+45+135)
 
     if T>0:
         line['index'] = 1/T*((1-distance_perc)*present_savings-distance_perc*exp_future_savings)

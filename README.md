@@ -1,14 +1,14 @@
 # CVRP with stochastic customers over time
 
-We are addressing to a Capacitated Vehicles Routing Problem (CVRP) with customers' arriaval that are Stochastic over time.
+We are addressing to a Capacitated Vehicles Routing Problem (CVRP) with customers' arrivals that are Stochastic over time.
 
-The customers are simulated on a rectangular region 205x215 km<sup>2</sup>, the region is divided in cells of dimensions 5×5 km<sup>2</sup>, the probability of customers belonging to a cell and the definitions of cells' coordinates are defined by input file `grid.txt`. Each day we simulate the number of new customers using a Uniform distribution, whose parameters can be modified in file `constant.py`. Then their positions on the region of interest is performed by a Multinomial distribution, to specify the cells they're coming from; finally a Uniform distribution on both dimensions of each cell specify the coordinates of each new customers.
+The customers are simulated on a rectangular region 205x215 km<sup>2</sup>, the region is divided in cells of dimensions 5×5 km<sup>2</sup>, the probability of customers belonging to a cell and the definitions of cells' coordinates are defined by input file `grid.txt`. Each day we simulate the number of new customers using a Uniform distribution, whose parameters can be modified in file `constant.py`. Then their positions on the region of interest is performed by a Multinomial distribution, to specify the cells customers are coming from; finally a Uniform distribution on both dimensions of each cell specify the coordinates of each new customers.
 
 Each day we select the custumers to serve, among the pending ones, and than we solve a CVRP with deterministic information about customers' positions, demands (kg) and service time (min) 
 
 So the proposed algorithms solves the problem in 2 stages:
 - Selection of custumers to serve in the current day
-- CVRP solved with ORtools library
+- CVRP solved with OR-Tools library
 
 The *objective function* to minimize is composed by:
 - the total travel cost (expressed in terms of minutes to travel)
@@ -100,7 +100,7 @@ Best results in terms of objective functions are obtained using policy NP_1, as 
 
 * [Python] https://www.python.org/downloads/
 * [VSCode] https://code.visualstudio.com/
-* [OrTools] https://developers.google.com/optimization
+* [OR-Tools] https://developers.google.com/optimization
 
 ## Licensing and Authors
 

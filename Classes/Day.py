@@ -54,7 +54,7 @@ class Day:
         # add a column corresponding to the number of client to simulate for each cell
         selected_cells['demands'] = demands_cell[demands_cell > 0]
         # initialize empty coordinates
-        customers_data = {'x': [], 'y': [], 'kg': [], 'set_up_time': [], 'last_day': [], 'yet_postponed': [], 'cell': [], 'index': []}
+        customers_data = {'x': [], 'y': [], 'kg': [], 'service_time': [], 'last_day': [], 'yet_postponed': [], 'cell': [], 'index': []}
         # simulate coordinates for each customer
         selected_cells.apply(lambda line: self._simulate_clients_parameters(line.cell_name, line.x, line.length, line.y, line.height,
                                                                             line.demands, customers_data), axis=1)
@@ -107,8 +107,8 @@ class Day:
             # save demand in kg
             custom_data['kg'] += np.random.randint(low=constant.SMALL_KG_MIN+constant.BIG_KG_MIN*big[cl],\
                  high=constant.SMALL_KG_MAX+constant.BIG_KG_MAX*big[cl],size=1).tolist()
-            # calculate set up times
-            custom_data['set_up_time'] += np.random.randint(low=constant.SMALL_TIME_MIN+constant.BIG_TIME_MIN*big[cl],\
+            # calculate service times
+            custom_data['service_time'] += np.random.randint(low=constant.SMALL_TIME_MIN+constant.BIG_TIME_MIN*big[cl],\
                  high=constant.SMALL_TIME_MAX+constant.BIG_TIME_MAX*big[cl],size=1).tolist()
         return custom_data
 
