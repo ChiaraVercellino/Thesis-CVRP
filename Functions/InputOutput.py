@@ -117,7 +117,7 @@ def load_distribution(file_path):
         Cells are not overlapping.
 
     OUTPUTS:
-        df: dataframe containg all information about cell, each row represents a cell. We consider the following columns
+        df: dataframe containg all information about cells, each row represents a cell. We consider the following columns
             cell_name <- int-1
             x <- x_left
             y <- y_low
