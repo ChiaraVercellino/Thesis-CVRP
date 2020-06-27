@@ -1,18 +1,52 @@
+'''
+This file contains all the functions that manage the selection of customer for CVRP, given the set of all pending customers in
+a specific day.
+There are 4 policies to select customer:
+- Early Policy (EP): each day we select all pending customers according to the available capacity of the vehicles and
+                     assigning a priority to customers based on the last day they are available to be served.
+- Delayed Policy (DP): each day we select the customers whose last available day to be served is the current day.
+- Neighbourhood Policy (NP): each day we select customers according to a index that expresses the reward of including a customer in
+                             the set of selected customer, given the set of pending customer, the presence/absence of other
+                             customers in the neighbourhood and the remainings days to serve him.
+- Neighbourhood Policy 1 (NP_1): each day we select customers according to a index that expresses the reward of including a 
+                                 customer in the set of selected customer, given the set of pending customer, the presence/absence 
+                                 of other customers in the neighbourhood, the remainings days to serve him and, his distance from
+                                 depot and his service time.
+'''
+
+
 import constant
 
+# global variable: total number of customers that has been post-poned that is the one that couldn't be served within their last
+#                  available day.
 num_postponed = 0
 
-def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probabilities, compatibility_index, depot_distance):
-    # percentage for service times
+def select_customers(day, min_capacity, kg_capacity, policy, compatibility, probabilities, compatibility_index, depot_distance):
+    '''
+    Select the customers for CVRP given the chosen policy, time constraint and capacity contraint.
+    INPUTS:
+        day: object of class Day containing information about current day in simulation
+        min_capacity: aggregate time capacity expressed in minutes
+        kg_capacity: aggregate weight capacity expressed in kg
+        policy: chosen policy for customers selection ("EP", "DP", "NP", "NP_1")
+        compatibility: list of dimension #cells whose elements are lists of convenient cells
+        probabilities: dataframe column containig probability of a simulated customer to belong to a cell
+        compatibility_index: numpy array of dimension #cells*#cells which contains the saving indexes
+        depot_distance: numpy array of dimension #cells+1 containing all distance from depot to each cells (and the depot itself
+                        in position 0)
+    OUTPUTS:
+        day: object of class Day containing information about current day in simulation (updated)
+        num_postponed: total number of customers that has been postponed till the current day
+    '''
+    # percentage for service times: the time constraint will include both service time and travel time so I consider only a
+    # percentage of the time capacity to select customers according to their service time.
     perc = constant.PERCENTAGE
-    # calculate average demand and standard deviation (kg)
+    # calculate average demand (kg)
     avg_kg = day.customer_df['kg'].mean()
-    std_kg = day.customer_df['kg'].std()
-    # calculate average service_times and standard deviation (min)
+    # calculate average service_times (min)
     avg_service = day.customer_df['service_time'].mean()
-    std_service = day.customer_df['service_time'].std()
     # approximate the maximum number of deliveries will be allowed with the available capacities
-    num_deliveries = min(perc*h_capacity//avg_service, kg_capacity//avg_kg)
+    num_deliveries = min(perc*min_capacity//avg_service, kg_capacity//avg_kg)
     # apply the desired policy
     if policy == "EP":
         selected_customers, selected_idx, new_customer_df = _early_policy(day.customer_df, day.current_day,
@@ -29,19 +63,23 @@ def select_customers(day, h_capacity, kg_capacity, policy, compatibility, probab
                                                                             compatibility_index, depot_distance)
 
     # check if I've respected total capacities
-    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*h_capacity)
+    constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*min_capacity)
     # iterate until the constraint is satisfied
     while not constraints_respected:
-        # If capacity is not respected I have to eliminate some customer
+        # If capacity is not respected I have to eliminate some customer: I remove one customers from the selected ones
         selected_idx, selected_customers, new_customer_df = _remove_client(selected_customers, new_customer_df,
                                                                            day.current_day, selected_idx)
-        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*h_capacity)
+        # check constraints
+        constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*min_capacity)
+        # reduce the deliveries
         num_deliveries -= 1
-    # add labels corresponding to nodes in graph
+    # add labels corresponding to nodes in graph: to have a correspondence with CVRP solutions
     selected_customers['customer_label'] = range(1, len(selected_customers)+1)
-    # update data frame
+    # update dataframe of pending customers
     day.customer_df = new_customer_df
+    # create dataframe with selected customers
     day.selected_customers = selected_customers
+    # save index of selected customers
     day.selected_indexes = selected_idx
     return day, num_postponed
 

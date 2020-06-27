@@ -27,7 +27,7 @@ def select_compatible_cells(df_distribution, depot, rho):
         depot: numpy array containig depot (x,y) coordinates.
         rho: threshold to select convenient cells to put in the list (C2, C3, ...) according to saving indexes.
     OUTPUTS:
-        compatibility_list: list of dimension #cells whose elements are list of convenient cells
+        compatibility_list: list of dimension #cells whose elements are lists of convenient cells
         compatibility_index: numpy array of dimension #cells*#cells which contains the saving indexes
         distance_matrix[0]: numpy array of dimension #cells+1 containing all distance from depot to each cells (and the depot itself
                             in position 0)
