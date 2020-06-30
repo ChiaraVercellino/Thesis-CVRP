@@ -48,6 +48,10 @@ BIG_TIME_MIN = 45
 BIG_KG_MAX = 490
 # upper bound for increment, w.r.t. small demand upper bound, of big demand in service time (min)
 BIG_TIME_MAX = 135
+# minimum number of day after the current day which specify the availability of a customer
+MIN_DAY = 3
+# maximum number of day after the current day which specify the availability of a customer
+MAX_DAY = 5
 
 # ------------------------------------------------ TUNED PARAMETERS POLICY NP--------------------------------------------------------------------
 
