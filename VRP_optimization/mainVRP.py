@@ -17,7 +17,6 @@ A reference for the code can be found at
 https://developers.google.com/optimization/routing/cvrp
 """
 
-from __future__ import print_function
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 from scipy.spatial import distance
@@ -159,7 +158,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     # Use CHRISTOFIDES to minimize the number of vehicles used
-    search_parameters.first_solution_strategy = (routing_enums_pb2.FirstSolutionStrategy.CHRISTOFIDES)
+    search_parameters.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.CHRISTOFIDES
     
     # Setting maximum time limit for search (in seconds)
     search_parameters.time_limit.seconds = constant.TIME_LIMIT
