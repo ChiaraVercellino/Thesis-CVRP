@@ -96,19 +96,19 @@ def print_solution(data, manager, routing, solution):
         while not routing.IsEnd(index):
             node_index = manager.IndexToNode(index)
             route_load += data['demands'][node_index]
-            plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
+            plan_output += ' {0} Load ({1}) -> '.format(node_index, route_load)
             previous_index = index
             index = solution.Value(routing.NextVar(index))
             route_distance += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id)
-        plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
+        plan_output += ' {0} Load ({1})\n'.format(manager.IndexToNode(index),
                                                  route_load)
-        plan_output += 'Distance of the route: {}m\n'.format(route_distance)
-        plan_output += 'Load of the route: {}\n'.format(route_load)
+        plan_output += 'Total time of the route: {} min\n'.format(route_distance)
+        plan_output += 'Total load of the route: {} kg\n'.format(route_load)
         print(plan_output)
         total_distance += route_distance
         total_load += route_load
-    print('Total distance of all routes: {}km'.format(total_distance))
+    print('Total distance of all routes: {}km'.format(total_distance-sum([0, 50, 60, 120, 156, 85, 83, 123, 167, 90, 78, 98, 142, 111, 89, 40, 54])))
     print('Total load of all routes: {}kg'.format(total_load))
 
 def main():
