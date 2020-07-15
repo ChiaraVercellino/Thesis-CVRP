@@ -45,6 +45,8 @@ class Vehicle:
         '''
         cust = self.load_cust + 1 <= self.cap_cust
         time = self.load_min + customer.service_time + travel_time <= self.cap_min
-        kg = self.load_kg +customer.demand <= self.cap_kg
+        kg = self.load_kg + customer.demand <= self.cap_kg
         constraint = cust and time and kg
         return constraint
+
+    
