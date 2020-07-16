@@ -79,7 +79,7 @@ def create_data_model():
     ]
     data['distance_matrix'] += service_time_matrix
     data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
-    data['vehicle_capacities'] = [15, 15, 15, 15]
+    data['vehicle_capacities'] = [16, 16, 16, 16]
     data['num_vehicles'] = 4
     data['depot'] = 0
     return data
