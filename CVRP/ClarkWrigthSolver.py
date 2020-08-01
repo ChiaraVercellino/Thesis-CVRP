@@ -10,6 +10,7 @@ class ClarkeWrightSolver():
         #self.num_customers = len(selected_customer)
         self.num_customers = 16
         self.num_vehicles = 4
+        self.num_routes = self.num_customers
         '''
         # select from select_clients_df the columns corresponding to (x,y) coordinates and store them into a numpy array 
         clients_coords = selected_customer[['x', 'y']].to_numpy()
@@ -55,11 +56,11 @@ class ClarkeWrightSolver():
         """
         savings_matrix = self._compute_savings_matrix()
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
-        best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[-4*self.num_customers:], savings_matrix.shape)
-    
-        for i in range(4*self.num_customers):
-            customer1=best_savings_indexes[0][4*self.num_customers-1-i]
-            customer2=best_savings_indexes[1][4*self.num_customers-1-i]
+        best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[-self.num_vehicles*self.num_customers:], savings_matrix.shape)
+
+        for i in range(self.num_vehicles*self.num_customers):
+            customer1=best_savings_indexes[0][self.num_vehicles*self.num_customers-1-i]
+            customer2=best_savings_indexes[1][self.num_vehicles*self.num_customers-1-i]
             route1_idx=self.route_of_customers[customer1+1]
             route2_idx=self.route_of_customers[customer2+1]
             
@@ -72,10 +73,15 @@ class ClarkeWrightSolver():
                     for cust_id in new_route.route:
                         self.route_of_customers[cust_id]=new_route.id
                     self.routes[new_route.id]=new_route
+                    self.num_routes -= 1
                     del self.routes[route1_idx]
                     del self.routes[route2_idx]
                 else:
                     Route.delete_route()
+        if self.num_routes <= self.num_vehicles:
+            print('feasible solution found: used {} vehicles'.format(self.num_routes))
+        else:
+            print('feasible solution not found: used {} vehicles'.format(self.num_routes))
 
 
     def print_solution(self):
