@@ -1,4 +1,5 @@
 from ClarkWrigthSolver import ClarkeWrightSolver
+from TabuSearch import TabuSearch
 
 
 def main():
@@ -75,9 +76,14 @@ def main():
 
     service_time = [50, 60, 120, 156, 85, 83, 123, 167, 90, 78, 98, 142, 111, 89, 40, 54]
     demand = [1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
-    clark_wright_solver = ClarkeWrightSolver(distance_matrix, service_time, demand)
-    clark_wright_solver.solve()
-    clark_wright_solver.print_solution()
+    clark_wright_sol = ClarkeWrightSolver(distance_matrix, service_time, demand)
+    clark_wright_sol.solve()
+    clark_wright_sol.print_solution()
+    tabu_search = TabuSearch(clark_wright_sol)
+    for i in range(20):
+        tabu_search.solve()
+    tabu_search_sol = tabu_search.current_solution
+    tabu_search_sol.print_solution()
 
 if __name__ == '__main__':
     main()

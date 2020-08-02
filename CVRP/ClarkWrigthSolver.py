@@ -33,6 +33,8 @@ class ClarkeWrightSolver():
             self.route_of_customers[k+1] = route.id
             self.routes[route.id] = route
 
+        self.total_cost = 0
+
         '''
         selected_customer.apply(lambda line: _initialize_customers(line.kg, line.service_time, line.customer_label, customers))
         '''
@@ -105,4 +107,4 @@ class ClarkeWrightSolver():
             print('Total load of the route: {} kg\n'.format(v.load_kg))
         print('Total distance of all routes: {} km'.format(total_cost-sum([0, 50, 60, 120, 156, 85, 83, 123, 167, 90, 78, 98, 142, 111, 89, 40, 54])))
         print('Total load of all routes: {} kg'.format(total_load)) 
-            
+        self.total_cost = total_cost -sum([0, 50, 60, 120, 156, 85, 83, 123, 167, 90, 78, 98, 142, 111, 89, 40, 54])
