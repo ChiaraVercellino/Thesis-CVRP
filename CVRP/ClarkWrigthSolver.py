@@ -4,7 +4,7 @@ from merge_route import merge_routes
 import numpy as np
 
 
-class ClarkeWrightSolver():
+class ClarkWrightSolver():
     """Clark and Wright Savings algorithm solver class"""
     def __init__(self, distance_matrix, service_time, demand, selected_customer=None, depot=None):
         #self.num_customers = len(selected_customer)
