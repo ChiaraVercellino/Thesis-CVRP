@@ -1,18 +1,16 @@
 from itertools import permutations
 import random
-from Route import Route
-from ClarkWrigthSolver import ClarkWrightSolver
 import copy
 import numpy as np
-
-
+from Route import Route
+from ClarkWrigthSolver import ClarkWrightSolver
 
 
 class TabuSearch():
 
     def __init__(self, initial_solution):    
         # generate all possible permutation for local search step
-        random.seed(10)
+        random.seed(8930)
         self.perms = {}
         for i in [2,3,4,5,6]:
             perms = list(permutations(range(1, i+1))) 
@@ -25,31 +23,28 @@ class TabuSearch():
 
 
     def solve(self):
-        feasible_swap = False
+        # copy of the routes
+        all_routes = copy.copy(self.current_solution.routes)
 
+        feasible_swap = False
         # generate neighbourhood by swapping customers
         while not feasible_swap:
-            feasible_swap, old_cost_routes, route1_swap, route2_swap, route_ids_no_more, cust_id1, cust_id2 = self._swap_neighbourhood()
-        
-        # copy of the updated route
-        all_routes = copy.copy(self.current_solution.routes)
-        all_routes[route1_swap.id] = route1_swap
-        all_routes[route2_swap.id] = route2_swap        
+            feasible_swap, old_cost_routes, route1_swap, route2_swap, route_ids_no_more, cust_id1, cust_id2 = self._swap_neighbourhood(all_routes)
+           
         # those routes have been modified by swap
-        del all_routes[route_ids_no_more[0]]
-        del all_routes[route_ids_no_more[1]]
-        route_1 = route1_swap
-        route_2 = route2_swap
+        all_routes = self._update_routes(all_routes, route_ids_no_more, route1_swap, route2_swap)
         all_modified_routes = [route1_swap.id, route2_swap.id]
 
         # generate neighbourhood by inserting a customer in another route
-        feasible_insertion, route1_ins, route2_ins, cust_id_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)
+        feasible_insertion = False
+        num_iteration = 0
+        while (not feasible_insertion) and num_iteration<=30:
+            num_iteration +=1
+            feasible_insertion, route1_ins, route2_ins, cust_id_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)
+     
         if feasible_insertion:
-            # those routes have been modified by swap
-            del all_routes[route_ids_no_more_ins[0]]
-            del all_routes[route_ids_no_more_ins[1]]
-            all_routes[route1_ins.id] = route1_ins
-            all_routes[route2_ins.id] = route2_ins 
+            # those routes have been modified by insertion
+            all_routes = self._update_routes(all_routes, route_ids_no_more_ins, route1_ins, route2_ins)
             all_modified_routes = set([route1_swap.id, route2_swap.id, route1_ins.id, route2_ins.id]).difference(set(route_ids_no_more_ins))
 
         # calculate cost of new solution
@@ -60,7 +55,7 @@ class TabuSearch():
             new_cost_routes += best_route.load_min
 
         diff_cost = old_cost_routes - new_cost_routes
-        # found a better solution: unpdate solution
+        # found a better solution: update solution
         if diff_cost >= 0:
             self.current_solution.routes = copy.copy(all_routes)
             self.current_solution.total_cost -= diff_cost
@@ -70,9 +65,40 @@ class TabuSearch():
                 self.current_solution.route_of_customers[cust_id_ins] = route2_ins.id
                 
 
-
-    def _swap_neighbourhood(self):
+    def final_optimization(self):
         all_routes = self.current_solution.routes
+        # find best configuration for all routes
+        for id_route, route in all_routes.items():
+            best_route = self._local_search(route)
+            all_routes[id_route] = best_route
+
+# ------------------------------------------------------ PRIVATE METHODS ----------------------------------------------------------
+
+    def _initialize_route(self, all_routes, route_id, custumer_on_route=True):
+        route = Route()
+        route.route = copy.copy(all_routes[route_id].route)
+        route.load_kg = all_routes[route_id].load_kg
+        route.load_min = all_routes[route_id].load_min
+        route.load_cust = all_routes[route_id].load_cust
+        if custumer_on_route:
+            cust_id = random.sample(route.route[1:-1], 1)[0]
+            prec_cust = route.route[route.route.index(cust_id)-1]
+            post_cust = route.route[route.route.index(cust_id)+1]
+            cust = self.current_solution.customers[cust_id]
+            return route, cust_id, prec_cust, post_cust, cust
+        else:
+            return route
+
+    @staticmethod
+    def _update_routes(all_routes, route_ids_no_more, route1, route2):
+        del all_routes[route_ids_no_more[0]]
+        del all_routes[route_ids_no_more[1]]
+        all_routes[route1.id] = route1
+        all_routes[route2.id] = route2
+        return all_routes
+
+
+    def _swap_neighbourhood(self, all_routes):
         all_route_ids =all_routes.keys()
         # select 2 random routes and 2 random customer
         route_ids = random.sample(all_route_ids, 2)
@@ -116,27 +142,32 @@ class TabuSearch():
         dist_matrix = self.current_solution.distance_matrix
         # calculate new loads for ruote 1
         new_load_kg1 = route_1.load_kg - cust.demand
+        new_load_cust1 = route_1.load_cust -1
         new_load_min1 = route_1.load_min - cust.service_time - dist_matrix[prec_cust1][cust_id] \
         - dist_matrix[cust_id][post_cust1] + dist_matrix[prec_cust1][post_cust1]
         # check if the insertion is feasible
         new_load_kg2 = route_2.load_kg + cust.demand
         cap_kg_constraint2 = new_load_kg2 <= route_2.cap_kg
+        new_load_cust2 = route_2.load_cust +1
+        cap_cust_constraint = new_load_cust2 <= route_2.cap_cust
         # I try to insert the customer in the best position: look for the nearest customer on route2, I'll put the new customer after it
-        distances  = np.array([dist_matrix[cust_id][i] for i in route_2.route[0:-1]])
+        distances  = np.array([dist_matrix[cust_id][i] for i in route_2.route])
         best_idx = np.argpartition(distances, 1) 
         prec_cust2 = route_2.route[best_idx[0]]
         post_cust2 = route_2.route[best_idx[0]+1]
         new_load_min2 = route_2.load_min + cust.service_time - dist_matrix[prec_cust2][post_cust2] \
         + dist_matrix[prec_cust2][cust_id] + dist_matrix[cust_id][post_cust2]
         cap_min_constraint2 = new_load_min2 <= route_2.cap_min
-        feasible = cap_kg_constraint2 and cap_min_constraint2
+        feasible = cap_kg_constraint2 and cap_min_constraint2 and cap_cust_constraint
         # update routes
         route_1.load_kg = new_load_kg1
         route_1.load_min = new_load_min1
+        route_1.load_cust -= 1
         route_2.load_kg = new_load_kg2
         route_2.load_min = new_load_min2
+        route_2.load_cust += 1
         route_1.route.remove(cust_id)
-        route_2.route = route_2.route[:best_idx[0]]+[cust_id]+route_2.route[best_idx[0]+1:]
+        route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
         return feasible, route_1, route_2, cust_id, route_ids
 
     def _local_search(self, route):
@@ -162,19 +193,3 @@ class TabuSearch():
                 best_route = new_route
                 best_cost = route_cost
         return best_route, best_cost, service_times_routes
-
-
-    def _initialize_route(self, all_routes, route_id, custumer_on_route=True):
-        route = Route()
-        route.route = copy.copy(all_routes[route_id].route)
-        route.load_kg = all_routes[route_id].load_kg
-        route.load_min = all_routes[route_id].load_min
-        route.load_cust = all_routes[route_id].load_cust
-        if custumer_on_route:
-            cust_id = random.sample(route.route[1:-1], 1)[0]
-            prec_cust = route.route[route.route.index(cust_id)-1]
-            post_cust = route.route[route.route.index(cust_id)+1]
-            cust = self.current_solution.customers[cust_id]
-            return route, cust_id, prec_cust, post_cust, cust
-        else:
-            return route

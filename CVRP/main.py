@@ -80,8 +80,9 @@ def main():
     clark_wright_sol.solve()
     clark_wright_sol.print_solution()
     tabu_search = TabuSearch(clark_wright_sol)
-    for i in range(70):
+    for i in range(50):
         tabu_search.solve()
+    tabu_search.final_optimization()
     tabu_search_sol = tabu_search.current_solution
     tabu_search_sol.print_solution()
 
