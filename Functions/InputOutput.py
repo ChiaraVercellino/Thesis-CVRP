@@ -18,7 +18,7 @@ def check_arguments(argv):
     '''
     Parse command line and check if the passed arguments are correct:
     Run code with command line arguments:
-        input_file_path -p policy -d days_simulation
+        input_file_path -p policy -d days_simulation -s solver
     WHERE:
         - input_file_path is the file containing density distribution (i.e. grid.txt)
         - policy is the desired policy to select which customers to serve
@@ -27,6 +27,9 @@ def check_arguments(argv):
             NP : neighbourhood policy
             NP_1 : neighbourhood policy 1
         - days_simulation is the number of day you want to simulate
+        - solver is the solver for CVRP
+            ortools : Google ORtools solver
+            tabu : Tabù Search
     
     INPUT:
         argv: command line arguments
@@ -35,21 +38,23 @@ def check_arguments(argv):
         input_path: path of input file containing cells' distributions
         policy: the selected policy for simulation
         n_days: number of days of simulation
+        solver: solver type for CVRP
     ''' 
     # Initialize variables
     error = False
     input_path = ''
     policy = ''
-    n_days= ''
+    n_days = ''
+    solver = ''
     # Check if the number of input arguments is correct
-    if len(argv)==6:
+    if len(argv)==8:
         # file with initial distribution of clients
         input_path = argv[1]
         if argv[2]=="-p" and (argv[3]=="EP" or argv[3]=="DP" or argv[3]=="NP" or argv[3]=="NP_1"):
             # policy for customer selections
             policy = argv[3]
         else:
-            sys.stderr.write("Error: inserted policy\n")
+            sys.stderr.write("Error: not available inserted policy\n")
             error = True
         if argv[4]=="-d":
             # number of simulated days
@@ -57,16 +62,24 @@ def check_arguments(argv):
         else:
             sys.stderr.write("Error: number of days\n")
             error = True
+        if argv[6]=="-s" and (argv[7]=="ortools" or argv[7]=="tabu"):
+            # choose the solver for CVRP problem
+            solver = argv[7]
+        else:
+            sys.stderr.write("Error: not available inserted solver\n")
+            error = True
     else:
         error = True
     if error:
         print(argv)
-        sys.stderr.write("Run code with command line arguments:\n input_file_path -p policy -d days_simulation\n WHERE:\n\
+        sys.stderr.write("Run code with command line arguments:\n input_file_path -p policy -d days_simulation -s solver\n WHERE:\n\
         - input_file_path is the file containing density distribution (i.e. grid.txt)\n\
         - policy is the desired policy to select which customers to serve \n\
         \t EP : early policy\n \t\t DP : delayed policy\n \t\t NP : neighbourhood policy\n \t\t NP_1 : neighbourhood policy 1\n\
-        - days_simulation is the number of day you want to simulate")
-    return error, input_path, policy, n_days
+        - days_simulation is the number of day you want to simulate\n\
+        - solver is the solver to solve CVRP \n\
+        \t ortools: Google ORtools solver\n \t\t tabu: Tabù Seach algorithm\n")
+    return error, input_path, policy, n_days, solver
     
     
 

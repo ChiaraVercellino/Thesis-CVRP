@@ -75,6 +75,8 @@ from Functions.CostumerSelection import select_customers, remove_client_VRP
 from Classes.Day import Day
 from VRP_optimization.mainVRP import VRP_optimization
 from Functions.CostumerCompatibility import select_compatible_cells
+from Classes.ClarkWrightSolver import ClarkWrightSolver
+from Classes.TabuSearch import TabuSearch
 
 # import constant variables
 import constant
@@ -91,7 +93,7 @@ def main():
     # error: there is an erroe in the arguments
     # input_path: path to file containing the distribution of cells
     # n_days: days of simulation
-    error, input_path, policy, n_days = check_arguments(sys.argv)
+    error, input_path, policy, n_days, solver = check_arguments(sys.argv)
     if error:
         return
     # empty pre-existent files: Solution/routes.sol, Data/selected_customers.txt, Data/simulated_clients.txt
@@ -194,7 +196,20 @@ def main():
             # manager: routing index manager
             # routing: routing model
             # solution: solution to CVRP
-            data, manager, routing, solution = VRP_optimization(updated_day.selected_customers, depot, vehicles, capacity)
+
+            if solver == 'ortools':
+                data, manager, routing, solution = VRP_optimization(updated_day.selected_customers, depot, vehicles, capacity)
+
+            elif solver == 'tabu':
+                clark_wright_sol = ClarkWrightSolver(updated_day.selected_customers, depot)
+                solution = clark_wright_sol.solve()
+                if solution:
+                    tabu_search = TabuSearch(clark_wright_sol)
+                    for i in range(100):
+                        tabu_search.solve()
+                    tabu_search.final_optimization()
+                    tabu_search_sol = tabu_search.current_solution
+
             if not(solution):
                 # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
                 # selected_indexes and I put it again in customer_df to be served in the following days               
@@ -207,7 +222,10 @@ def main():
         # ---------------------------------------- Save daily routes --------------------------------------------------
 
         # save daily roads in Solution/routes.sol
-        num_empty_route[day] = save_routes(new_day, data, manager, routing, solution)
+        if solver == 'ortools':
+            num_empty_route[day] = save_routes(new_day, data, manager, routing, solution)
+        elif solver == 'tabu':
+            num_empty_route[day] = tabu_search_sol.print_solution(new_day)
 
         # --------------------------------------- Final updates -------------------------------------------------------
         
@@ -224,7 +242,11 @@ def main():
         # study the objective function on the long run I don't consider for statistics a transient period of NUM_DAYS
 
         # In the objective function I consider only the travel time, not the service one which cannot be optimized
-        daily_obj[day] = solution.ObjectiveValue()-total_time
+        if solver == 'ortools':
+            daily_obj[day] = solution.ObjectiveValue()-total_time
+        elif solver == 'tabu':
+            daily_obj[day] = tabu_search_sol.total_cost-total_time
+
         if new_day.current_day >= constant.NUM_DAYS:
             total_obj_fun += daily_obj[day]
 
