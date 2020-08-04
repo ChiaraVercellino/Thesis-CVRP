@@ -1,6 +1,6 @@
 class Route:
     num_route = 0
-    def __init__(self, cap_kg=16, cap_min=3000, cap_cust=5):
+    def __init__(self, cap_kg=1000, cap_min=480, cap_cust=5):
         '''
         Constructor
         '''

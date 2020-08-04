@@ -56,11 +56,12 @@ class ClarkWrightSolver():
         """
         savings_matrix = self._compute_savings_matrix()
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
-        best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[-2*self.num_vehicles*self.num_customers:], savings_matrix.shape)
+        num_elem_tridiag = int((self.num_customers-1)*self.num_customers/2)
+        best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[-num_elem_tridiag:], savings_matrix.shape)
 
-        for i in range(2*self.num_vehicles*self.num_customers):
-            customer1=best_savings_indexes[0][2*self.num_vehicles*self.num_customers-1-i]
-            customer2=best_savings_indexes[1][2*self.num_vehicles*self.num_customers-1-i]
+        for i in range(num_elem_tridiag):
+            customer1=best_savings_indexes[0][num_elem_tridiag-1-i]
+            customer2=best_savings_indexes[1][num_elem_tridiag-1-i]
             route1_idx=self.route_of_customers[customer1+1]
             route2_idx=self.route_of_customers[customer2+1]
             
@@ -93,7 +94,7 @@ class ClarkWrightSolver():
         total_load = 0
         num_route = 0
         max_route_distance = 0
-        num_empty_vehicles = len(self.routes)
+        num_empty_vehicles = constant.NUM_VEHICLES-len(self.routes)
         # Save the current day
         with open(file_path, 'a') as fp:            
             fp.write(f'\n DAY: {day.current_day} \n')

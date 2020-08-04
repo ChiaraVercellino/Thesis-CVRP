@@ -6,27 +6,21 @@ import numpy as np
 
 class ClarkWrightSolver():
     """Clark and Wright Savings algorithm solver class"""
-    def __init__(self, distance_matrix, service_time, demand, selected_customer=None, depot=None):
+    def __init__(self, distance_matrix, service_time, demand):
         #self.num_customers = len(selected_customer)
-        self.num_customers = 16
-        self.num_vehicles = 4
+        self.num_customers = len(service_time)
+        self.num_vehicles = 50
         self.num_routes = self.num_customers
-        '''
-        # select from select_clients_df the columns corresponding to (x,y) coordinates and store them into a numpy array 
-        clients_coords = selected_customer[['x', 'y']].to_numpy()
-        # add at the beginning of the coordinates array the coordinates of depot
-        coords = np.vstack ((depot, clients_coords)) 
-        self.distances = distance.cdist(coords, coords)
-        '''
+        
         self.distance_matrix = distance_matrix
 
         # list of customers
         self.customers = {}
         self.routes = {}
         self.route_of_customers = {}
-        
+
         for k in range(self.num_customers):
-            cust = Customer(k+1, demand[k], service_time[k])
+            cust = Customer(k+1, demand[k][0], service_time[k][0])
             self.customers[k+1] = cust
             route = Route()
             route.initialize_route(cust, distance_matrix[0][k+1])
@@ -34,10 +28,7 @@ class ClarkWrightSolver():
             self.routes[route.id] = route
 
         self.total_cost = 0
-
-        '''
-        selected_customer.apply(lambda line: _initialize_customers(line.kg, line.service_time, line.customer_label, customers))
-        '''
+        self.service_time = service_time
 
     def _compute_savings_matrix(self):
         """Compute Clarke and Wright savings matrix
@@ -58,11 +49,12 @@ class ClarkWrightSolver():
         """
         savings_matrix = self._compute_savings_matrix()
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
-        best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[-self.num_vehicles*self.num_customers:], savings_matrix.shape)
+        num_elem_tridiag = int((self.num_customers-1)*self.num_customers/2)
+        best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[num_elem_tridiag:], savings_matrix.shape)
 
-        for i in range(self.num_vehicles*self.num_customers):
-            customer1=best_savings_indexes[0][self.num_vehicles*self.num_customers-1-i]
-            customer2=best_savings_indexes[1][self.num_vehicles*self.num_customers-1-i]
+        for i in range(num_elem_tridiag):
+            customer1=best_savings_indexes[0][num_elem_tridiag-1-i]
+            customer2=best_savings_indexes[1][num_elem_tridiag-1-i]
             route1_idx=self.route_of_customers[customer1+1]
             route2_idx=self.route_of_customers[customer2+1]
             
@@ -82,6 +74,8 @@ class ClarkWrightSolver():
                     Route.delete_route()
         if self.num_routes <= self.num_vehicles:
             print('feasible solution found: used {} vehicles'.format(self.num_routes))
+            for k, v in self.routes.items():
+                self.total_cost += v.load_min
         else:
             print('feasible solution not found: used {} vehicles'.format(self.num_routes))
 
@@ -105,6 +99,6 @@ class ClarkWrightSolver():
             print(route)
             print('Total time of the route: {} min'.format(v.load_min))
             print('Total load of the route: {} kg\n'.format(v.load_kg))
-        print('Total distance of all routes: {} km'.format(total_cost-sum([0, 50, 60, 120, 156, 85, 83, 123, 167, 90, 78, 98, 142, 111, 89, 40, 54])))
+        print('Total distance of all routes: {} km'.format(total_cost-sum(self.service_time)[0]))
         print('Total load of all routes: {} kg'.format(total_load)) 
-        self.total_cost = total_cost -sum([0, 50, 60, 120, 156, 85, 83, 123, 167, 90, 78, 98, 142, 111, 89, 40, 54])
+        

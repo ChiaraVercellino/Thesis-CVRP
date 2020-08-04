@@ -2,85 +2,18 @@ import numpy as np
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-def create_data_model():
+def create_data_model(service_time, distance_matrix, demands):
     """Stores the data for the problem."""
     data = {}
-    service_time = np.array([0, 50, 60, 120, 156, 85, 83, 123, 167, 90, 78, 98, 142, 111, 89, 40, 54])
+    service_time = np.append(np.array([0]), service_time)
+    demands = np.append(np.array([0]), demands)
+    data['service_time'] = service_time
     service_time_matrix = np.tile(service_time,(len(service_time),1))
-    data['distance_matrix'] = [
-        [
-            0, 548, 776, 696, 582, 274, 502, 194, 308, 194, 536, 502, 388, 354,
-            468, 776, 662
-        ],
-        [
-            548, 0, 684, 308, 194, 502, 730, 354, 696, 742, 1084, 594, 480, 674,
-            1016, 868, 1210
-        ],
-        [
-            776, 684, 0, 992, 878, 502, 274, 810, 468, 742, 400, 1278, 1164,
-            1130, 788, 1552, 754
-        ],
-        [
-            696, 308, 992, 0, 114, 650, 878, 502, 844, 890, 1232, 514, 628, 822,
-            1164, 560, 1358
-        ],
-        [
-            582, 194, 878, 114, 0, 536, 764, 388, 730, 776, 1118, 400, 514, 708,
-            1050, 674, 1244
-        ],
-        [
-            274, 502, 502, 650, 536, 0, 228, 308, 194, 240, 582, 776, 662, 628,
-            514, 1050, 708
-        ],
-        [
-            502, 730, 274, 878, 764, 228, 0, 536, 194, 468, 354, 1004, 890, 856,
-            514, 1278, 480
-        ],
-        [
-            194, 354, 810, 502, 388, 308, 536, 0, 342, 388, 730, 468, 354, 320,
-            662, 742, 856
-        ],
-        [
-            308, 696, 468, 844, 730, 194, 194, 342, 0, 274, 388, 810, 696, 662,
-            320, 1084, 514
-        ],
-        [
-            194, 742, 742, 890, 776, 240, 468, 388, 274, 0, 342, 536, 422, 388,
-            274, 810, 468
-        ],
-        [
-            536, 1084, 400, 1232, 1118, 582, 354, 730, 388, 342, 0, 878, 764,
-            730, 388, 1152, 354
-        ],
-        [
-            502, 594, 1278, 514, 400, 776, 1004, 468, 810, 536, 878, 0, 114,
-            308, 650, 274, 844
-        ],
-        [
-            388, 480, 1164, 628, 514, 662, 890, 354, 696, 422, 764, 114, 0, 194,
-            536, 388, 730
-        ],
-        [
-            354, 674, 1130, 822, 708, 628, 856, 320, 662, 388, 730, 308, 194, 0,
-            342, 422, 536
-        ],
-        [
-            468, 1016, 788, 1164, 1050, 514, 514, 662, 320, 274, 388, 650, 536,
-            342, 0, 764, 194
-        ],
-        [
-            776, 868, 1552, 560, 674, 1050, 1278, 742, 1084, 810, 1152, 274,
-            388, 422, 764, 0, 798
-        ],
-        [
-            662, 1210, 754, 1358, 1244, 708, 480, 856, 514, 468, 354, 844, 730,
-            536, 194, 798, 0
-        ],
-    ]
+    data['distance_matrix'] = distance_matrix
     data['distance_matrix'] += service_time_matrix
-    data['demands'] = [0, 1, 1, 2, 4, 2, 4, 8, 8, 1, 2, 1, 2, 4, 4, 8, 8]
-    data['vehicle_capacities'] = [16, 16, 16, 16]
-    data['num_vehicles'] = 4
+    data['demands'] = demands
+    data['vehicle_capacities'] = [1000]*50
+    data['num_vehicles'] = 50
     data['depot'] = 0
     return data
 
@@ -108,13 +41,22 @@ def print_solution(data, manager, routing, solution):
         print(plan_output)
         total_distance += route_distance
         total_load += route_load
-    print('Total distance of all routes: {}km'.format(total_distance-sum([0, 50, 60, 120, 156, 85, 83, 123, 167, 90, 78, 98, 142, 111, 89, 40, 54])))
+    print('Total distance of all routes: {}km'.format(total_distance-sum(data['service_time'])))
     print('Total load of all routes: {}kg'.format(total_load))
 
 def main():
     """Solve the CVRP problem."""
+    np.random.seed(1939)
+    num_customer = 195
+    distances = np.random.uniform(10,100,int(num_customer*(num_customer+1)/2))
+    distance_matrix = np.zeros((num_customer+1,num_customer+1))
+    distance_matrix[np.triu_indices(num_customer+1, 1)] = distances
+    distance_matrix[np.tril_indices(num_customer+1, -1)] = distance_matrix.T[np.tril_indices(num_customer+1, -1)]
+    service_time = np.random.randint(15,80,size=(num_customer,1))
+    demand = np.random.randint(100,200,size=(num_customer,1))
+
     # Instantiate the data problem.
-    data = create_data_model()
+    data = create_data_model(service_time, distance_matrix, demand)
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
                                            data['num_vehicles'], data['depot'])
@@ -146,7 +88,7 @@ def main():
     routing.AddDimension(
         transit_callback_index,
         0,  # no slack
-        3000,  # vehicle maximum travel time and service time (in minutes)
+        480,  # vehicle maximum travel time and service time (in minutes)
         True,  # start cumul to zero
         dimension_name)
 
