@@ -2,6 +2,7 @@ from Customer import Customer
 from Route import Route
 from merge_route import merge_routes
 import numpy as np
+import random
 
 
 class ClarkWrightSolver():
@@ -11,7 +12,7 @@ class ClarkWrightSolver():
         self.num_customers = len(service_time)
         self.num_vehicles = 50
         self.num_routes = self.num_customers
-        
+        random.seed(849323)
         self.distance_matrix = distance_matrix
 
         # list of customers
@@ -51,8 +52,11 @@ class ClarkWrightSolver():
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
         num_elem_tridiag = int((self.num_customers-1)*self.num_customers/2)
         best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[num_elem_tridiag:], savings_matrix.shape)
-
-        for i in range(num_elem_tridiag):
+        final_random_custumer = num_elem_tridiag//2
+        permutation = list(range(final_random_custumer,num_elem_tridiag))
+        random.shuffle(permutation)
+        permutation = list(range(final_random_custumer))+permutation
+        for i in permutation:
             customer1=best_savings_indexes[0][num_elem_tridiag-1-i]
             customer2=best_savings_indexes[1][num_elem_tridiag-1-i]
             route1_idx=self.route_of_customers[customer1+1]

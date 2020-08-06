@@ -6,7 +6,7 @@ import numpy as np
 
 def main():
     np.random.seed(19)
-    num_customer = 195
+    num_customer = 200
     distances = np.random.uniform(10,100,int(num_customer*(num_customer+1)/2))
     distance_matrix = np.zeros((num_customer+1,num_customer+1))
     distance_matrix[np.triu_indices(num_customer+1, 1)] = distances
@@ -17,7 +17,7 @@ def main():
     clark_wright_sol = ClarkWrightSolver(distance_matrix, service_time, demand)
     clark_wright_sol.solve()
     tabu_search = TabuSearch(clark_wright_sol)
-    for i in range(10000):
+    for i in range(100000):
         tabu_search.solve()
     tabu_search.final_optimization()
     tabu_search_sol = tabu_search.current_solution
