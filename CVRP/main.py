@@ -5,7 +5,7 @@ import numpy as np
 
 
 def main():
-    np.random.seed(19)
+    np.random.seed(789)
     num_customer = 200
     distances = np.random.uniform(10,100,int(num_customer*(num_customer+1)/2))
     distance_matrix = np.zeros((num_customer+1,num_customer+1))

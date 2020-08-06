@@ -10,7 +10,7 @@ class TabuSearch():
 
     def __init__(self, initial_solution):    
         # generate all possible permutation for local search step
-        random.seed(79543)
+        random.seed(197)
         self.perms = {}
         for i in [3,4,5]:
             perms = list(permutations(range(1, i+1))) 
@@ -20,9 +20,9 @@ class TabuSearch():
                     perms.remove(p[::-1])
             self.perms[i]=perms
         self.current_solution = initial_solution
-        self.tabu_list = []
-        self.tabu_lenght = initial_solution.num_customers
-        self.violate_tabu = False
+        self.tabu_list = {}
+        self.tabu_lenght = initial_solution.num_customers//5
+        self.violate_tabu = 0
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
         self.best_route_of_customer = copy.copy(initial_solution.route_of_customers)
@@ -40,7 +40,8 @@ class TabuSearch():
             feasible_swap, old_cost_routes, route1_swap, route2_swap, route_ids_no_more, cust_id1, cust_id2 = self._swap_neighbourhood(all_routes)
         
         # update tabù list
-        self._update_tabu_list([cust_id1,cust_id2])
+        self._update_tabu_list(route1_swap, cust_id1)
+        self._update_tabu_list(route2_swap, cust_id2)
 
         # those routes have been modified by swap
         all_routes = self._update_routes(all_routes, route_ids_no_more, route1_swap, route2_swap)
@@ -53,18 +54,17 @@ class TabuSearch():
         all_modified_routes = set([route1_swap.id, route2_swap.id])
 
         # generate neighbourhood by inserting a customer in another route
-        #feasible_insertion, route1_ins, route2_ins, cust_id_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)
-        feasible_insertion = False
+        feasible_insertion, route1_ins, route2_ins, cust_id_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)
+            
         if feasible_insertion:
-            print('feasible ins')
+            self._update_tabu_list(route1_ins, cust_id_ins)
             if route1_ins.load_cust == 1:
                 self.route_to_eliminate = route1_ins.id
             # those routes have been modified by insertion
             all_routes = self._update_routes(all_routes, route_ids_no_more_ins, route1_ins, route2_ins)
-            if self.route_to_eliminate:
+            if route1_ins.load_cust==0:
                 print('eliminated route')
-                del all_routes[self.route_to_eliminate]
-                self.route_to_eliminate = None
+                del all_routes[route1_ins.id]
                 self.eliminated_route = True
                 all_modified_routes = all_modified_routes.union(set([route2_ins.id])).difference(set(route_ids_no_more_ins))
             else:
@@ -111,7 +111,9 @@ class TabuSearch():
             self.current_solution.route_of_customers[cust_id2] = route1_swap.id
             if feasible_insertion:
                 self.current_solution.route_of_customers[cust_id_ins] = route2_ins.id
-        self.violate_tabu = False
+
+        self.violate_tabu = 0
+        self.route_to_eliminate = None
                 
 
     def final_optimization(self):
@@ -153,12 +155,12 @@ class TabuSearch():
         all_routes[route2.id] = route2
         return all_routes
 
-    def _update_tabu_list(self, customers_id):
-        if len(self.tabu_list) < self.tabu_lenght and set(customers_id) not in self.tabu_list:
-            self.tabu_list.append(set(customers_id))
-        elif set(customers_id) not in self.tabu_list:
-            self.tabu_list.pop(0)
-            self.tabu_list.append(set(customers_id))
+    def _update_tabu_list(self, route, customer):
+        if len(self.tabu_list) < self.tabu_lenght:
+            self.tabu_list[customer]=set(route.route)
+        else:
+            element_to_remove = list(self.tabu_list.keys())[0] 
+            del self.tabu_list[element_to_remove]
 
     def _swap_neighbourhood(self, all_routes):
         all_route_ids = all_routes.keys()
@@ -167,8 +169,10 @@ class TabuSearch():
         route_1, cust_id1, prec_cust1, post_cust1, cust_1 = self._initialize_route(all_routes, route_ids[0])
         route_2, cust_id2, prec_cust2, post_cust2, cust_2 = self._initialize_route(all_routes, route_ids[1])
 
-        if set(route_ids) in self.tabu_list:
-            self.violate_tabu = True
+        if cust_id1 in self.tabu_list:
+            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id1] == set(route_2.route))
+        if cust_id2 in self.tabu_list:
+            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id2] == set(route_1.route))
         
         dist_matrix = self.current_solution.distance_matrix
         # check if the swap is feasible
@@ -210,6 +214,9 @@ class TabuSearch():
         route_1, cust_id, prec_cust1, post_cust1, cust = self._initialize_route(all_routes, route_ids[0])
         route_2 = self._initialize_route(all_routes, route_ids[1], custumer_on_route=False)
 
+        if cust_id in self.tabu_list:
+            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id] == set(route_2.route))
+
         dist_matrix = self.current_solution.distance_matrix
         # calculate new loads for ruote 1
         new_load_kg1 = route_1.load_kg - cust.demand
@@ -239,8 +246,6 @@ class TabuSearch():
         route_2.load_cust += 1
         route_1.route.remove(cust_id)
         route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
-        if self.route_to_eliminate and feasible:
-            self.route_to_eliminate = route_1.id
         return feasible, route_1, route_2, cust_id, route_ids
 
     def _local_search(self, route, final=False):
