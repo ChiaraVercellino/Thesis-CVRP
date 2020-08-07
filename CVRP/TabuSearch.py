@@ -21,16 +21,17 @@ class TabuSearch():
             self.perms[i]=perms
         self.current_solution = initial_solution
         self.tabu_list = {}
-        self.tabu_lenght = initial_solution.num_customers//5
-        self.violate_tabu = 0
+        self.tabu_lenght = initial_solution.num_customers//10
+        self.violate_tabu = True
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
         self.best_route_of_customer = copy.copy(initial_solution.route_of_customers)
         self.route_to_eliminate = None
         self.eliminated_route = False
-
+        self.no_improvement = 0
 
     def solve(self):
+
         # copy of the routes
         all_routes = copy.copy(self.current_solution.routes)
 
@@ -38,10 +39,6 @@ class TabuSearch():
         # generate neighbourhood by swapping customers
         while not feasible_swap:
             feasible_swap, old_cost_routes, route1_swap, route2_swap, route_ids_no_more, cust_id1, cust_id2 = self._swap_neighbourhood(all_routes)
-        
-        # update tabù list
-        self._update_tabu_list(route1_swap, cust_id1)
-        self._update_tabu_list(route2_swap, cust_id2)
 
         # those routes have been modified by swap
         all_routes = self._update_routes(all_routes, route_ids_no_more, route1_swap, route2_swap)
@@ -57,7 +54,6 @@ class TabuSearch():
         feasible_insertion, route1_ins, route2_ins, cust_id_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)
             
         if feasible_insertion:
-            self._update_tabu_list(route1_ins, cust_id_ins)
             if route1_ins.load_cust == 1:
                 self.route_to_eliminate = route1_ins.id
             # those routes have been modified by insertion
@@ -80,44 +76,26 @@ class TabuSearch():
         current_cost = self.current_solution.total_cost - diff_cost
         diff_cost_best = self.best_cost - current_cost
         # found a better solution: update solution
-        if diff_cost >= 0 and not(self.violate_tabu) or self.eliminated_route:
+        if diff_cost >= 0 and not(self.violate_tabu) or self.eliminated_route:            
             self.eliminated_route = False
-            #print('old cost {} - current cost {} - best cost {}'.format(self.current_solution.total_cost, current_cost, self.best_cost))
-            self.current_solution.routes = copy.copy(all_routes)
-            self.current_solution.total_cost -= diff_cost
-            self.current_solution.route_of_customers[cust_id1] = route2_swap.id
-            self.current_solution.route_of_customers[cust_id2] = route1_swap.id
-            if feasible_insertion:
-                self.current_solution.route_of_customers[cust_id_ins] = route2_ins.id
+            self._accept_solution(all_routes, route1_swap, route2_swap, cust_id1, cust_id2, diff_cost, feasible_insertion, route1_ins, route2_ins, cust_id_ins)
             if diff_cost_best >= 0:
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)
                 self.best_route_of_customer = copy.copy(self.current_solution.route_of_customers)
         elif diff_cost_best > 0:
             print('best')  
-            # mi trova sempre la stessa soluzione    
-            self.best_routes = copy.copy(all_routes)
-            self.best_cost = current_cost
-            self.best_route_of_customer[cust_id1] = route2_swap.id
-            self.best_route_of_customer[cust_id2] = route1_swap.id
-            if feasible_insertion:
-                self.best_route_of_customer[cust_id_ins] = route2_ins.id
-        elif self.violate_tabu and (len(self.tabu_list)>=self.tabu_lenght):
+            self._accept_solution(all_routes, route1_swap, route2_swap, cust_id1, cust_id2, diff_cost_best, feasible_insertion, route1_ins, route2_ins, cust_id_ins, best=True)
+        elif not(self.violate_tabu) and self.no_improvement >= 2000:
             print('accept worse')
-            self.iter_no_improvement = 0
-            self.current_solution.routes = copy.copy(all_routes)
-            self.current_solution.total_cost -= diff_cost
-            self.current_solution.route_of_customers[cust_id1] = route2_swap.id
-            self.current_solution.route_of_customers[cust_id2] = route1_swap.id
-            if feasible_insertion:
-                self.current_solution.route_of_customers[cust_id_ins] = route2_ins.id
+            self._accept_solution(all_routes, route1_swap, route2_swap, cust_id1, cust_id2, diff_cost, feasible_insertion, route1_ins, route2_ins, cust_id_ins)
 
-        self.violate_tabu = 0
+        self.no_improvement += 1
+        self.violate_tabu = True
         self.route_to_eliminate = None
                 
 
     def final_optimization(self):
-        print(self.best_cost)
         self.current_solution.total_cost = self.best_cost
         self.current_solution.routes = self.best_routes
         self.current_solution.route_of_customers = self.best_route_of_customer
@@ -128,7 +106,7 @@ class TabuSearch():
             best_route = self._local_search(route)
             all_routes[id_route] = best_route
             self.current_solution.total_cost += route.load_min
-        print(self.current_solution.total_cost)
+        
 
 # ------------------------------------------------------ PRIVATE METHODS ----------------------------------------------------------
 
@@ -162,6 +140,29 @@ class TabuSearch():
             element_to_remove = list(self.tabu_list.keys())[0] 
             del self.tabu_list[element_to_remove]
 
+
+    def _accept_solution(self, all_routes, route1_swap, route2_swap, cust_id1, cust_id2, diff_cost, feasible_insertion, route1_ins, route2_ins, cust_id_ins, best=False):
+        self._update_tabu_list(route1_swap, cust_id1)
+        self._update_tabu_list(route2_swap, cust_id2)
+        self.no_improvement = 0
+        if best:
+            self.best_routes = copy.copy(all_routes)
+            self.best_cost -= diff_cost
+            self.best_route_of_customer[cust_id1] = route2_swap.id
+            self.best_route_of_customer[cust_id2] = route1_swap.id
+        else:
+            self.current_solution.routes = copy.copy(all_routes)
+            self.current_solution.total_cost -= diff_cost
+            self.current_solution.route_of_customers[cust_id1] = route2_swap.id
+            self.current_solution.route_of_customers[cust_id2] = route1_swap.id
+        if feasible_insertion:
+            if best:
+                self.best_route_of_customer[cust_id_ins] = route2_ins.id
+            else:
+                self.current_solution.route_of_customers[cust_id_ins] = route2_ins.id                
+            self._update_tabu_list(route1_ins, cust_id_ins)
+
+
     def _swap_neighbourhood(self, all_routes):
         all_route_ids = all_routes.keys()
         # select 2 random routes and 2 random customer
@@ -170,9 +171,9 @@ class TabuSearch():
         route_2, cust_id2, prec_cust2, post_cust2, cust_2 = self._initialize_route(all_routes, route_ids[1])
 
         if cust_id1 in self.tabu_list:
-            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id1] == set(route_2.route))
+            self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id1] == set(route_2.route))
         if cust_id2 in self.tabu_list:
-            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id2] == set(route_1.route))
+            self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id2] == set(route_1.route))
         
         dist_matrix = self.current_solution.distance_matrix
         # check if the swap is feasible
@@ -215,7 +216,7 @@ class TabuSearch():
         route_2 = self._initialize_route(all_routes, route_ids[1], custumer_on_route=False)
 
         if cust_id in self.tabu_list:
-            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id] == set(route_2.route))
+            self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id] == set(route_2.route))
 
         dist_matrix = self.current_solution.distance_matrix
         # calculate new loads for ruote 1

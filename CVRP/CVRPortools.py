@@ -1,6 +1,8 @@
 import numpy as np
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
+import time
+
 
 def create_data_model(service_time, distance_matrix, demands):
     """Stores the data for the problem."""
@@ -45,6 +47,8 @@ def print_solution(data, manager, routing, solution):
     print('Total load of all routes: {}kg'.format(total_load))
 
 def main():
+    
+    start = time.time()
     """Solve the CVRP problem."""
     np.random.seed(789)
     num_customer = 200
@@ -127,6 +131,9 @@ def main():
     # Print solution on console.
     if solution:
         print_solution(data, manager, routing, solution)
+    end = time.time()
+    str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
+    print('Time for simlation: '+str_time)
 
 
 main()

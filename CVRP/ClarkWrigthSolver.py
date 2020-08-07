@@ -52,7 +52,7 @@ class ClarkWrightSolver():
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
         num_elem_tridiag = int((self.num_customers-1)*self.num_customers/2)
         best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[num_elem_tridiag:], savings_matrix.shape)
-        final_random_custumer = 2*num_elem_tridiag//3
+        final_random_custumer = int(2*num_elem_tridiag//3)
         permutation = list(range(final_random_custumer,num_elem_tridiag))
         random.shuffle(permutation)
         permutation = list(range(final_random_custumer))+permutation
