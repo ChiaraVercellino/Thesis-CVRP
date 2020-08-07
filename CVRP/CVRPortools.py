@@ -21,6 +21,7 @@ def create_data_model(service_time, distance_matrix, demands):
 
 def print_solution(data, manager, routing, solution):
     """Prints solution on console."""
+    total =  0
     total_distance = 0
     total_load = 0
     for vehicle_id in range(data['num_vehicles']):
@@ -34,6 +35,7 @@ def print_solution(data, manager, routing, solution):
             plan_output += ' {0} Load ({1}) -> '.format(node_index, route_load)
             previous_index = index
             index = solution.Value(routing.NextVar(index))
+            total += data['distance_matrix'][manager.IndexToNode(previous_index)][manager.IndexToNode(index)]
             route_distance += routing.GetArcCostForVehicle(
                 previous_index, index, vehicle_id)
         plan_output += ' {0} Load ({1})\n'.format(manager.IndexToNode(index),
@@ -45,13 +47,13 @@ def print_solution(data, manager, routing, solution):
         total_load += route_load
     print('Total distance of all routes: {}km'.format(total_distance-sum(data['service_time'])))
     print('Total load of all routes: {}kg'.format(total_load))
-
+    print('Real total: {} km'.format(total-sum(data['service_time'])))
 def main():
     
     start = time.time()
     """Solve the CVRP problem."""
-    np.random.seed(789)
-    num_customer = 200
+    np.random.seed(79)
+    num_customer = 195
     distances = np.random.uniform(10,100,int(num_customer*(num_customer+1)/2))
     distance_matrix = np.zeros((num_customer+1,num_customer+1))
     distance_matrix[np.triu_indices(num_customer+1, 1)] = distances

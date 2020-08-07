@@ -6,8 +6,8 @@ import time
 
 def main():
     start = time.time()
-    np.random.seed(789)
-    num_customer = 200
+    np.random.seed(79)
+    num_customer = 195
     distances = np.random.uniform(10,100,int(num_customer*(num_customer+1)/2))
     distance_matrix = np.zeros((num_customer+1,num_customer+1))
     distance_matrix[np.triu_indices(num_customer+1, 1)] = distances
@@ -19,7 +19,7 @@ def main():
     clark_wright_sol.solve()
     tabu_search = TabuSearch(clark_wright_sol)
     max_iter = 100000
-    for i in range(maxiter):
+    for i in range(max_iter):
         tabu_search.solve()
     tabu_search.final_optimization()
     tabu_search_sol = tabu_search.current_solution
@@ -27,5 +27,6 @@ def main():
     end = time.time()
     str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
     print('Time for simlation: '+str_time)
+
 if __name__ == '__main__':
     main()
