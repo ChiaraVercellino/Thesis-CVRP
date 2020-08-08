@@ -6,7 +6,7 @@ import time
 
 def main():
     start = time.time()
-    np.random.seed(79)
+    np.random.seed(890)
     num_customer = 195
     distances = np.random.uniform(10,100,int(num_customer*(num_customer+1)/2))
     distance_matrix = np.zeros((num_customer+1,num_customer+1))
@@ -17,16 +17,18 @@ def main():
 
     clark_wright_sol = ClarkWrightSolver(distance_matrix, service_time, demand)
     clark_wright_sol.solve()
-    tabu_search = TabuSearch(clark_wright_sol)
-    max_iter = 100000
-    for i in range(max_iter):
-        tabu_search.solve()
+    max_time = 30
+    tabu_search = TabuSearch(clark_wright_sol, max_time)
+    elapsed_time = 0
+    i=0
+    while elapsed_time <= max_time:
+        i+=1
+        tabu_search.solve(elapsed_time)
+        elapsed_time = time.time()-start
     tabu_search.final_optimization()
     tabu_search_sol = tabu_search.current_solution
     tabu_search_sol.print_solution()
-    end = time.time()
-    str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
-    print('Time for simlation: '+str_time)
+    print('Iterations: {}'.format(i))
 
 if __name__ == '__main__':
     main()

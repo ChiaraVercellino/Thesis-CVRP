@@ -52,7 +52,7 @@ def main():
     
     start = time.time()
     """Solve the CVRP problem."""
-    np.random.seed(79)
+    np.random.seed(890)
     num_customer = 195
     distances = np.random.uniform(10,100,int(num_customer*(num_customer+1)/2))
     distance_matrix = np.zeros((num_customer+1,num_customer+1))
