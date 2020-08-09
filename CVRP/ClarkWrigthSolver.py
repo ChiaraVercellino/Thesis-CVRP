@@ -7,14 +7,14 @@ import random
 
 class ClarkWrightSolver():
     """Clark and Wright Savings algorithm solver class"""
-    def __init__(self, distance_matrix, service_time, demand):
+    def __init__(self, distance_matrix, service_time, demand, initialize_perc):
         #self.num_customers = len(selected_customer)
         self.num_customers = len(service_time)
         self.num_vehicles = 50
         self.num_routes = self.num_customers
-        random.seed()
+        random.seed(498)
         self.distance_matrix = distance_matrix
-
+        self.initialize_perc = initialize_perc
         # list of customers
         self.customers = {}
         self.routes = {}
@@ -52,7 +52,7 @@ class ClarkWrightSolver():
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
         num_elem_tridiag = int((self.num_customers-1)*self.num_customers/2)
         best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[num_elem_tridiag:], savings_matrix.shape)
-        final_random_custumer = int(num_elem_tridiag//3)
+        final_random_custumer = int(num_elem_tridiag*self.initialize_perc)
         permutation = list(range(final_random_custumer,num_elem_tridiag))
         random.shuffle(permutation)
         permutation = list(range(final_random_custumer))+permutation

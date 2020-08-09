@@ -8,12 +8,13 @@ from ClarkWrigthSolver import ClarkWrightSolver
 
 class TabuSearch():
 
-    def __init__(self, initial_solution, max_time):    
+    def __init__(self, initial_solution, max_time, tabu_divisor, perc, num_perm):    
         # generate all possible permutation for local search step
-        random.seed()
+        random.seed(156)
         self.perms = {}
         for i in [3,4,5]:
             perms = list(permutations(range(1, i+1))) 
+            perms.pop(0)
             for p in perms:
                 # remove anti-clockwise permutations
                 if p[::-1] in perms:
@@ -21,7 +22,7 @@ class TabuSearch():
             self.perms[i]=perms
         self.current_solution = initial_solution
         self.tabu_list = {}
-        self.tabu_lenght = initial_solution.num_customers//2
+        self.tabu_lenght = initial_solution.num_customers//tabu_divisor
         self.violate_tabu = True
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
@@ -31,6 +32,8 @@ class TabuSearch():
         self.no_improvement = 0
         self.max_time = max_time
         self.previous_time = 0
+        self.percentage2swap = perc
+        self.num_perm = num_perm
 
     def solve(self, elapsed_time):
         # copy of the routes
@@ -38,7 +41,7 @@ class TabuSearch():
         diff_time = elapsed_time - self.previous_time
         feasible_swap = False
         # generate neighbourhood by swapping customers
-        if elapsed_time/self.max_time <= 0.15:
+        if elapsed_time/self.max_time <= self.percentage2swap:
             num_swap = 2
         else:
             num_swap = 1
@@ -67,7 +70,8 @@ class TabuSearch():
                 print('eliminated route')
                 del all_routes[route1_ins.id]
                 self.eliminated_route = True
-                all_modified_routes = all_modified_routes.union(set([route2_ins.id])).difference(set(route_ids_no_more_ins))
+                all_modified_routes = all_modified_routes.union(set([route2_ins.id])).difference(set(route_ids_no_more_ins))  
+                self.route_to_eliminate = None
             else:
                 all_modified_routes = all_modified_routes.union(set([route2_ins.id, route1_ins.id])).difference(set(route_ids_no_more_ins))
         
@@ -91,8 +95,7 @@ class TabuSearch():
                 self.best_route_of_customer = copy.copy(self.current_solution.route_of_customers)
         elif diff_cost_best > 0:
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost_best, feasible_insertion, route1_ins, route2_ins, cust_id_ins, best=True)
-        elif not(self.violate_tabu) and self.no_improvement >= 2 and elapsed_time<=0.95*self.max_time:
-            print('accept worse')
+        elif not(self.violate_tabu) and self.no_improvement >= 0.01*self.max_time and elapsed_time<=0.95*self.max_time:
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, cust_id_ins)
         else:
             self.no_improvement += diff_time
@@ -106,7 +109,7 @@ class TabuSearch():
         # find best configuration for all routes
         self.current_solution.total_cost = 0
         for id_route, route in all_routes.items():
-            best_route = self._local_search(route)
+            best_route = self._local_search(route, final=True)
             all_routes[id_route] = best_route
             self.current_solution.total_cost += best_route.load_min
         self.current_solution.routes = all_routes
@@ -215,7 +218,7 @@ class TabuSearch():
         # select 2 random routes and 2 random customer
         route_ids = random.sample(all_route_ids, k=2)
 
-        if self.route_to_eliminate:
+        if self.route_to_eliminate and self.route_to_eliminate in all_route_ids:
             if self.route_to_eliminate == route_ids[1]:
                 route_ids[1] = route_ids[0]
                 route_ids[0] = self.route_to_eliminate
@@ -248,37 +251,48 @@ class TabuSearch():
         + dist_matrix[prec_cust2][cust_id] + dist_matrix[cust_id][post_cust2]
         cap_min_constraint2 = new_load_min2 <= route_2.cap_min
         feasible = cap_kg_constraint2 and cap_min_constraint2 and cap_cust_constraint
+        if feasible:
         # update routes
-        route_1.load_kg = new_load_kg1
-        route_1.load_min = new_load_min1
-        route_1.load_cust -= 1
-        route_2.load_kg = new_load_kg2
-        route_2.load_min = new_load_min2
-        route_2.load_cust += 1
-        route_1.route.remove(cust_id)
-        route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
+            route_1.load_kg = new_load_kg1
+            route_1.load_min = new_load_min1
+            route_1.load_cust -= 1
+            route_2.load_kg = new_load_kg2
+            route_2.load_min = new_load_min2
+            route_2.load_cust += 1
+            route_1.route.remove(cust_id)
+            route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
         return feasible, route_1, route_2, cust_id, route_ids
 
-    def _local_search(self, route):
+    def _local_search(self, route, final=False):
         # local search
         new_cost_routes = route.load_min
-        best_route, best_cost, service_times_routes = self._find_best_permutation(route)
+        best_route, best_cost, service_times_routes = self._find_best_permutation(route, final)
         route.route = best_route
         route.load_min = best_cost + service_times_routes
         return route
 
-    def _find_best_permutation(self, route):
+    def _find_best_permutation(self, route, final):
         service_times_routes = 0
-        for c in route.route[1:-1]:
+        route_list = route.route
+        for c in route_list[1:-1]:
             service_times_routes += self.current_solution.customers[c].service_time
         best_cost = route.load_min - service_times_routes
-        best_route = route.route
+        best_route = route_list
+        dist_matrix = self.current_solution.distance_matrix
+        
         if route.load_cust >= 3:
-            for perm in self.perms[route.load_cust]:
-                new_route = [0]+[route.route[i] for i in perm]+[0]
+            all_permutation = copy.copy(self.perms[route.load_cust])
+            if not final:
+                total_permutation = len(all_permutation)
+                if total_permutation >= self.num_perm:
+                    all_permutation = random.sample(all_permutation, self.num_perm)
+            for perm in all_permutation:
+                new_route = [0]+[route_list[i] for i in perm]+[0]
                 route_cost = 0
                 for i in range(len(new_route)-1):
-                    route_cost += self.current_solution.distance_matrix[new_route[i]][new_route[i+1]]
+                    route_cost += dist_matrix[new_route[i]][new_route[i+1]]
+                    if route_cost>=best_cost:
+                        break
                 if route_cost < best_cost:             
                     best_route = new_route
                     best_cost = route_cost
@@ -297,9 +311,10 @@ class TabuSearch():
             dist_matrix[prec_cust_id][customer2.id] - dist_matrix[customer2.id][post_cust_id] + \
                     dist_matrix[prec_cust_id][customer1.id] + dist_matrix[customer1.id][post_cust_id]
         cap_min_constraint = new_load_min <= swapped_route2.cap_min
-        swapped_route2.load_kg = new_load_kg
-        swapped_route2.load_min = new_load_min
-        swapped_route2.route[swapped_route2.route.index(customer2.id)] = customer1.id
         feasible_swap = cap_kg_constraint and cap_min_constraint
-
+        if feasible_swap:
+            swapped_route2.load_kg = new_load_kg
+            swapped_route2.load_min = new_load_min
+            swapped_route2.route[swapped_route2.route.index(customer2.id)] = customer1.id
+        
         return feasible_swap, swapped_route2
