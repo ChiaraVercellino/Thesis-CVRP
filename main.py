@@ -212,7 +212,6 @@ def main():
                         elapsed_time = time.time()-start_tabu
                     tabu_search.final_optimization()
                     tabu_search_sol = tabu_search.current_solution
-                    tabu_search_sol.print_solution(updated_day)
 
             if not(solution):
                 # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
@@ -227,9 +226,9 @@ def main():
 
         # save daily roads in Solution/routes.sol
         if solver == 'ortools':
-            num_empty_route[day] = save_routes(new_day, data, manager, routing, solution)
+            num_empty_route[day] = save_routes(updated_day, data, manager, routing, solution)
         elif solver == 'tabu':
-            num_empty_route[day] = tabu_search_sol.print_solution(new_day)
+            num_empty_route[day] = tabu_search_sol.print_solution(updated_day)
 
         # --------------------------------------- Final updates -------------------------------------------------------
         
