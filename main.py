@@ -198,17 +198,21 @@ def main():
             # solution: solution to CVRP
 
             if solver == 'ortools':
-                data, manager, routing, solution = VRP_optimization(updated_day.selected_customers, depot, vehicles, capacity)
+                data, manager, routing, solution, obj_value = VRP_optimization(updated_day.selected_customers, depot, vehicles, capacity)
 
-            elif solver == 'tabu':
+            elif solver == 'tabu':                                 
+                start_tabu = time.time()
+                elapsed_time = 0
                 clark_wright_sol = ClarkWrightSolver(updated_day.selected_customers, depot)
                 solution = clark_wright_sol.solve()
                 if solution:
-                    tabu_search = TabuSearch(clark_wright_sol)
-                    for i in range(100):
-                        tabu_search.solve()
+                    tabu_search = TabuSearch(clark_wright_sol, constant.MAX_TIME)
+                    while elapsed_time <= constant.MAX_TIME:
+                        tabu_search.solve(elapsed_time)
+                        elapsed_time = time.time()-start_tabu
                     tabu_search.final_optimization()
                     tabu_search_sol = tabu_search.current_solution
+                    tabu_search_sol.print_solution(updated_day)
 
             if not(solution):
                 # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
@@ -243,7 +247,7 @@ def main():
 
         # In the objective function I consider only the travel time, not the service one which cannot be optimized
         if solver == 'ortools':
-            daily_obj[day] = solution.ObjectiveValue()-total_time
+            daily_obj[day] = obj_value-total_time
         elif solver == 'tabu':
             daily_obj[day] = tabu_search_sol.total_cost-total_time
 

@@ -15,10 +15,10 @@ def main():
     demand = np.random.randint(100,200,size=(num_customer,1))
     
     
-    tabu_divisor = [2, 3, 4, 5, 6]
-    perc = [0.1, 0.15, 0.20, 0.25, 0.30, 0.35]
-    num_perm = [10, 15, 20, 25, 30, 35, 40]
-    initialize_perc = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
+    tabu_divisor = [3]
+    perc = [0.35]
+    num_perm = [30]
+    initialize_perc = [0.6]
     
     max_time = 30
 

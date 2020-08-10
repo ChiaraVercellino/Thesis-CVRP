@@ -75,3 +75,10 @@ gamma = 1
 threshold_1 = -0.12
 
 
+# ------------------------------------------------ TABU SEARCH PARAMETERS --------------------------------------------------------------------------
+
+CLARK_WRIGHT_PERC = 0.6
+TABU_LENGTH = 3
+PERC2SWAP = 0.35
+NUM_PERM = 30
+MAX_TIME = 30

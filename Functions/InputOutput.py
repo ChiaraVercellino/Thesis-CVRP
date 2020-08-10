@@ -220,9 +220,8 @@ def save_routes(day, data, manager, routing, solution, file_path='./Solution/rou
             previous_index = index
             # select following customer
             index = solution.Value(routing.NextVar(index))
-            # add lenght of the arc
-            route_distance += routing.GetArcCostForVehicle(
-                previous_index, index, vehicle_id)
+            # add the real lenght of the arc
+            route_distance += data['distance_matrix'][manager.IndexToNode(previous_index)][manager.IndexToNode(index)]
         plan_output += '{}\n'.format(manager.IndexToNode(index))
         # Save travel and service time of the route (h)
         plan_output += 'Travel and service time of the route: {} h\n'.format(round(route_distance/60,2))

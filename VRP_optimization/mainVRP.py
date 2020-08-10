@@ -91,6 +91,7 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
         manager: routing index manager
         routing: routing model
         solution: solution to CVRP
+        obj_value : real value of objective function
     """
     # Instantiate the data problem
     data = _create_data_model(select_clients_df, depot, vehicles, capacity_kg)
@@ -166,4 +167,14 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
     # Solve the problem
     solution = routing.SolveWithParameters(search_parameters)
 
-    return  data, manager, routing, solution
+    obj_value =  0
+    # Compute the real value of objetive function
+    if solution:
+        for vehicle_id in range(data['num_vehicles']):
+            index = routing.Start(vehicle_id)
+            while not routing.IsEnd(index):
+                previous_index = index
+                index = solution.Value(routing.NextVar(index))
+                obj_value += data['distance_matrix'][manager.IndexToNode(previous_index)][manager.IndexToNode(index)]
+
+    return  data, manager, routing, solution, obj_value
