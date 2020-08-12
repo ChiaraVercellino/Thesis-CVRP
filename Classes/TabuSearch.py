@@ -9,7 +9,7 @@ import constant
 
 class TabuSearch():
 
-    def __init__(self, initial_solution, max_time):    
+    def __init__(self, initial_solution, max_time, perc_swap, tabu_lenght, num_permutation):    
         random.seed(constant.SEED)
         # generate all possible permutation for local search step
         self.perms = {}
@@ -23,7 +23,7 @@ class TabuSearch():
             self.perms[i]=perms
         self.current_solution = initial_solution
         self.tabu_list = {}
-        self.tabu_lenght = initial_solution.num_customers//constant.TABU_LENGTH
+        self.tabu_lenght = tabu_lenght
         self.violate_tabu = True
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
@@ -33,7 +33,8 @@ class TabuSearch():
         self.no_improvement = 0
         self.max_time = max_time
         self.previous_time = 0
-
+        self.perc_swap = perc_swap
+        self.num_permutation = num_permutation
 
     def solve(self, elapsed_time):
         # copy of the routes
@@ -42,7 +43,7 @@ class TabuSearch():
         feasible_swap = False
         # generate neighbourhood by swapping customers
 
-        if elapsed_time/self.max_time <= 0.25:            
+        if elapsed_time/self.max_time <= self.perc_swap:            
             num_swap = random.randint(1,2)
             swap_size = random.randint(1,3)
         else:
@@ -302,8 +303,8 @@ class TabuSearch():
             all_permutation = copy.copy(self.perms[route.load_cust])
             if not final:
                 total_permutation = len(all_permutation)
-                if total_permutation >= constant.NUM_PERM:
-                    all_permutation = random.sample(all_permutation, constant.NUM_PERM)
+                if total_permutation >= self.num_permutation:
+                    all_permutation = random.sample(all_permutation, self.num_permutation)
             for perm in all_permutation:
                 new_route = [0]+[route_list[i] for i in perm]+[0]
                 route_cost = 0
