@@ -135,12 +135,14 @@ class TabuSearch():
         else:
             return route
 
+
     @staticmethod
     def _update_routes(all_routes, route_ids_no_more, routes_list):
         for i in range(len(routes_list)):
             del all_routes[route_ids_no_more[i]]
             all_routes[routes_list[i].id] = routes_list[i]
         return all_routes
+
 
     def _update_tabu_list(self, route, customers):
         for customer in customers:
@@ -228,7 +230,6 @@ class TabuSearch():
         return feasible, old_cost_routes, swapped_routes, route_ids, cust_ids
     
     
-
     def _insert_neighbourhood(self, all_routes):
         all_route_ids = all_routes.keys()
         # select 2 random routes and 2 random customer
@@ -280,7 +281,6 @@ class TabuSearch():
         return feasible, route_1, route_2, cust_id, route_ids
 
 
-
     def _local_search(self, route, final=False):
         # local search
         new_cost_routes = route.load_min
@@ -323,30 +323,14 @@ class TabuSearch():
         dist_matrix = self.current_solution.distance_matrix   
 
         new_load_kg = swapped_route2.load_kg
-        new_service_time = 0  
         new_load_cust = swapped_route2.load_cust + len(cust_ids1) - len(cust_ids2)      
-        new_route_cost = swapped_route2.load_min
-        prec = swapped_route2.route[left]
-        for cust_id1 in cust_ids1:                 
-            customer1 = self.current_solution.customers[cust_id1]
-            if cust_id1 in self.tabu_list:
-                self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id1] == set(swapped_route2.route))
-            new_load_kg += customer1.demand
-            new_service_time += customer1.service_time
-            new_route_cost += dist_matrix[prec][cust_id1]
-            prec = cust_id1
-        new_route_cost += dist_matrix[prec][swapped_route2.route[right]]
-        prec = swapped_route2.route[left]
-        for cust_id2 in cust_ids2:            
-            customer2 = self.current_solution.customers[cust_id2]
-            new_load_kg -= customer2.demand
-            new_service_time -= customer2.service_time
-            new_route_cost -= dist_matrix[prec][cust_id2]
-            prec = cust_id2
-        new_route_cost -= dist_matrix[prec][swapped_route2.route[right]]
+        new_load_min = swapped_route2.load_min
+        
+        new_load_kg, new_load_min = self._calculate_new_loads(cust_ids1, swapped_route2.route, left, right, new_load_kg, new_load_min)
+        new_load_kg, new_load_min = self._calculate_new_loads(cust_ids2, swapped_route2.route, left, right, new_load_kg, new_load_min, factor='minus')
+        
         # check if the swap is feasible
         cap_kg_constraint = new_load_kg <= swapped_route2.cap_kg
-        new_load_min = new_service_time + new_route_cost
         cap_min_constraint = new_load_min <= swapped_route2.cap_min
         cap_cust_constraint = new_load_cust <= swapped_route2.load_cust
         feasible_swap = cap_kg_constraint and cap_min_constraint and cap_cust_constraint
@@ -357,3 +341,26 @@ class TabuSearch():
             swapped_route2.route = swapped_route2.route[0:left+1] + cust_ids1 + swapped_route2.route[right:]
         
         return feasible_swap, swapped_route2
+
+
+    def _calculate_new_loads(self, cust_ids, route, left, right, new_load_kg, new_route_cost, factor='plus'):
+        prec = route[left]
+        for cust_id in cust_ids:                 
+            customer = self.current_solution.customers[cust_id]
+            if cust_id in self.tabu_list:
+                self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id] == set(route))
+            if factor == 'plus':
+                new_load_kg += customer.demand
+                new_route_cost += customer.service_time
+                new_route_cost += self.current_solution.distance_matrix[prec][cust_id]
+            elif factor == 'minus':
+                new_load_kg -= customer.demand
+                new_route_cost -= customer.service_time
+                new_route_cost -= self.current_solution.distance_matrix[prec][cust_id]
+            prec = cust_id
+        if factor == 'plus':
+            new_route_cost += self.current_solution.distance_matrix[prec][route[right]]
+        elif factor == 'minus':
+            new_route_cost -= self.current_solution.distance_matrix[prec][route[right]]
+
+        return new_load_kg, new_route_cost

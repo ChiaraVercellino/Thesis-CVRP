@@ -81,13 +81,12 @@ from Classes.TabuSearch import TabuSearch
 # import constant variables
 import constant
 
-np.random.seed(constant.SEED)
 
 def main():
 
-    PERC_SWAP = [0.1, 0.20, 0.3]
-    CLARK_WRIGHT_PERC = [0.5, 0.65, 0.75]
-    TABU_LENGTH = [50, 90, 130]
+    PERC_SWAP = [0.15]
+    CLARK_WRIGHT_PERC = [0.55, 0.7, 0.85]
+    TABU_LENGTH = [80, 90, 100]
     NUM_PERM = [20, 30, 40]
 
     for cl_wr_perc in CLARK_WRIGHT_PERC:
@@ -95,7 +94,8 @@ def main():
             for num_p in NUM_PERM:
                 for tabu_l in TABU_LENGTH:
                 # ------------------------------------------------ INITIALIZATION -------------------------------------------------------
-
+                              
+                    np.random.seed(constant.SEED)
                     # starting time for simulation  
                     start = time.time()
                     # parse command line arguments:
@@ -175,10 +175,10 @@ def main():
                             # append new customers to the ones that were not served in the previous day
                             new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
-                        print(f'Simulated day {new_day.current_day}')
+                        #print(f'Simulated day {new_day.current_day}')
 
                         # save simulated clients' data
-                        #new_day.save_data_costumers()
+                        new_day.save_data_costumers()
 
                         # ---------------------------------------- Customers selection ------------------------------------------------
 
@@ -223,7 +223,7 @@ def main():
                                         elapsed_time = time.time()-start_tabu
                                     tabu_search.final_optimization()
                                     tabu_search_sol = tabu_search.current_solution
-                                    print(ii)
+                                    #print(ii)
                             if not(solution):
                                 # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
                                 # selected_indexes and I put it again in customer_df to be served in the following days               
