@@ -259,7 +259,7 @@ def main():
 
             # ------------------------------------------------ STATISICS -------------------------------------------------------
 
-            print('Perc init {}, tabu lenght {}'.format(cl_wr_perc, perc_sw, tabu_l, num_p))
+            print('Perc init {}, tabu lenght {}'.format(cl_wr_perc, tabu_l))
             # Print on the standard output some statistics
             print(f'Total objective function: {total_obj_fun}')
             #print(f'Total number of postponed costumers: {num_postponed}')
