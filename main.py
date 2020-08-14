@@ -219,7 +219,7 @@ def main():
                                 elapsed_time = time.time()-start_tabu
                             tabu_search.final_optimization()
                             tabu_search_sol = tabu_search.current_solution
-                            print(ii)
+                            
                     if not(solution):
                         # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
                         # selected_indexes and I put it again in customer_df to be served in the following days               
