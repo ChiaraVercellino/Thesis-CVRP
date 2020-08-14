@@ -36,7 +36,9 @@ class TabuSearch():
         self.num_swap = 1
         self.swap_size = 1
 
+
     def solve(self, elapsed_time):
+            
         # copy of the routes
         all_routes = copy.copy(self.current_solution.routes)
         diff_time = elapsed_time - self.previous_time
@@ -59,7 +61,7 @@ class TabuSearch():
 
         # generate neighbourhood by inserting a customer in another route
         feasible_insertion, route1_ins, route2_ins, cust_id_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)
-            
+        
         if feasible_insertion:
             # those routes have been modified by insertion
             all_routes = self._update_routes(all_routes, route_ids_no_more_ins, [route1_ins,route2_ins])
@@ -195,18 +197,25 @@ class TabuSearch():
         post_cust_idx = []
 
         for swap in range(2*num_swap):
+            
             route = self._initialize_route(all_routes, route_ids[swap], custumer_on_route = False)
             swapped_routes.append(route)
-            if route.load_cust >= swap_size:
-                left = random.randint(1,  route.load_cust+1-(swap_size))
-                right = left+swap_size
-                cust_id = route.route[left:right]
-                prec_cust = left-1
-                post_cust = right
+            if swap % 2==0:
+                if route.load_cust >= swap_size:
+                    left = random.randint(1,  route.load_cust+1-(swap_size))
+                    right = left+swap_size
+                    cust_id = route.route[left:right]
+                    prec_cust = left-1
+                    post_cust = right
+                else:
+                    cust_id = random.sample(route.route[1:-1], 1)
+                    prec_cust = route.route.index(cust_id[0])-1
+                    post_cust = route.route.index(cust_id[0])+1
             else:
-                cust_id = random.sample(route.route[1:-1], 1)
-                prec_cust = route.route.index(cust_id[0])-1
-                post_cust = route.route.index(cust_id[0])+1
+                if route.load_cust >= swap_size:
+                    cust_id, prec_cust, post_cust = self._find_best_swap(cust_id[0], route.route, swap_size=swap_size)
+                else:
+                    cust_id, prec_cust, post_cust = self._find_best_swap(cust_id[0], route.route)     
 
             cust_ids.append(cust_id)
             prec_cust_idx.append(prec_cust)
@@ -219,10 +228,10 @@ class TabuSearch():
             old_cost_routes += swapped_routes[swap].load_min
             if swap % 2 == 0:
                 feasible_swap, swapped_routes[swap] = self._try_swap(swapped_routes[swap+1], swapped_routes[swap], cust_ids[swap+1], \
-                    cust_ids[swap], prec_cust_idx[swap], post_cust_idx[swap])                
-            else:
+                    cust_ids[swap], prec_cust_idx[swap], post_cust_idx[swap])   
+            else:                           
                 feasible_swap, swapped_routes[swap] = self._try_swap(swapped_routes[swap-1], swapped_routes[swap], cust_ids[swap-1], \
-                    cust_ids[swap], prec_cust_idx[swap], post_cust_idx[swap])
+                    cust_ids[swap], prec_cust_idx[swap], post_cust_idx[swap]) 
             swap += 1
             feasible = feasible and feasible_swap
         return feasible, old_cost_routes, swapped_routes, route_ids, cust_ids
@@ -281,6 +290,7 @@ class TabuSearch():
                 route_2.load_cust += 1
                 route_1.route.remove(cust_id)
                 route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
+                
         return feasible, route_1, route_2, cust_id, route_ids
 
 
@@ -323,7 +333,7 @@ class TabuSearch():
 
     def _try_swap(self, swapped_route1, swapped_route2, cust_ids1, cust_ids2, left, right):
         
-        new_load_cust = swapped_route2.load_cust + len(cust_ids1) - len(cust_ids2)     
+        new_load_cust = swapped_route2.load_cust + len(cust_ids1) - len(cust_ids2) 
         cap_cust_constraint = new_load_cust <= swapped_route2.load_cust
         feasible_swap = False
         if cap_cust_constraint:
@@ -371,3 +381,41 @@ class TabuSearch():
             new_route_cost -= self.current_solution.distance_matrix[prec][route[right]]
 
         return new_load_kg, new_route_cost
+    
+    def _find_best_swap(self, cust_id, route, swap_size=1):
+        num_cust = len(route)-2
+        if num_cust==1:
+            prec_cust = 0
+            swap_cust = [route[1]]
+            post_cust = num_cust+1
+        else:
+            dist_matrix = self.current_solution.distance_matrix
+            distances  = np.array([dist_matrix[cust_id][i] for i in route])
+            best_idx = np.argpartition(distances, 1)
+            best_idx = best_idx[0]
+            if swap_size == 1:
+                if best_idx <= num_cust-swap_size:
+                    swap_cust = [route[best_idx+1]]
+                    prec_cust = best_idx
+                    post_cust = best_idx+1+swap_size
+                else:
+                    swap_cust = [route[best_idx-swap_size]]
+                    prec_cust = best_idx-1-swap_size
+                    post_cust = best_idx
+            elif swap_size == 2:
+                if num_cust == 2:
+                    swap_cust = route[1:-1]
+                    prec_cust = 0
+                    post_cust = num_cust+1
+                elif best_idx <= num_cust-swap_size:              
+                    swap_cust = route[best_idx+1:best_idx+swap_size+1]
+                    prec_cust = best_idx
+                    post_cust = best_idx+1+swap_size
+                else: 
+                    if num_cust == 3 and best_idx == 2:
+                        best_idx = 3              
+                    swap_cust = route[best_idx-swap_size:best_idx]
+                    prec_cust = best_idx-swap_size-1
+                    post_cust = best_idx        
+
+        return swap_cust, prec_cust, post_cust

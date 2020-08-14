@@ -84,8 +84,8 @@ import constant
 
 def main():
 
-    CLARK_WRIGHT_PERC = [0.6, 0.7, 0.8, 0.9]
-    TABU_LENGTH = [90, 100, 110, 120, 130, 140, 150]
+    CLARK_WRIGHT_PERC = [0.75]
+    TABU_LENGTH = [100]
 
     for cl_wr_perc in CLARK_WRIGHT_PERC:
         for tabu_l in TABU_LENGTH:
@@ -212,11 +212,14 @@ def main():
                         solution = clark_wright_sol.solve()
                         if solution:
                             tabu_search = TabuSearch(clark_wright_sol, constant.MAX_TIME, tabu_l)
+                            ii=0
                             while elapsed_time <= constant.MAX_TIME:
+                                ii+=1
                                 tabu_search.solve(elapsed_time)
                                 elapsed_time = time.time()-start_tabu
                             tabu_search.final_optimization()
                             tabu_search_sol = tabu_search.current_solution
+                            print(ii)
                     if not(solution):
                         # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
                         # selected_indexes and I put it again in customer_df to be served in the following days               
