@@ -24,7 +24,7 @@ class TabuSearch():
         self.current_solution = initial_solution
         self.tabu_list = {}
         self.tabu_lenght = tabu_lenght
-        self.violate_tabu = True
+        self.violate_tabu = False
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
         self.best_route_of_customer = copy.copy(initial_solution.route_of_customers)
@@ -33,8 +33,6 @@ class TabuSearch():
         self.no_improvement = 0
         self.max_time = max_time
         self.previous_time = 0
-        self.num_swap = 1
-        self.swap_size = 1
 
 
     def solve(self, elapsed_time):
@@ -46,7 +44,7 @@ class TabuSearch():
         # generate neighbourhood by swapping customers
 
         while not feasible_swap:
-            feasible_swap, old_cost_routes, swapped_routes, route_ids_no_more, cust_ids = self._swap_neighbourhood(all_routes, self.num_swap, self.swap_size)
+            feasible_swap, old_cost_routes, swapped_routes, route_ids_no_more, cust_ids = self._swap_neighbourhood(all_routes)
 
         # those routes have been modified by swap
         all_routes = self._update_routes(all_routes, route_ids_no_more, swapped_routes)
@@ -86,24 +84,20 @@ class TabuSearch():
         # found a better solution: update solution
         if diff_cost >= 0 and not(self.violate_tabu) or self.eliminated_route:            
             self.eliminated_route = False
-            self.swap_size = 2
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, cust_id_ins)
             if diff_cost_best >= 0:
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)
                 self.best_route_of_customer = copy.copy(self.current_solution.route_of_customers)
         elif diff_cost_best > 0:
-            self.swap_size = 1
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost_best, feasible_insertion, route1_ins, route2_ins, cust_id_ins, best=True)
         elif not(self.violate_tabu) and self.no_improvement >= 0.01*self.max_time and elapsed_time<=0.95*self.max_time:
-            self.swap_size = 1
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, cust_id_ins)
         else:
-            self.swap_size = 1
             self.no_improvement += diff_time
         
         self.previous_time = elapsed_time
-        self.violate_tabu = True
+        self.violate_tabu = False
         self.route_to_eliminate = None
                 
 
@@ -144,97 +138,77 @@ class TabuSearch():
         return all_routes
 
 
-    def _update_tabu_list(self, route, customers):
-        for customer in customers:
-            if len(self.tabu_list) < self.tabu_lenght:
-                self.tabu_list[customer]=set(route.route)
-            else:
-                element_to_remove = list(self.tabu_list.keys())[0] 
-                del self.tabu_list[element_to_remove]
+    def _update_tabu_list(self, route, customer):
+        if len(self.tabu_list) < self.tabu_lenght:
+            self.tabu_list[customer]=set(route.route)
+        else:
+            element_to_remove = list(self.tabu_list.keys())[0] 
+            del self.tabu_list[element_to_remove]
 
 
     def _accept_solution(self, all_routes, swapped_routes, swapped_cust, diff_cost, feasible_insertion, route1_ins, route2_ins, cust_id_ins, best=False):
         
-        for swap in range(len(swapped_routes)):
-            self._update_tabu_list(swapped_routes[swap], swapped_cust[swap])
+        self._update_tabu_list(swapped_routes[1], swapped_cust[1])
 
         self.no_improvement = 0
         if best:
             self.best_routes = copy.copy(all_routes)
             self.best_cost -= diff_cost
-            for swap in range(len(swapped_routes)):                
-                for cust in swapped_cust[swap]:
-                    if swap%2==0:
-                        self.best_route_of_customer[cust] = swapped_routes[swap+1].id
-                    else:
-                        self.best_route_of_customer[cust] = swapped_routes[swap-1].id
+            self.best_route_of_customer[swapped_cust[0]] = swapped_routes[1].id
+            self.best_route_of_customer[swapped_cust[1]] = swapped_routes[0].id
         else:
             self.current_solution.routes = copy.copy(all_routes)
             self.current_solution.total_cost -= diff_cost
-            for swap in range(len(swapped_routes)):
-                for cust in swapped_cust[swap]:
-                    if swap%2==0:
-                        self.current_solution.route_of_customers[cust] = swapped_routes[swap+1].id
-                    else:
-                        self.current_solution.route_of_customers[cust] = swapped_routes[swap-1].id
+            self.current_solution.route_of_customers[swapped_cust[0]] = swapped_routes[1].id
+            self.current_solution.route_of_customers[swapped_cust[1]] = swapped_routes[0].id
 
         if feasible_insertion:
             if best:
                 self.best_route_of_customer[cust_id_ins] = route2_ins.id
             else:
                 self.current_solution.route_of_customers[cust_id_ins] = route2_ins.id                
-            self._update_tabu_list(route1_ins, [cust_id_ins])
+            self._update_tabu_list(route1_ins, cust_id_ins)
 
 
-    def _swap_neighbourhood(self, all_routes, num_swap, swap_size):
+    def _swap_neighbourhood(self, all_routes):
         all_route_ids = all_routes.keys()
         # select 2 random routes and 2 random customer
-        route_ids = random.sample(all_route_ids, k=2*num_swap)
+        route_ids = random.sample(all_route_ids, k=2)
+        route_1, cust_id1, prec_cust1, post_cust1, cust_1 = self._initialize_route(all_routes, route_ids[0])
+        route_2, cust_id2, prec_cust2, post_cust2, cust_2 = self._initialize_route(all_routes, route_ids[1])
+        swapped_routes = [route_1, route_2]
+        swapped_cust = [cust_id1, cust_id2]
+        if cust_id1 in self.tabu_list:
+            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id1] == set(route_2.route))
+        if cust_id2 in self.tabu_list:
+            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id2] == set(route_1.route))
+        
+        dist_matrix = self.current_solution.distance_matrix
+        # check if the swap is feasible
+        new_load_kg1 = route_1.load_kg + cust_2.demand - cust_1.demand
+        cap_kg_constraint1 = new_load_kg1 <= route_1.cap_kg
+        new_load_min1 = route_1.load_min + cust_2.service_time - cust_1.service_time - dist_matrix[prec_cust1][cust_id1] \
+        - dist_matrix[cust_id1][post_cust1] + dist_matrix[prec_cust1][cust_id2] + dist_matrix[cust_id2][post_cust1]
+        cap_min_constraint1 = new_load_min1 <= route_1.cap_min
 
-        swapped_routes = []
-        cust_ids = []
-        prec_cust_idx = []
-        post_cust_idx = []
+        new_load_kg2 = route_2.load_kg + cust_1.demand - cust_2.demand
+        cap_kg_constraint2 = new_load_kg2 <= route_2.cap_kg
+        new_load_min2 = route_2.load_min + cust_1.service_time - cust_2.service_time - dist_matrix[prec_cust2][cust_id2] \
+        - dist_matrix[cust_id2][post_cust2] + dist_matrix[prec_cust2][cust_id1] + dist_matrix[cust_id1][post_cust2]
+        cap_min_constraint2 = new_load_min2 <= route_2.cap_min
 
-        for swap in range(2*num_swap):
-            
-            route = self._initialize_route(all_routes, route_ids[swap], custumer_on_route = False)
-            swapped_routes.append(route)
-            if swap % 2==0:
-                if route.load_cust >= swap_size:
-                    left = random.randint(1,  route.load_cust+1-(swap_size))
-                    right = left+swap_size
-                    cust_id = route.route[left:right]
-                    prec_cust = left-1
-                    post_cust = right
-                else:
-                    cust_id = random.sample(route.route[1:-1], 1)
-                    prec_cust = route.route.index(cust_id[0])-1
-                    post_cust = route.route.index(cust_id[0])+1
-            else:
-                if route.load_cust >= swap_size:
-                    cust_id, prec_cust, post_cust = self._find_best_swap(cust_id[0], route.route, swap_size=swap_size)
-                else:
-                    cust_id, prec_cust, post_cust = self._find_best_swap(cust_id[0], route.route)     
-
-            cust_ids.append(cust_id)
-            prec_cust_idx.append(prec_cust)
-            post_cust_idx.append(post_cust)
-
-        feasible = True
-        old_cost_routes = 0
-        swap = 0
-        while swap<2*num_swap and feasible:
-            old_cost_routes += swapped_routes[swap].load_min
-            if swap % 2 == 0:
-                feasible_swap, swapped_routes[swap] = self._try_swap(swapped_routes[swap+1], swapped_routes[swap], cust_ids[swap+1], \
-                    cust_ids[swap], prec_cust_idx[swap], post_cust_idx[swap])   
-            else:                           
-                feasible_swap, swapped_routes[swap] = self._try_swap(swapped_routes[swap-1], swapped_routes[swap], cust_ids[swap-1], \
-                    cust_ids[swap], prec_cust_idx[swap], post_cust_idx[swap]) 
-            swap += 1
-            feasible = feasible and feasible_swap
-        return feasible, old_cost_routes, swapped_routes, route_ids, cust_ids
+        feasible = cap_kg_constraint1 and cap_kg_constraint2 and cap_min_constraint1 and cap_min_constraint2
+        
+        old_cost_routes = route_1.load_min + route_2.load_min
+        if feasible:
+        # update routes
+            route_1.load_kg = new_load_kg1
+            route_1.load_min = new_load_min1
+            route_2.load_kg = new_load_kg2
+            route_2.load_min = new_load_min2
+            route_1.route[route_1.route.index(cust_id1)] = cust_id2
+            route_2.route[route_2.route.index(cust_id2)] = cust_id1
+        return feasible, old_cost_routes, swapped_routes, route_ids, swapped_cust
     
     
     def _insert_neighbourhood(self, all_routes):
@@ -253,7 +227,7 @@ class TabuSearch():
         route_2 = self._initialize_route(all_routes, route_ids[1], custumer_on_route=False)
 
         if cust_id in self.tabu_list:
-            self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id] == set(route_2.route))
+            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id] == set(route_2.route))
 
         new_load_kg2 = route_2.load_kg + cust.demand
         cap_kg_constraint2 = new_load_kg2 <= route_2.cap_kg
@@ -289,8 +263,7 @@ class TabuSearch():
                 route_2.load_min = new_load_min2
                 route_2.load_cust += 1
                 route_1.route.remove(cust_id)
-                route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
-                
+                route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]                
         return feasible, route_1, route_2, cust_id, route_ids
 
 
@@ -331,91 +304,3 @@ class TabuSearch():
         return best_route, best_cost, service_times_routes
 
 
-    def _try_swap(self, swapped_route1, swapped_route2, cust_ids1, cust_ids2, left, right):
-        
-        new_load_cust = swapped_route2.load_cust + len(cust_ids1) - len(cust_ids2) 
-        cap_cust_constraint = new_load_cust <= swapped_route2.load_cust
-        feasible_swap = False
-        if cap_cust_constraint:
-            dist_matrix = self.current_solution.distance_matrix   
-
-            new_load_kg = swapped_route2.load_kg
-            
-            new_load_min = swapped_route2.load_min
-            
-            new_load_kg, new_load_min = self._calculate_new_loads(cust_ids1, swapped_route2.route, left, right, new_load_kg, new_load_min)
-            new_load_kg, new_load_min = self._calculate_new_loads(cust_ids2, swapped_route2.route, left, right, new_load_kg, new_load_min, factor='minus')
-            
-            # check if the swap is feasible
-            cap_kg_constraint = new_load_kg <= swapped_route2.cap_kg
-            cap_min_constraint = new_load_min <= swapped_route2.cap_min
-            
-            feasible_swap = cap_kg_constraint and cap_min_constraint
-            if feasible_swap:
-                swapped_route2.load_kg = new_load_kg
-                swapped_route2.load_min = new_load_min
-                swapped_route2.load_cust = new_load_cust
-                swapped_route2.route = swapped_route2.route[0:left+1] + cust_ids1 + swapped_route2.route[right:]
-        
-        return feasible_swap, swapped_route2
-
-
-    def _calculate_new_loads(self, cust_ids, route, left, right, new_load_kg, new_route_cost, factor='plus'):
-        prec = route[left]
-        for cust_id in cust_ids:                 
-            customer = self.current_solution.customers[cust_id]
-            if cust_id in self.tabu_list:
-                self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id] == set(route))
-            if factor == 'plus':
-                new_load_kg += customer.demand
-                new_route_cost += customer.service_time
-                new_route_cost += self.current_solution.distance_matrix[prec][cust_id]
-            elif factor == 'minus':
-                new_load_kg -= customer.demand
-                new_route_cost -= customer.service_time
-                new_route_cost -= self.current_solution.distance_matrix[prec][cust_id]
-            prec = cust_id
-        if factor == 'plus':
-            new_route_cost += self.current_solution.distance_matrix[prec][route[right]]
-        elif factor == 'minus':
-            new_route_cost -= self.current_solution.distance_matrix[prec][route[right]]
-
-        return new_load_kg, new_route_cost
-    
-    def _find_best_swap(self, cust_id, route, swap_size=1):
-        num_cust = len(route)-2
-        if num_cust==1:
-            prec_cust = 0
-            swap_cust = [route[1]]
-            post_cust = num_cust+1
-        else:
-            dist_matrix = self.current_solution.distance_matrix
-            distances  = np.array([dist_matrix[cust_id][i] for i in route])
-            best_idx = np.argpartition(distances, 1)
-            best_idx = best_idx[0]
-            if swap_size == 1:
-                if best_idx <= num_cust-swap_size:
-                    swap_cust = [route[best_idx+1]]
-                    prec_cust = best_idx
-                    post_cust = best_idx+1+swap_size
-                else:
-                    swap_cust = [route[best_idx-swap_size]]
-                    prec_cust = best_idx-1-swap_size
-                    post_cust = best_idx
-            elif swap_size == 2:
-                if num_cust == 2:
-                    swap_cust = route[1:-1]
-                    prec_cust = 0
-                    post_cust = num_cust+1
-                elif best_idx <= num_cust-swap_size:              
-                    swap_cust = route[best_idx+1:best_idx+swap_size+1]
-                    prec_cust = best_idx
-                    post_cust = best_idx+1+swap_size
-                else: 
-                    if num_cust == 3 and best_idx == 2:
-                        best_idx = 3              
-                    swap_cust = route[best_idx-swap_size:best_idx]
-                    prec_cust = best_idx-swap_size-1
-                    post_cust = best_idx        
-
-        return swap_cust, prec_cust, post_cust
