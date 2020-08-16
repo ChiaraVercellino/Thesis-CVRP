@@ -24,7 +24,7 @@ class TabuSearch():
         self.current_solution = initial_solution
         self.tabu_list = {}
         self.tabu_lenght = tabu_lenght
-        self.violate_tabu = False
+        self.violate_tabu = True
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
         self.best_route_of_customer = copy.copy(initial_solution.route_of_customers)
@@ -98,7 +98,7 @@ class TabuSearch():
         
         self.previous_time = elapsed_time
         self.route_to_eliminate = None
-        self.violate_tabu = False
+        self.violate_tabu = True
                 
 
     def final_optimization(self):
@@ -207,9 +207,9 @@ class TabuSearch():
             route_2.route[route_2.route.index(cust_id2)] = cust_id1
             # check if it violates tabu
             if cust_id1 in self.tabu_list:
-                self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id1] == set(route_2.route))
+                self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id1] == set(route_2.route))
             if cust_id2 in self.tabu_list:
-                self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id2] == set(route_1.route))
+                self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id2] == set(route_1.route))
 
         return feasible, old_cost_routes, swapped_routes, route_ids, swapped_cust
     
@@ -263,7 +263,7 @@ class TabuSearch():
                 route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
                 # check if it violates tabu
                 if cust_id in self.tabu_list:
-                    self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id] == set(route_2.route))  
+                    self.violate_tabu = self.violate_tabu and (self.tabu_list[cust_id] == set(route_2.route))  
 
         return feasible, route_1, route_2, cust_id, route_ids
 

@@ -84,8 +84,8 @@ import constant
 
 def main():
 
-    CLARK_WRIGHT_PERC = [0.75]
-    TABU_LENGTH = [50]
+    CLARK_WRIGHT_PERC = [0.7]
+    TABU_LENGTH = [70]
 
     for cl_wr_perc in CLARK_WRIGHT_PERC:
         for tabu_l in TABU_LENGTH:
@@ -219,7 +219,7 @@ def main():
                                 elapsed_time = time.time()-start_tabu
                             tabu_search.final_optimization()
                             tabu_search_sol = tabu_search.current_solution
-                            print(ii)
+                            #print(ii)
                             
                     if not(solution):
                         # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
@@ -266,15 +266,15 @@ def main():
             print('Perc init {}, tabu lenght {}'.format(cl_wr_perc, tabu_l))
             # Print on the standard output some statistics
             print(f'Total objective function: {total_obj_fun}')
-            #print(f'Total number of postponed costumers: {num_postponed}')
-            #print(f'Average of empty vehicles: {mean(num_empty_route[constant.NUM_DAYS-1:])}')
-            #print(f'Average of served customers: {mean(num_served_clients[constant.NUM_DAYS-1:])}') 
-            #print(f'Average of cycles: {mean(num_cycles)}') 
+            print(f'Total number of postponed costumers: {num_postponed}')
+            print(f'Average of empty vehicles: {mean(num_empty_route[constant.NUM_DAYS-1:])}')
+            print(f'Average of served customers: {mean(num_served_clients[constant.NUM_DAYS-1:])}') 
+            print(f'Average of cycles: {mean(num_cycles)}') 
             print(f'Average of travel cost: {mean(daily_obj[constant.NUM_DAYS-1:])}') 
             # ending time for simulation  
-            #end = time.time()
-            #str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
-            #print('Time for simlation: '+str_time)
+            end = time.time()
+            str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
+            print('Time for simlation: '+str_time)
 
     return
 
