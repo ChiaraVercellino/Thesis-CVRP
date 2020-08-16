@@ -85,7 +85,7 @@ import constant
 def main():
 
     CLARK_WRIGHT_PERC = [0.75]
-    TABU_LENGTH = [100]
+    TABU_LENGTH = [50]
 
     for cl_wr_perc in CLARK_WRIGHT_PERC:
         for tabu_l in TABU_LENGTH:

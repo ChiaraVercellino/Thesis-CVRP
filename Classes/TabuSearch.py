@@ -97,8 +97,8 @@ class TabuSearch():
             self.no_improvement += diff_time
         
         self.previous_time = elapsed_time
-        self.violate_tabu = False
         self.route_to_eliminate = None
+        self.violate_tabu = False
                 
 
     def final_optimization(self):
@@ -148,6 +148,7 @@ class TabuSearch():
 
     def _accept_solution(self, all_routes, swapped_routes, swapped_cust, diff_cost, feasible_insertion, route1_ins, route2_ins, cust_id_ins, best=False):
         
+        self._update_tabu_list(swapped_routes[0], swapped_cust[0])
         self._update_tabu_list(swapped_routes[1], swapped_cust[1])
 
         self.no_improvement = 0
@@ -178,10 +179,6 @@ class TabuSearch():
         route_2, cust_id2, prec_cust2, post_cust2, cust_2 = self._initialize_route(all_routes, route_ids[1])
         swapped_routes = [route_1, route_2]
         swapped_cust = [cust_id1, cust_id2]
-        if cust_id1 in self.tabu_list:
-            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id1] == set(route_2.route))
-        if cust_id2 in self.tabu_list:
-            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id2] == set(route_1.route))
         
         dist_matrix = self.current_solution.distance_matrix
         # check if the swap is feasible
@@ -201,13 +198,19 @@ class TabuSearch():
         
         old_cost_routes = route_1.load_min + route_2.load_min
         if feasible:
-        # update routes
+            # update routes
             route_1.load_kg = new_load_kg1
             route_1.load_min = new_load_min1
             route_2.load_kg = new_load_kg2
             route_2.load_min = new_load_min2
             route_1.route[route_1.route.index(cust_id1)] = cust_id2
             route_2.route[route_2.route.index(cust_id2)] = cust_id1
+            # check if it violates tabu
+            if cust_id1 in self.tabu_list:
+                self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id1] == set(route_2.route))
+            if cust_id2 in self.tabu_list:
+                self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id2] == set(route_1.route))
+
         return feasible, old_cost_routes, swapped_routes, route_ids, swapped_cust
     
     
@@ -226,25 +229,19 @@ class TabuSearch():
         route_1, cust_id, prec_cust1, post_cust1, cust = self._initialize_route(all_routes, route_ids[0])
         route_2 = self._initialize_route(all_routes, route_ids[1], custumer_on_route=False)
 
-        if cust_id in self.tabu_list:
-            self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id] == set(route_2.route))
-
         new_load_kg2 = route_2.load_kg + cust.demand
         cap_kg_constraint2 = new_load_kg2 <= route_2.cap_kg
-
+        new_load_cust2 = route_2.load_cust +1
+        cap_cust_constraint = new_load_cust2 <= route_2.cap_cust
         feasible = False
 
-        if cap_kg_constraint2:
+        if cap_kg_constraint2 and cap_cust_constraint:
             dist_matrix = self.current_solution.distance_matrix
             # calculate new loads for ruote 1
             new_load_kg1 = route_1.load_kg - cust.demand
             new_load_cust1 = route_1.load_cust -1
             new_load_min1 = route_1.load_min - cust.service_time - dist_matrix[prec_cust1][cust_id] \
             - dist_matrix[cust_id][post_cust1] + dist_matrix[prec_cust1][post_cust1]
-            # check if the insertion is feasible
-            
-            new_load_cust2 = route_2.load_cust +1
-            cap_cust_constraint = new_load_cust2 <= route_2.cap_cust
             # I try to insert the customer in the best position: look for the nearest customer on route2, I'll put the new customer after it
             distances  = np.array([dist_matrix[cust_id][i] for i in route_2.route])
             best_idx = np.argpartition(distances, 1) 
@@ -253,9 +250,9 @@ class TabuSearch():
             new_load_min2 = route_2.load_min + cust.service_time - dist_matrix[prec_cust2][post_cust2] \
             + dist_matrix[prec_cust2][cust_id] + dist_matrix[cust_id][post_cust2]
             cap_min_constraint2 = new_load_min2 <= route_2.cap_min
-            feasible = cap_min_constraint2 and cap_cust_constraint
+            feasible = cap_min_constraint2
             if feasible:
-            # update routes
+                 # update routes
                 route_1.load_kg = new_load_kg1
                 route_1.load_min = new_load_min1
                 route_1.load_cust -= 1
@@ -263,7 +260,11 @@ class TabuSearch():
                 route_2.load_min = new_load_min2
                 route_2.load_cust += 1
                 route_1.route.remove(cust_id)
-                route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]                
+                route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
+                # check if it violates tabu
+                if cust_id in self.tabu_list:
+                    self.violate_tabu = self.violate_tabu or (self.tabu_list[cust_id] == set(route_2.route))  
+
         return feasible, route_1, route_2, cust_id, route_ids
 
 
