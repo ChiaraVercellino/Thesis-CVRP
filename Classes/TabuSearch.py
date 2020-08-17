@@ -32,25 +32,29 @@ class TabuSearch():
         self.no_improvement = 0
         self.max_time = max_time
         self.previous_time = 0
+        self.accept_worse = False
 
 
     def solve(self, elapsed_time):
             
         diff_time = elapsed_time - self.previous_time
 
-        max_attempt = 10
-        num_unrouted = 5
+        
+        max_attempt = 5
+        num_unrouted = 10
         num_attempt = 0
         routing_done = False
-        
-        while num_attempt < max_attempt and not(routing_done):
-            all_routes_rerouting = copy.copy(self.current_solution.routes)
-            route_of_customers = copy.copy(self.current_solution.route_of_customers)
-            all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost = self._unrouting(all_routes_rerouting, num_unrouted, route_of_customers)
-            routing_done, all_routes_rerouting, route_of_customers, diff_cost = self._re_routing(all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost)
+        route_of_customers = []
+        if self.accept_worse:
+            while num_attempt < max_attempt and not(routing_done):
+                all_routes_rerouting = copy.copy(self.current_solution.routes)
+                route_of_customers = copy.copy(self.current_solution.route_of_customers)
+                all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost = self._unrouting(all_routes_rerouting, num_unrouted, route_of_customers)
+                routing_done, all_routes_rerouting, route_of_customers, diff_cost = self._re_routing(all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost)
+                num_attempt += 1
+                num_unrouted -= 1
 
         if routing_done:
-            print('ok re routing')
             all_routes = copy.copy(all_routes_rerouting)
         else:
             # copy of the routes
@@ -100,15 +104,18 @@ class TabuSearch():
         # found a better solution: update solution
         if diff_cost >= 0 and not(self.violate_tabu) or self.eliminated_route:            
             self.eliminated_route = False
+            self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
                  cust_id_ins, routing_done, route_of_customers)
             if diff_cost_best >= 0:
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)
         elif diff_cost_best > 0:
+            self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost_best, feasible_insertion, route1_ins, route2_ins, \
                  cust_id_ins, routing_done, route_of_customers,  best=True)
         elif not(self.violate_tabu) and self.no_improvement >= 0.01*self.max_time and elapsed_time<=0.95*self.max_time:
+            self.accept_worse = True
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
                 cust_id_ins, routing_done, route_of_customers)
         else:
@@ -334,10 +341,11 @@ class TabuSearch():
             new_route.load_min = new_route.load_min - cust.service_time + delta_load_min
             new_route.route.remove(cust.id)
             delta_cost += delta_load_min
-            all_routes[new_route.id] = new_route
+            if new_route.load_cust >= 1:
+                all_routes[new_route.id] = new_route                    
+                for customer in new_route.route[1:-1]:
+                    route_of_customers[customer] = new_route.id
             del route_of_customers[cust.id]
-            for customer in new_route.route[1:-1]:
-                route_of_customers[customer] = new_route.id
             del all_routes[route_id]
 
         return all_routes, unrouted_customers, route_of_customers, delta_cost
@@ -349,7 +357,7 @@ class TabuSearch():
         routed_cust = 0
         routing_done = False
         for cust in unrouted_customers:
-            distances  = np.array(dist_matrix[cust.id][1:])
+            distances  = np.array(dist_matrix[cust.id][1:-1])
             best_indexes = np.argpartition(distances, max_try) 
             i = 0
             found_route = False
@@ -357,9 +365,8 @@ class TabuSearch():
                 best_near_cust = best_indexes[i]+1
                 if best_near_cust in route_of_cust.keys():
                     best_near_route = route_of_cust[best_near_cust]
-                    best_route = all_routes[best_near_route]
-
-                    if best_route.load_cust+1<=best_route.cap_cust and best_route.load_kg+cust.demand<=best_route.load_kg:
+                    best_route = self._initialize_route(all_routes, best_near_route, custumer_on_route=False)
+                    if best_route.load_cust+1<=best_route.cap_cust and best_route.load_kg+cust.demand<=best_route.cap_kg:
                         idx_best_near = best_route.route.index(best_near_cust)
                         prec_cust = best_route.route[idx_best_near-1]
                         post_cust = best_route.route[idx_best_near+1]
@@ -370,16 +377,20 @@ class TabuSearch():
                         else:
                             delta_load_min = - dist_matrix[prec_cust][best_near_cust] + dist_matrix[prec_cust][cust.id] + dist_matrix[cust.id][best_near_cust]
                             new_load_min = best_route.load_min  + cust.service_time + delta_load_min
-                            new_route = best_route.route[:idx_best_near-1]+[cust.id]+best_route.route[idx_best_near-1:]
+                            new_route = best_route.route[:idx_best_near]+[cust.id]+best_route.route[idx_best_near:]
                         if new_load_min <= best_route.cap_min:
                             best_route.load_min = new_load_min
                             best_route.load_cust += 1
                             best_route.load_kg += cust.demand
                             best_route.route = new_route
-                            route_of_cust[cust.id] = new_route.id
+                            for customer in best_route.route[1:-1]:
+                                route_of_cust[customer] = best_route.id
                             found_route = True
                             routed_cust += 1
                             delta_cost += delta_load_min
+                            del all_routes[best_near_route]
+                            all_routes[best_route.id] = best_route
+                            
                 i += 1
             if not found_route:
                 break
