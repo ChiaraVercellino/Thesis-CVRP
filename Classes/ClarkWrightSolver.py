@@ -78,7 +78,7 @@ class ClarkWrightSolver():
                 savings = savings_matrix[customer1][customer2]
                 feasible_route, new_route = merge_routes(route1, route2, customer1, customer2, savings)
                 if feasible_route:
-                    for cust_id in new_route.route:
+                    for cust_id in new_route.route[1:-1]:
                         self.route_of_customers[cust_id]=new_route.id
                     self.routes[new_route.id]=new_route
                     self.num_routes -= 1

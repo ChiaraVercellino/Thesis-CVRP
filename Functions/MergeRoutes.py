@@ -14,8 +14,8 @@ def merge_routes(route1, route2, customer1, customer2, savings):
 
     if feasible_route:
         new_route_list = []
-        idx_cus1 = route1.pos_customers_on_route[customer1+1]
-        idx_cus2 = route2.pos_customers_on_route[customer2+1]
+        idx_cus1 = route1.route.index(customer1+1)
+        idx_cus2 = route2.route.index(customer2+1)
 
         if route1.route[idx_cus1-1]==0:
             if route2.route[idx_cus2-1]==0:
@@ -31,10 +31,6 @@ def merge_routes(route1, route2, customer1, customer2, savings):
 
         new_route.route = new_route_list
 
-        pos=0
-        for cust in new_route_list:
-            new_route.pos_customers_on_route[cust]=pos
-            pos += 1
         if not(new_route_list):
             feasible_route = False
 

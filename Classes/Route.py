@@ -22,7 +22,6 @@ class Route:
         self.load_cust = 0
         # customers on the route of vehicle
         self.route = [0, 0]
-        self.pos_customers_on_route = {}
 
 
     def initialize_route(self, customer, depot_distance):
@@ -33,7 +32,6 @@ class Route:
         self.load_cust = 1
         # customers on the route of vehicle
         self.route.insert(1, customer.id)
-        self.pos_customers_on_route[customer.id] = 1
 
     def check_constraints(self):
         '''

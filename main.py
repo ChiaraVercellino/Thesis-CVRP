@@ -171,7 +171,7 @@ def main():
                     # append new customers to the ones that were not served in the previous day
                     new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
-                #print(f'Simulated day {new_day.current_day}')
+                print(f'Simulated day {new_day.current_day}')
 
                 # save simulated clients' data
                 #new_day.save_data_costumers()
@@ -219,7 +219,7 @@ def main():
                                 elapsed_time = time.time()-start_tabu
                             tabu_search.final_optimization()
                             tabu_search_sol = tabu_search.current_solution
-                            #print(ii)
+                            print(ii)
                             
                     if not(solution):
                         # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
