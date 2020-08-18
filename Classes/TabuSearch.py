@@ -9,7 +9,7 @@ import constant
 
 class TabuSearch():
 
-    def __init__(self, initial_solution, max_time, tabu_lenght):    
+    def __init__(self, initial_solution, max_time):    
         random.seed(constant.SEED)
         # generate all possible permutation for local search step
         self.perms = {}
@@ -23,7 +23,7 @@ class TabuSearch():
             self.perms[i]=perms
         self.current_solution = initial_solution
         self.tabu_list = {}
-        self.tabu_lenght = tabu_lenght
+        self.tabu_lenght = constant.TABU_LENGTH
         self.violate_tabu = True
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
@@ -35,13 +35,12 @@ class TabuSearch():
         self.accept_worse = False
 
 
-    def solve(self, elapsed_time):
+    def solve(self, elapsed_time, num_unrouted):
             
         diff_time = elapsed_time - self.previous_time
 
         
-        max_attempt = 5
-        num_unrouted = 10
+        max_attempt = num_unrouted//2
         num_attempt = 0
         routing_done = False
         route_of_customers = []
@@ -57,7 +56,6 @@ class TabuSearch():
         if routing_done:
             all_routes = copy.copy(all_routes_rerouting)
         else:
-            # copy of the routes
             all_routes = copy.copy(self.current_solution.routes)
             diff_cost = 0
 

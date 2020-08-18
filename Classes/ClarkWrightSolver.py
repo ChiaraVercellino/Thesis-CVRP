@@ -10,7 +10,7 @@ import constant
 
 class ClarkWrightSolver():
     """Clark and Wright Savings algorithm solver class"""
-    def __init__(self, selected_customer, depot, perc_init):
+    def __init__(self, selected_customer, depot):
 
         random.seed(constant.SEED)
         #self.num_customers = len(selected_customer)
@@ -25,7 +25,7 @@ class ClarkWrightSolver():
         self.distance_matrix = distance.cdist(coords, coords)
         self.demand = selected_customer['kg'].to_numpy()
         self.service_time = selected_customer['service_time'].to_numpy()
-        self.perc_init = perc_init
+        self.perc_init = constant.CLARK_WRIGHT_PERC
         # list of customers
         self.customers = {}
         self.routes = {}
