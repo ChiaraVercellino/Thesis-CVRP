@@ -9,7 +9,7 @@ import constant
 
 class TabuSearch():
 
-    def __init__(self, initial_solution, max_time):    
+    def __init__(self, initial_solution, max_time, tabu_len):    
         random.seed(constant.SEED)
         # generate all possible permutation for local search step
         self.perms = {}
@@ -23,7 +23,7 @@ class TabuSearch():
             self.perms[i]=perms
         self.current_solution = initial_solution
         self.tabu_list = {}
-        self.tabu_lenght = constant.TABU_LENGTH
+        self.tabu_lenght = tabu_len
         self.violate_tabu = True
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
@@ -35,16 +35,17 @@ class TabuSearch():
         self.accept_worse = False
 
 
-    def solve(self, elapsed_time, num_unrouted):
+    def solve(self, elapsed_time):
             
         diff_time = elapsed_time - self.previous_time
 
         
-        max_attempt = num_unrouted//2
-        num_attempt = 0
         routing_done = False
         route_of_customers = []
         if self.accept_worse:
+            num_unrouted = constant.NUM_UNROUTED
+            max_attempt = num_unrouted//2
+            num_attempt = 0
             while num_attempt < max_attempt and not(routing_done):
                 all_routes_rerouting = copy.copy(self.current_solution.routes)
                 route_of_customers = copy.copy(self.current_solution.route_of_customers)
@@ -351,7 +352,7 @@ class TabuSearch():
     def _re_routing(self, all_routes, unrouted_customers, route_of_cust, delta_cost):
         dist_matrix = self.current_solution.distance_matrix
         random.shuffle(unrouted_customers)
-        max_try = 15
+        max_try = constant.NUM_UNROUTED
         routed_cust = 0
         routing_done = False
         for cust in unrouted_customers:
