@@ -345,10 +345,10 @@ class TabuSearch():
         for cust in unrouted_customers:
             route_id = route_of_customers[cust.id]
             new_route = self._initialize_route(all_routes, route_id, custumer_on_route=False)
-            unrouted_tabu_list[cust.id] = set(new_route.route)
             cust_idx = new_route.route.index(cust.id) 
             prec_cust = new_route.route[cust_idx-1]     
-            post_cust = new_route.route[cust_idx+1]      
+            post_cust = new_route.route[cust_idx+1]
+            unrouted_tabu_list[cust.id] = set(new_route.route[:cust_idx]+new_route.route[cust_idx+1:])    
             new_route.load_cust -= 1
             new_route.load_kg -= cust.demand     
             delta_load_min = - dist_matrix[prec_cust][cust.id] - dist_matrix[cust.id][post_cust] + dist_matrix[prec_cust][post_cust]   
