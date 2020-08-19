@@ -42,6 +42,7 @@ class TabuSearch():
         
         routing_done = False
         route_of_customers = []
+        unrouting_tabu_list = {}
         if self.accept_worse:
             num_unrouted = constant.NUM_UNROUTED
             max_attempt = num_unrouted//2
@@ -49,7 +50,7 @@ class TabuSearch():
             while num_attempt < max_attempt and not(routing_done):
                 all_routes_rerouting = copy.copy(self.current_solution.routes)
                 route_of_customers = copy.copy(self.current_solution.route_of_customers)
-                all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost = self._unrouting(all_routes_rerouting, num_unrouted, route_of_customers)
+                all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost, unrouting_tabu_list = self._unrouting(all_routes_rerouting, num_unrouted, route_of_customers)
                 routing_done, all_routes_rerouting, route_of_customers, diff_cost = self._re_routing(all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost)
                 num_attempt += 1
                 num_unrouted -= 1
@@ -105,18 +106,18 @@ class TabuSearch():
             self.eliminated_route = False
             self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
-                 cust_id_ins, routing_done, route_of_customers)
+                 cust_id_ins, routing_done, route_of_customers, unrouting_tabu_list)
             if diff_cost_best >= 0:
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)
         elif diff_cost_best > 0:
             self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost_best, feasible_insertion, route1_ins, route2_ins, \
-                 cust_id_ins, routing_done, route_of_customers,  best=True)
+                 cust_id_ins, routing_done, route_of_customers, unrouting_tabu_list, best=True)
         elif not(self.violate_tabu) and self.no_improvement >= 0.01*self.max_time and elapsed_time<=0.95*self.max_time:
             self.accept_worse = True
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
-                cust_id_ins, routing_done, route_of_customers)
+                cust_id_ins, routing_done, route_of_customers, unrouting_tabu_list)
         else:
             self.no_improvement += diff_time
         
@@ -162,27 +163,39 @@ class TabuSearch():
 
 
     def _update_tabu_list(self, route, customer):
-        if len(self.tabu_list) < self.tabu_lenght:
+        if customer in self.tabu_list.keys():
+            del self.tabu_list[customer]
+        if len(self.tabu_list) < self.tabu_lenght:            
             self.tabu_list[customer]=set(route.route)
         else:
             element_to_remove = list(self.tabu_list.keys())[0] 
             del self.tabu_list[element_to_remove]
+            self.tabu_list[customer]=set(route.route)
 
 
     def _accept_solution(self, all_routes, swapped_routes, swapped_cust, diff_cost, feasible_insertion, route1_ins, route2_ins, \
-         cust_id_ins, routing_done, route_of_customers, best=False):
-        
-        self._update_tabu_list(swapped_routes[0], swapped_cust[0])
-        self._update_tabu_list(swapped_routes[1], swapped_cust[1])
+         cust_id_ins, routing_done, route_of_customers, unrouting_tabu_list,  best=False):
 
         self.no_improvement = 0
         if best:
             self.best_routes = copy.copy(all_routes)
             self.best_cost -= diff_cost
         else:
+            self._update_tabu_list(swapped_routes[0], swapped_cust[0])
+            self._update_tabu_list(swapped_routes[1], swapped_cust[1])
             self.current_solution.routes = copy.copy(all_routes)
             self.current_solution.total_cost -= diff_cost
             if routing_done:
+                for cust_id in unrouting_tabu_list.keys():
+                    self.tabu_list.pop(cust_id, None)
+                if len(self.tabu_list) + len(unrouting_tabu_list) <= self.tabu_lenght:
+                    self.tabu_list.update(unrouting_tabu_list)
+                else:
+                    num_elements_to_delete = len(self.tabu_list) - (self.tabu_lenght - len(unrouting_tabu_list))
+                    elements_to_delete = list(self.tabu_list.keys())[:num_elements_to_delete]
+                    for elem_delete in elements_to_delete:
+                        del self.tabu_list[elem_delete]
+                    self.tabu_list.update(unrouting_tabu_list)
                 self.current_solution.route_of_customers = copy.copy(route_of_customers)
             for cust in swapped_routes[0].route[1:-1]:
                 self.current_solution.route_of_customers[cust] = swapped_routes[0].id
@@ -195,7 +208,7 @@ class TabuSearch():
                     self.current_solution.route_of_customers[cust] = route1_ins.id 
                 for cust in route2_ins.route[1:-1]:
                     self.current_solution.route_of_customers[cust] = route2_ins.id               
-            self._update_tabu_list(route1_ins, cust_id_ins)
+                self._update_tabu_list(route1_ins, cust_id_ins)
 
 
     def _swap_neighbourhood(self, all_routes):
@@ -328,9 +341,11 @@ class TabuSearch():
         unrouted_customers = random.sample(list(self.current_solution.customers.values()), num_unrouted)
         dist_matrix = self.current_solution.distance_matrix
         delta_cost = 0
+        unrouted_tabu_list = {}
         for cust in unrouted_customers:
             route_id = route_of_customers[cust.id]
             new_route = self._initialize_route(all_routes, route_id, custumer_on_route=False)
+            unrouted_tabu_list[cust.id] = set(new_route.route)
             cust_idx = new_route.route.index(cust.id) 
             prec_cust = new_route.route[cust_idx-1]     
             post_cust = new_route.route[cust_idx+1]      
@@ -347,7 +362,7 @@ class TabuSearch():
             del route_of_customers[cust.id]
             del all_routes[route_id]
 
-        return all_routes, unrouted_customers, route_of_customers, delta_cost
+        return all_routes, unrouted_customers, route_of_customers, delta_cost, unrouted_tabu_list
 
     def _re_routing(self, all_routes, unrouted_customers, route_of_cust, delta_cost):
         dist_matrix = self.current_solution.distance_matrix
