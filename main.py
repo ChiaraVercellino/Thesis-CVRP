@@ -84,8 +84,8 @@ import constant
 
 def main():
 
-    PERC_INIT = [0.6, 0.7, 0.8]
-    TABU_LENGTH = [40, 50, 60, 70, 80, 90]
+    PERC_INIT = [0.7, 0.75, 0.8, 0.85]
+    TABU_LENGTH = [60, 70, 80, 90, 100, 110, 120]
 
     for perc_init in PERC_INIT:
         for tabu_len in TABU_LENGTH:
@@ -263,7 +263,7 @@ def main():
 
             # ------------------------------------------------ STATISICS -------------------------------------------------------
 
-            print('Perc Init {} Tabu Length'.format(perc_init, tabu_len))
+            print('Perc Init {} Tabu Length {}'.format(perc_init, tabu_len))
             # Print on the standard output some statistics
             print(f'Total objective function: {total_obj_fun}')
             #print(f'Total number of postponed costumers: {num_postponed}')
@@ -272,9 +272,9 @@ def main():
             #print(f'Average of cycles: {mean(num_cycles)}') 
             print(f'Average of travel cost: {mean(daily_obj[constant.NUM_DAYS-1:])}') 
             # ending time for simulation  
-            end = time.time()
-            str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
-            print('Time for simlation: '+str_time)
+            #end = time.time()
+            #str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
+            #print('Time for simlation: '+str_time)
 
     return
 
