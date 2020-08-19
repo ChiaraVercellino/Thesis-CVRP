@@ -84,8 +84,8 @@ import constant
 
 def main():
 
-    PERC_INIT = [0.6, 0.65, 0.7, 0.75, 0.8, 0.85]
-    TABU_LENGTH = [50, 70, 90, 110, 130, 150]
+    PERC_INIT = [0.7]
+    TABU_LENGTH = [100]
 
     for perc_init in PERC_INIT:
         for tabu_len in TABU_LENGTH:

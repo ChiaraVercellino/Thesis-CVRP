@@ -181,8 +181,6 @@ class TabuSearch():
             self.best_routes = copy.copy(all_routes)
             self.best_cost -= diff_cost
         else:
-            self._update_tabu_list(swapped_routes[0], swapped_cust[0])
-            self._update_tabu_list(swapped_routes[1], swapped_cust[1])
             self.current_solution.routes = copy.copy(all_routes)
             self.current_solution.total_cost -= diff_cost
             if routing_done:
@@ -200,7 +198,9 @@ class TabuSearch():
             for cust in swapped_routes[0].route[1:-1]:
                 self.current_solution.route_of_customers[cust] = swapped_routes[0].id
             for cust in swapped_routes[1].route[1:-1]:
-                self.current_solution.route_of_customers[cust] = swapped_routes[1].id
+                self.current_solution.route_of_customers[cust] = swapped_routes[1].id        
+        self._update_tabu_list(swapped_routes[0], swapped_cust[0])
+        self._update_tabu_list(swapped_routes[1], swapped_cust[1])
 
         if feasible_insertion:
             if not best:
