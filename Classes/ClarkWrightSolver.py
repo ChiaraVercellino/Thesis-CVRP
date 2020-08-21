@@ -10,7 +10,7 @@ import constant
 
 class ClarkWrightSolver():
     """Clark and Wright Savings algorithm solver class"""
-    def __init__(self, selected_customer, depot, perc_init):
+    def __init__(self, selected_customer, depot):
 
         random.seed(constant.SEED)
         #self.num_customers = len(selected_customer)
@@ -25,7 +25,6 @@ class ClarkWrightSolver():
         self.distance_matrix = distance.cdist(coords, coords)
         self.demand = selected_customer['kg'].to_numpy()
         self.service_time = selected_customer['service_time'].to_numpy()
-        self.perc_init = perc_init
         # list of customers
         self.customers = {}
         self.routes = {}
@@ -62,11 +61,8 @@ class ClarkWrightSolver():
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
         num_elem_tridiag = int((self.num_customers-1)*self.num_customers/2)
         best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[num_elem_tridiag:], savings_matrix.shape)
-        final_random_custumer = int(num_elem_tridiag*self.perc_init)
-        permutation = list(range(final_random_custumer,num_elem_tridiag))
-        random.shuffle(permutation)
-        permutation = list(range(final_random_custumer))+permutation
-        for i in permutation:
+        
+        for i in range(num_elem_tridiag):
             customer1=best_savings_indexes[0][num_elem_tridiag-1-i]
             customer2=best_savings_indexes[1][num_elem_tridiag-1-i]
             route1_idx=self.route_of_customers[customer1+1]
