@@ -103,7 +103,7 @@ class TabuSearch():
         diff_cost_best = self.best_cost - current_cost
 
         # found a better solution: update solution
-        if diff_cost >= 0 and not(self.violate_tabu) or self.eliminated_route:            
+        if diff_cost >= 0 and not(self.violate_tabu) or self.eliminated_route or routing_done:            
             self.eliminated_route = False
             self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
