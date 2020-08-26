@@ -175,7 +175,7 @@ def main():
                             # append new customers to the ones that were not served in the previous day
                             new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
-                        print(f'Simulated day {new_day.current_day}')
+                        #print(f'Simulated day {new_day.current_day}')
 
                         # save simulated clients' data
                         new_day.save_data_costumers()
