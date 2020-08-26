@@ -140,7 +140,7 @@ def load_distribution(file_path):
         depot: numpy array containig the (x,y) coordinates of the depot
     """
     # Input path
-    #file_path = './Data/'+file_path
+    file_path = './Data/'+file_path
     with open(file_path, "r") as fp:
         # initialize empty dictionary
         data_lines = {'cell_name': [], 'x': [], 'y': [], 'length': [], 'height': [], 'probability': []}

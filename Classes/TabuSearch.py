@@ -71,9 +71,10 @@ class TabuSearch():
         while not feasible_swap:            
             self.violate_tabu = False
             feasible_swap, old_cost_routes, swapped_routes, route_ids_no_more, cust_ids = self._swap_neighbourhood(all_routes)
-
+        
         # those routes have been modified by swap
-        all_routes = self._update_routes(all_routes, route_ids_no_more, swapped_routes)
+        tabu_moves = []
+        all_routes, tabu_moves = self._update_routes(all_routes, route_ids_no_more, swapped_routes, tabu_moves)
 
         modified_routes_id = []
         for route_swap in swapped_routes:            
@@ -88,7 +89,7 @@ class TabuSearch():
         
         if feasible_insertion:
             # those routes have been modified by insertion
-            all_routes = self._update_routes(all_routes, route_ids_no_more_ins, [route1_ins, route2_ins])
+            all_routes, tabu_moves = self._update_routes(all_routes, route_ids_no_more_ins, [route1_ins, route2_ins],tabu_moves=tabu_moves)
             if route1_ins.load_cust==0:
                 del all_routes[route1_ins.id]
                 self.eliminated_route = True
@@ -114,20 +115,20 @@ class TabuSearch():
             self.eliminated_route = False
             self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
-                routing_done, route_of_customers)
-            if diff_cost_best >= 0:
+                routing_done, route_of_customers, tabu_moves)
+            if diff_cost_best > 0:
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)   
              
         elif diff_cost_best > 0:
             self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost_best, feasible_insertion, route1_ins, route2_ins, \
-                routing_done, route_of_customers, best=True)            
+                routing_done, route_of_customers, tabu_moves, best=True)            
         elif not(self.violate_tabu) and self.no_improvement >= self.perc_worse*self.max_time:
             self.accept_worse = True
             self.num_worse += 1
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
-                routing_done, route_of_customers)
+                routing_done, route_of_customers, tabu_moves)
         else:
             self.no_improvement += diff_time
         
@@ -164,11 +165,12 @@ class TabuSearch():
 
 
     @staticmethod
-    def _update_routes(all_routes, route_ids_no_more, routes_list):
+    def _update_routes(all_routes, route_ids_no_more, routes_list, tabu_moves):
         for i in range(len(routes_list)):
+            tabu_moves.append(all_routes[route_ids_no_more[i]].route)
             del all_routes[route_ids_no_more[i]]
             all_routes[routes_list[i].id] = routes_list[i]
-        return all_routes
+        return all_routes, tabu_moves
 
 
     def _update_tabu_list(self, route):
@@ -181,7 +183,7 @@ class TabuSearch():
 
 
     def _accept_solution(self, all_routes, swapped_routes, swapped_cust, diff_cost, feasible_insertion, route1_ins, route2_ins, \
-        routing_done, route_of_customers,  best=False):
+        routing_done, route_of_customers, tabu_moves, best=False):
 
         self.no_improvement = 0
         if best:
@@ -197,13 +199,11 @@ class TabuSearch():
             for cust in swapped_routes[1].route[1:-1]:
                 self.current_solution.route_of_customers[cust] = swapped_routes[1].id   
         
-        self._update_tabu_list(set(swapped_routes[0].route))        
-        self._update_tabu_list(set(swapped_routes[1].route))
+        for tabu_move in tabu_moves:
+            self._update_tabu_list(set(tabu_move))
         
 
         if feasible_insertion:
-            self._update_tabu_list(set(route1_ins.route))        
-            self._update_tabu_list(set(route2_ins.route))
             if not best:
                 for cust in route1_ins.route[1:-1]:
                     self.current_solution.route_of_customers[cust] = route1_ins.id 

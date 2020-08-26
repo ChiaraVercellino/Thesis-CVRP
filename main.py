@@ -83,10 +83,10 @@ import constant
 
 
 def main():
-    PERC_INIT = [0.6, 0.7, 0.8, 0.9, 1.0]
-    NUM_PERM = [30, 40]
-    PERC_WORSE = [0.01, 0.015, 0.02]
-    TABU_LENGTH = [50]
+    PERC_INIT = [0.8]
+    NUM_PERM = [30]
+    PERC_WORSE = [0.015]
+    TABU_LENGTH = [100]
 
     for perc_init in PERC_INIT:
         for num_perm in NUM_PERM:
@@ -223,7 +223,7 @@ def main():
                                         elapsed_time = time.time()-start_tabu
                                     tabu_search.final_optimization()
                                     tabu_search_sol = tabu_search.current_solution
-                                    #print(ii, tabu_search.num_worse, tabu_search.num_tabu)
+                                    print(ii, tabu_search.num_worse, tabu_search.num_tabu)
                                     
                             if not(solution):
                                 # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
