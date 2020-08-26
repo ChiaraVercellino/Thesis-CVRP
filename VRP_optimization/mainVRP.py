@@ -60,6 +60,7 @@ def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
     data['distance_matrix'] = distance.cdist(coords, coords)
     # add service times
     data['distance_matrix'] += service_time_matrix
+    data['distance_matrix'] = np.round(data['distance_matrix'], 3)
     # number of available vehicles
     data['num_vehicles'] = vehicles
     # the depot is the first node, so its corresponding index is 0
@@ -176,5 +177,6 @@ def VRP_optimization(select_clients_df, depot, vehicles, capacity_kg):
                 previous_index = index
                 index = solution.Value(routing.NextVar(index))
                 obj_value += data['distance_matrix'][manager.IndexToNode(previous_index)][manager.IndexToNode(index)]
+    obj_value = round(obj_value, 3)
 
     return  data, manager, routing, solution, obj_value

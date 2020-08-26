@@ -77,8 +77,9 @@ threshold_1 = -0.12
 
 # ------------------------------------------------ TABU SEARCH PARAMETERS --------------------------------------------------------------------------
 
+MAX_TIME = 30
+NUM_UNROUTED = 20
+
 CLARK_WRIGHT_PERC = 0.7
 TABU_LENGTH = 70
-NUM_UNROUTED = 20
 NUM_PERM = 30
-MAX_TIME = 30

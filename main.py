@@ -83,10 +83,10 @@ import constant
 
 
 def main():
-    PERC_INIT = [0.8]
-    NUM_PERM = [30]
-    PERC_WORSE = [0.015]
-    TABU_LENGTH = [100]
+    PERC_INIT = [0.6, 0.7, 0.8, 0.9, 1.0]
+    NUM_PERM = [30, 40]
+    PERC_WORSE = [0.01, 0.02, 0.03]
+    TABU_LENGTH = [50, 80, 110, 140, 170, 200]
 
     for perc_init in PERC_INIT:
         for num_perm in NUM_PERM:
@@ -97,7 +97,7 @@ def main():
                 
                     np.random.seed(constant.SEED)
                     # starting time for simulation  
-                    start = time.time()
+                    #start = time.time()
                     # parse command line arguments:
                     # error: there is an erroe in the arguments
                     # input_path: path to file containing the distribution of cells
@@ -106,7 +106,7 @@ def main():
                     if error:
                         return
                     # empty pre-existent files: Solution/routes.sol, Data/selected_customers.txt, Data/simulated_clients.txt
-                    #clean_files()
+                    clean_files()
 
                     # new customers arriving in each day
                     new_customers = np.random.randint(low=constant.AVG_CUSTOMERS-constant.GAP_CUSTOMERS,\
@@ -175,10 +175,10 @@ def main():
                             # append new customers to the ones that were not served in the previous day
                             new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
-                        #print(f'Simulated day {new_day.current_day}')
+                        print(f'Simulated day {new_day.current_day}')
 
                         # save simulated clients' data
-                        #new_day.save_data_costumers()
+                        new_day.save_data_costumers()
 
                         # ---------------------------------------- Customers selection ------------------------------------------------
 
@@ -216,14 +216,16 @@ def main():
                                 solution = clark_wright_sol.solve()
                                 if solution:
                                     tabu_search = TabuSearch(clark_wright_sol, constant.MAX_TIME, tabu_len, perc_worse, num_perm)
-                                    ii=0
+                                    
+                                    #ii=0
                                     while elapsed_time <= constant.MAX_TIME:
-                                        ii+=1
+                                        #ii+=1
                                         tabu_search.solve(elapsed_time)
                                         elapsed_time = time.time()-start_tabu
                                     tabu_search.final_optimization()
                                     tabu_search_sol = tabu_search.current_solution
-                                    print(ii, tabu_search.num_worse, tabu_search.num_tabu)
+                                    #print(ii, tabu_search.num_worse, tabu_search.num_tabu)
+                                    
                                     
                             if not(solution):
                                 # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
@@ -235,17 +237,17 @@ def main():
                         total_time = updated_day.selected_customers.service_time.sum()
 
                         # ---------------------------------------- Save daily routes --------------------------------------------------
-                        '''
+                        
                         # save daily roads in Solution/routes.sol
                         if solver == 'ortools':
                             num_empty_route[day] = save_routes(updated_day, data, manager, routing, solution)
                         elif solver == 'tabu':
                             num_empty_route[day] = tabu_search_sol.print_solution(updated_day)
-                        '''
+                        
                         # --------------------------------------- Final updates -------------------------------------------------------
                         
                         # save selected customer passed to VRP solver in Data/selected_customers.txt
-                        #updated_day.save_selected_costumers()        
+                        updated_day.save_selected_costumers()        
                         # delete served customer from customer_df
                         updated_day.delete_served_customers()        
                         # update the day
@@ -269,12 +271,12 @@ def main():
 
                     print('Perc Init {} Num Perm {} Perc Worse {} Tabu Length {}'.format(perc_init, num_perm, perc_worse, tabu_len))
                     # Print on the standard output some statistics
-                    print(f'Total objective function: {total_obj_fun}')
+                    print(f'\t Total objective function: {np.round(total_obj_fun,3)}')
                     #print(f'Total number of postponed costumers: {num_postponed}')
-                    #print(f'Average of empty vehicles: {mean(num_empty_route[constant.NUM_DAYS-1:])}')
-                    #print(f'Average of served customers: {mean(num_served_clients[constant.NUM_DAYS-1:])}') 
+                    print(f'\t Average of empty vehicles: {np.round(mean(num_empty_route[constant.NUM_DAYS-1:]),3)}')
+                    #print(f'Average of served customers: {np.round(mean(num_served_clients[constant.NUM_DAYS-1:]))}') 
                     #print(f'Average of cycles: {mean(num_cycles)}') 
-                    print(f'Average of travel cost: {mean(daily_obj[constant.NUM_DAYS-1:])}') 
+                    print(f'\t Average of travel cost: {np.round(mean(daily_obj[constant.NUM_DAYS-1:]))}') 
                     # ending time for simulation  
                     #end = time.time()
                     #str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))

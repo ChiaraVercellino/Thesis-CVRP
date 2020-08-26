@@ -3,28 +3,25 @@ from Classes.Route import Route
 from Functions.MergeRoutes import merge_routes
 import numpy as np
 from scipy.spatial import distance
-import random
-
 import constant
 
 
 class ClarkWrightSolver():
     """Clark and Wright Savings algorithm solver class"""
-    def __init__(self, selected_customer, depot, perc_init):
-
-        random.seed(constant.SEED)
-        #self.num_customers = len(selected_customer)
+    def __init__(self, selected_customer, depot):
+        
         self.num_customers = len(selected_customer)
         self.num_vehicles = constant.NUM_VEHICLES
         self.num_routes = self.num_customers
-        self.perc_init = perc_init
+        
         # select from select_clients_df the columns corresponding to (x,y) coordinates and store them into a numpy array 
         clients_coords = selected_customer[['x', 'y']].to_numpy()
         # add at the beginning of the coordinates array the coordinates of depot
         coords = np.vstack ((depot, clients_coords)) 
-        self.distance_matrix = np.round(distance.cdist(coords, coords),3)
+        self.distance_matrix = distance.cdist(coords, coords)
         self.demand = selected_customer['kg'].to_numpy()
         self.service_time = selected_customer['service_time'].to_numpy()
+
         # list of customers
         self.customers = {}
         self.routes = {}
@@ -61,13 +58,8 @@ class ClarkWrightSolver():
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
         num_elem_tridiag = int((self.num_customers-1)*self.num_customers/2)
         best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[-num_elem_tridiag:], savings_matrix.shape)
-        
-        final_random_custumer = int(num_elem_tridiag*self.perc_init)
-        permutation = list(range(final_random_custumer,num_elem_tridiag))
-        random.shuffle(permutation)
-        permutation = list(range(final_random_custumer))+permutation        
-        
-        for i in permutation:
+
+        for i in range(num_elem_tridiag):
             customer1=best_savings_indexes[0][num_elem_tridiag-1-i]
             customer2=best_savings_indexes[1][num_elem_tridiag-1-i]
             route1_idx=self.route_of_customers[customer1+1]
@@ -79,7 +71,7 @@ class ClarkWrightSolver():
                 savings = savings_matrix[customer1][customer2]
                 feasible_route, new_route = merge_routes(route1, route2, customer1, customer2, savings)
                 if feasible_route:
-                    for cust_id in new_route.route[1:-1]:
+                    for cust_id in new_route.route:
                         self.route_of_customers[cust_id]=new_route.id
                     self.routes[new_route.id]=new_route
                     self.num_routes -= 1
@@ -88,12 +80,14 @@ class ClarkWrightSolver():
                 else:
                     Route.delete_route()
         if self.num_routes <= self.num_vehicles:
+            #print('feasible solution found: used {} vehicles'.format(self.num_routes))
             for k, v in self.routes.items():
                 self.total_cost += v.load_min
-                feasible_solution = True
+            feasible = True
         else:
-            feasible_solution = False
-        return feasible_solution
+            #print('feasible solution not found: used {} vehicles'.format(self.num_routes))
+            feasible = False
+        return feasible
 
 
     def print_solution(self, day, file_path='./Solution/routes.sol'):

@@ -20,7 +20,7 @@ class TabuSearch():
                 # remove anti-clockwise permutations
                 if p[::-1] in perms:
                     perms.remove(p[::-1])
-            self.perms[i]=perms
+            self.perms[i]=perms            
         self.current_solution = initial_solution
         self.tabu_list = []
         self.tabu_lenght = tabu_len
@@ -41,12 +41,10 @@ class TabuSearch():
 
     def solve(self, elapsed_time):
             
-        diff_time = elapsed_time - self.previous_time
-
-        
+        diff_time = elapsed_time - self.previous_time        
         routing_done = False
         route_of_customers = []
-
+        
         
         if self.accept_worse:
             num_unrouted = constant.NUM_UNROUTED
@@ -60,6 +58,7 @@ class TabuSearch():
                 num_attempt += 1
                 num_unrouted -= 1
         
+
         if routing_done:
             all_routes = copy.copy(all_routes_rerouting)
         else:
@@ -78,13 +77,15 @@ class TabuSearch():
 
         modified_routes_id = []
         for route_swap in swapped_routes:            
-            if route_swap.load_cust <= 2:
-                self.route_to_eliminate = route_swap.id
             modified_routes_id.append(route_swap.id)
 
         all_modified_routes = set(modified_routes_id)
 
+        '''
+        feasible_insertion = False
+        while not feasible_insertion:
         # generate neighbourhood by inserting a customer in another route
+        '''
         feasible_insertion, route1_ins, route2_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)
         
         if feasible_insertion:
@@ -119,21 +120,25 @@ class TabuSearch():
             if diff_cost_best > 0:
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)   
-             
+            
         elif diff_cost_best > 0:
             self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost_best, feasible_insertion, route1_ins, route2_ins, \
-                routing_done, route_of_customers, tabu_moves, best=True)            
+                routing_done, route_of_customers, tabu_moves, best=True) 
+                         
         elif not(self.violate_tabu) and self.no_improvement >= self.perc_worse*self.max_time:
             self.accept_worse = True
             self.num_worse += 1
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
                 routing_done, route_of_customers, tabu_moves)
+        
         else:
             self.no_improvement += diff_time
         
         self.previous_time = elapsed_time
         self.route_to_eliminate = None
+        
+        
                 
 
     def final_optimization(self):
@@ -238,7 +243,7 @@ class TabuSearch():
             route_1.route[route_1.route.index(cust_id1)] = cust_id2
             route_2.route[route_2.route.index(cust_id2)] = cust_id1
             # check if it violates tabu
-            if set(route_1.route) in self.tabu_list or set(route_2.route) in self.tabu_list:
+            if set(route_1.route) in self.tabu_list and set(route_2.route) in self.tabu_list:
                 self.violate_tabu = True
 
         return feasible, old_cost_routes, swapped_routes, route_ids, swapped_cust
@@ -249,13 +254,15 @@ class TabuSearch():
         # select 2 random routes and 2 random customer
         route_ids = random.sample(all_route_ids, k=2)
 
+        
         if self.route_to_eliminate and self.route_to_eliminate in all_route_ids:
             if self.route_to_eliminate == route_ids[1]:
                 route_ids[1] = route_ids[0]
                 route_ids[0] = self.route_to_eliminate
             else: 
                 route_ids[0] = self.route_to_eliminate
-                
+    
+
         route_1, cust_id, prec_cust1, post_cust1, cust = self._initialize_route(all_routes, route_ids[0])
         route_2 = self._initialize_route(all_routes, route_ids[1], custumer_on_route=False)
 
@@ -292,7 +299,7 @@ class TabuSearch():
                 route_1.route.remove(cust_id)
                 route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
                 if set(route_1.route) in self.tabu_list or set(route_2.route) in self.tabu_list:
-                    self.violate_tabu = True
+                    self.violate_tabu = self.violate_tabu and True
 
         return feasible, route_1, route_2, route_ids
 

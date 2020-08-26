@@ -51,7 +51,7 @@ class ClarkWrightSolver():
         savings_matrix = self._compute_savings_matrix()
         savings_matrix[np.tril_indices_from(savings_matrix, -1)] = 0
         num_elem_tridiag = int((self.num_customers-1)*self.num_customers/2)
-        best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[num_elem_tridiag:], savings_matrix.shape)
+        best_savings_indexes = np.unravel_index(np.argsort(savings_matrix.ravel())[-num_elem_tridiag:], savings_matrix.shape)
         final_random_custumer = int(num_elem_tridiag*self.initialize_perc)
         permutation = list(range(final_random_custumer,num_elem_tridiag))
         random.shuffle(permutation)
