@@ -86,7 +86,7 @@ def main():
     PERC_INIT = [0.6, 0.7, 0.8, 0.9, 1.0]
     NUM_PERM = [30, 40]
     PERC_WORSE = [0.01, 0.02, 0.03]
-    TABU_LENGTH = [50, 80, 110, 140, 170, 200]
+    TABU_LENGTH = [50]
 
     for perc_init in PERC_INIT:
         for num_perm in NUM_PERM:

@@ -58,8 +58,9 @@ class TabuSearch():
                 num_attempt += 1
                 num_unrouted -= 1
         
-
+        
         if routing_done:
+            pass
             all_routes = copy.copy(all_routes_rerouting)
         else:
             all_routes = copy.copy(self.current_solution.routes)
@@ -67,8 +68,7 @@ class TabuSearch():
 
         feasible_swap = False
         # generate neighbourhood by swapping customers
-        while not feasible_swap:            
-            self.violate_tabu = False
+        while not feasible_swap:       
             feasible_swap, old_cost_routes, swapped_routes, route_ids_no_more, cust_ids = self._swap_neighbourhood(all_routes)
         
         # those routes have been modified by swap
@@ -78,6 +78,8 @@ class TabuSearch():
         modified_routes_id = []
         for route_swap in swapped_routes:            
             modified_routes_id.append(route_swap.id)
+            if route_swap.load_cust <= 2:
+                self.route_to_eliminate = route_swap.id
 
         all_modified_routes = set(modified_routes_id)
 
@@ -98,6 +100,8 @@ class TabuSearch():
                 self.route_to_eliminate = None
             else:
                 all_modified_routes = all_modified_routes.union(set([route2_ins.id, route1_ins.id])).difference(set(route_ids_no_more_ins))
+            if route1_ins.load_cust <= 2:
+                self.route_to_eliminate = route1_ins.id
         
         # calculate cost of new solution
         new_cost_routes = 0        
@@ -136,7 +140,8 @@ class TabuSearch():
             self.no_improvement += diff_time
         
         self.previous_time = elapsed_time
-        self.route_to_eliminate = None
+        self.violate_tabu = False
+        
         
         
                 
@@ -299,7 +304,7 @@ class TabuSearch():
                 route_1.route.remove(cust_id)
                 route_2.route = route_2.route[:best_idx[0]+1]+[cust_id]+route_2.route[best_idx[0]+1:]
                 if set(route_1.route) in self.tabu_list or set(route_2.route) in self.tabu_list:
-                    self.violate_tabu = self.violate_tabu and True
+                    self.violate_tabu = True
 
         return feasible, route_1, route_2, route_ids
 
