@@ -9,7 +9,7 @@ import constant
 
 class TabuSearch():
 
-    def __init__(self, initial_solution, max_time, tabu_len, perc_worse, num_perm):    
+    def __init__(self, initial_solution, max_time, tabu_len, perc_worse):    
         random.seed(constant.SEED)
         # generate all possible permutation for local search step
         self.perms = {}
@@ -34,9 +34,9 @@ class TabuSearch():
         self.previous_time = 0
         self.accept_worse = False
         self.perc_worse = perc_worse
-        self.num_perm = num_perm
         self.num_worse = 0
         self.num_tabu = 0
+        self.num_best = 0
 
 
     def solve(self, elapsed_time):
@@ -45,7 +45,7 @@ class TabuSearch():
         routing_done = False
         route_of_customers = []
         
-        
+        '''
         if self.accept_worse:
             num_unrouted = constant.NUM_UNROUTED
             max_attempt = num_unrouted//2
@@ -60,17 +60,22 @@ class TabuSearch():
         
         
         if routing_done:
+
             all_routes = copy.copy(all_routes_rerouting)
             if len(self.current_solution.routes) > len(all_routes):
                 self.eliminated_route = True
         else:
             all_routes = copy.copy(self.current_solution.routes)
             diff_cost = 0
+        '''
 
+        all_routes = copy.copy(self.current_solution.routes)
+        diff_cost = 0
         feasible_swap = False
         # generate neighbourhood by swapping customers
         while not feasible_swap:       
             feasible_swap, old_cost_routes, swapped_routes, route_ids_no_more, cust_ids = self._swap_neighbourhood(all_routes)
+        
         
         # those routes have been modified by swap
         tabu_moves = []
@@ -84,12 +89,7 @@ class TabuSearch():
 
         all_modified_routes = set(modified_routes_id)
 
-        '''
-        feasible_insertion = False
-        while not feasible_insertion:
-        # generate neighbourhood by inserting a customer in another route
-        '''
-        feasible_insertion, route1_ins, route2_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)
+        feasible_insertion, route1_ins, route2_ins, route_ids_no_more_ins = self._insert_neighbourhood(all_routes)        
         
         if feasible_insertion:
             # those routes have been modified by insertion
@@ -123,10 +123,12 @@ class TabuSearch():
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
                 routing_done, route_of_customers, tabu_moves)
             if diff_cost_best > 0:
+                self.num_best += 1
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)   
             
         elif diff_cost_best > 0:
+            self.num_best += 1
             self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost_best, feasible_insertion, route1_ins, route2_ins, \
                 routing_done, route_of_customers, tabu_moves, best=True) 
@@ -267,7 +269,7 @@ class TabuSearch():
                 route_ids[0] = self.route_to_eliminate
             else: 
                 route_ids[0] = self.route_to_eliminate
-    
+        
 
         route_1, cust_id, prec_cust1, post_cust1, cust = self._initialize_route(all_routes, route_ids[0])
         route_2 = self._initialize_route(all_routes, route_ids[1], custumer_on_route=False)
@@ -331,7 +333,7 @@ class TabuSearch():
             all_permutation = copy.copy(self.perms[route.load_cust])
             if not final:
                 total_permutation = len(all_permutation)
-                if total_permutation >= self.num_perm:
+                if total_permutation >= constant.NUM_PERM:
                     all_permutation = random.sample(all_permutation, constant.NUM_PERM)
             for perm in all_permutation:
                 new_route = [0]+[route_list[i] for i in perm]+[0]
