@@ -60,8 +60,9 @@ class TabuSearch():
         
         
         if routing_done:
-            pass
             all_routes = copy.copy(all_routes_rerouting)
+            if len(self.current_solution.routes) > len(all_routes):
+                self.eliminated_route = True
         else:
             all_routes = copy.copy(self.current_solution.routes)
             diff_cost = 0

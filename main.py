@@ -83,10 +83,10 @@ import constant
 
 
 def main():
-    PERC_INIT = [0.6, 0.7, 0.8, 0.9, 1.0]
-    NUM_PERM = [30, 40]
-    PERC_WORSE = [0.01, 0.02, 0.03]
-    TABU_LENGTH = [50]
+    PERC_INIT = [1.0]
+    NUM_PERM = [30]
+    PERC_WORSE = [0.02]
+    TABU_LENGTH = [100]
 
     for perc_init in PERC_INIT:
         for num_perm in NUM_PERM:
@@ -175,7 +175,7 @@ def main():
                             # append new customers to the ones that were not served in the previous day
                             new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
-                        #print(f'Simulated day {new_day.current_day}')
+                        print(f'Simulated day {new_day.current_day}')
 
                         # save simulated clients' data
                         new_day.save_data_costumers()
