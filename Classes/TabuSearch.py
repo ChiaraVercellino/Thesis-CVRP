@@ -9,7 +9,7 @@ import constant
 
 class TabuSearch():
 
-    def __init__(self, initial_solution, max_time, tabu_len, perc_worse):    
+    def __init__(self, initial_solution, max_time, tabu_len, perc_worse, perc_unrouted):    
         random.seed(constant.SEED)
         # generate all possible permutation for local search step
         self.perms = {}
@@ -37,6 +37,7 @@ class TabuSearch():
         self.num_worse = 0
         self.num_tabu = 0
         self.num_best = 0
+        self.perc_unrouted = perc_unrouted
 
 
     def solve(self, elapsed_time):
@@ -45,9 +46,9 @@ class TabuSearch():
         routing_done = False
         route_of_customers = []
         
-        '''
+        
         if self.accept_worse:
-            num_unrouted = constant.NUM_UNROUTED
+            num_unrouted = int(self.perc_unrouted*self.current_solution.num_customers)
             max_attempt = num_unrouted//2
             num_attempt = 0
             while num_attempt < max_attempt and not(routing_done):
@@ -60,17 +61,17 @@ class TabuSearch():
         
         
         if routing_done:
-
             all_routes = copy.copy(all_routes_rerouting)
             if len(self.current_solution.routes) > len(all_routes):
                 self.eliminated_route = True
         else:
             all_routes = copy.copy(self.current_solution.routes)
             diff_cost = 0
-        '''
 
+        '''
         all_routes = copy.copy(self.current_solution.routes)
         diff_cost = 0
+        '''
         feasible_swap = False
         # generate neighbourhood by swapping customers
         while not feasible_swap:       
