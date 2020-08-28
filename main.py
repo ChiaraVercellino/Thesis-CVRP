@@ -84,9 +84,9 @@ import constant
 
 def main():
 
-    PERC_UNROUTED = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
-    PERC_WORSE = [0.02, 0.03]
-    TABU_LENGTH = [80, 110, 140, 170]
+    PERC_UNROUTED = [0.05]
+    PERC_WORSE = [0.02]
+    TABU_LENGTH = [80]
 
     for perc_worse in PERC_WORSE:
         for tabu_len in TABU_LENGTH:
@@ -174,7 +174,7 @@ def main():
                         # append new customers to the ones that were not served in the previous day
                         new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
-                    #print(f'Simulated day {new_day.current_day}')
+                    print(f'Simulated day {new_day.current_day}')
 
                     # save simulated clients' data
                     new_day.save_data_costumers()
@@ -223,7 +223,7 @@ def main():
                                     elapsed_time = time.time()-start_tabu
                                 tabu_search.final_optimization()
                                 tabu_search_sol = tabu_search.current_solution
-                                #print(ii, tabu_search.num_worse, tabu_search.num_tabu, tabu_search.num_best)
+                                print(ii, tabu_search.num_worse, tabu_search.num_tabu, tabu_search.num_best)
                                 
                                 
                         if not(solution):
@@ -242,6 +242,8 @@ def main():
                         num_empty_route[day] = save_routes(updated_day, data, manager, routing, solution)
                     elif solver == 'tabu':
                         num_empty_route[day] = tabu_search_sol.print_solution(updated_day)
+                        print('Route after {}'.format(50 - num_empty_route[day]))
+                        print('\n')
                     
                     # --------------------------------------- Final updates -------------------------------------------------------
                     
@@ -268,7 +270,7 @@ def main():
 
                 # ------------------------------------------------ STATISICS -------------------------------------------------------
 
-                print('Perc Worse {} Tabu Length {} Perc Unrouted'.format(perc_worse, tabu_len, perc_unrouted))
+                print('Perc Worse {} Tabu Length {} Perc Unrouted {}'.format(perc_worse, tabu_len, perc_unrouted))
                 # Print on the standard output some statistics
                 print(f'\t Total objective function: {np.round(total_obj_fun,3)}')
                 #print(f'Total number of postponed costumers: {num_postponed}')

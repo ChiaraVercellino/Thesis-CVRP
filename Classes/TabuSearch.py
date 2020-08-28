@@ -27,7 +27,6 @@ class TabuSearch():
         self.violate_tabu = False
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
-        self.route_to_eliminate = None
         self.eliminated_route = False
         self.no_improvement = 0
         self.max_time = max_time
@@ -38,6 +37,7 @@ class TabuSearch():
         self.num_tabu = 0
         self.num_best = 0
         self.perc_unrouted = perc_unrouted
+        self.small_routes_ids = initial_solution.small_routes
 
 
     def solve(self, elapsed_time):
@@ -45,19 +45,19 @@ class TabuSearch():
         diff_time = elapsed_time - self.previous_time        
         routing_done = False
         route_of_customers = []
+        current_small_routes_ids = copy.copy(self.small_routes_ids)
         
-        
-        if self.accept_worse:
-            num_unrouted = int(self.perc_unrouted*self.current_solution.num_customers)
-            max_attempt = num_unrouted//2
-            num_attempt = 0
-            while num_attempt < max_attempt and not(routing_done):
-                all_routes_rerouting = copy.copy(self.current_solution.routes)
-                route_of_customers = copy.copy(self.current_solution.route_of_customers)
-                all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost = self._unrouting(all_routes_rerouting, num_unrouted, route_of_customers)
-                routing_done, all_routes_rerouting, route_of_customers, diff_cost = self._re_routing(all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost)
-                num_attempt += 1
-                num_unrouted -= 1
+        '''
+        num_unrouted = int(self.perc_unrouted*self.current_solution.num_customers)
+        max_attempt = num_unrouted//2
+        num_attempt = 0
+        while num_attempt < max_attempt and not(routing_done):
+            all_routes_rerouting = copy.copy(self.current_solution.routes)
+            route_of_customers = copy.copy(self.current_solution.route_of_customers)
+            all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost = self._unrouting(all_routes_rerouting, num_unrouted, route_of_customers)
+            routing_done, all_routes_rerouting, route_of_customers, diff_cost = self._re_routing(all_routes_rerouting, unrouted_customers, route_of_customers, diff_cost)
+            num_attempt += 1
+            num_unrouted -= 1
         
         
         if routing_done:
@@ -71,7 +71,7 @@ class TabuSearch():
         '''
         all_routes = copy.copy(self.current_solution.routes)
         diff_cost = 0
-        '''
+        
         feasible_swap = False
         # generate neighbourhood by swapping customers
         while not feasible_swap:       
@@ -85,8 +85,6 @@ class TabuSearch():
         modified_routes_id = []
         for route_swap in swapped_routes:            
             modified_routes_id.append(route_swap.id)
-            if route_swap.load_cust <= 2:
-                self.route_to_eliminate = route_swap.id
 
         all_modified_routes = set(modified_routes_id)
 
@@ -94,16 +92,16 @@ class TabuSearch():
         
         if feasible_insertion:
             # those routes have been modified by insertion
-            all_routes, tabu_moves = self._update_routes(all_routes, route_ids_no_more_ins, [route1_ins, route2_ins],tabu_moves=tabu_moves)
+            all_routes, tabu_moves = self._update_routes(all_routes, route_ids_no_more_ins, [route1_ins, route2_ins], tabu_moves)
             if route1_ins.load_cust==0:
+                print('eliminated')
                 del all_routes[route1_ins.id]
                 self.eliminated_route = True
                 all_modified_routes = all_modified_routes.union(set([route2_ins.id])).difference(set(route_ids_no_more_ins))  
                 self.route_to_eliminate = None
             else:
                 all_modified_routes = all_modified_routes.union(set([route2_ins.id, route1_ins.id])).difference(set(route_ids_no_more_ins))
-            if route1_ins.load_cust <= 2:
-                self.route_to_eliminate = route1_ins.id
+            
         
         # calculate cost of new solution
         new_cost_routes = 0        
@@ -119,18 +117,18 @@ class TabuSearch():
             self.num_tabu += 1
         # found a better solution: update solution
         if diff_cost >= 0 and not(self.violate_tabu) or self.eliminated_route:            
-            self.eliminated_route = False
             self.accept_worse = False
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost, feasible_insertion, route1_ins, route2_ins, \
                 routing_done, route_of_customers, tabu_moves)
-            if diff_cost_best > 0:
+            if diff_cost_best > 0 or self.eliminated_route:
                 self.num_best += 1
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)   
             
-        elif diff_cost_best > 0:
+        elif diff_cost_best > 0 or self.eliminated_route:
             self.num_best += 1
             self.accept_worse = False
+            self.small_routes_ids = copy.copy(current_small_routes_ids)
             self._accept_solution(all_routes, swapped_routes, cust_ids, diff_cost_best, feasible_insertion, route1_ins, route2_ins, \
                 routing_done, route_of_customers, tabu_moves, best=True) 
                          
@@ -142,9 +140,11 @@ class TabuSearch():
         
         else:
             self.no_improvement += diff_time
+            self.small_routes_ids = copy.copy(current_small_routes_ids)
         
         self.previous_time = elapsed_time
         self.violate_tabu = False
+        self.eliminated_route = False
         
         
         
@@ -177,13 +177,17 @@ class TabuSearch():
         else:
             return route
 
-
-    @staticmethod
-    def _update_routes(all_routes, route_ids_no_more, routes_list, tabu_moves):
+    
+    def _update_routes(self, all_routes, route_ids_no_more, routes_list, tabu_moves):
         for i in range(len(routes_list)):
             tabu_moves.append(all_routes[route_ids_no_more[i]].route)
             del all_routes[route_ids_no_more[i]]
-            all_routes[routes_list[i].id] = routes_list[i]
+            all_routes[routes_list[i].id] = routes_list[i]            
+            if route_ids_no_more[i] in self.small_routes_ids:
+                self.small_routes_ids.remove(route_ids_no_more[i])
+            if 1 <= routes_list[i].load_cust <= 2:
+                self.small_routes_ids.append(routes_list[i].id)
+
         return all_routes, tabu_moves
 
 
@@ -260,17 +264,15 @@ class TabuSearch():
     
     def _insert_neighbourhood(self, all_routes):
         all_route_ids = all_routes.keys()
+        
         # select 2 random routes and 2 random customer
-        route_ids = random.sample(all_route_ids, k=2)
-
-        
-        if self.route_to_eliminate and self.route_to_eliminate in all_route_ids:
-            if self.route_to_eliminate == route_ids[1]:
-                route_ids[1] = route_ids[0]
-                route_ids[0] = self.route_to_eliminate
-            else: 
-                route_ids[0] = self.route_to_eliminate
-        
+        if self.small_routes_ids:
+            big_route_ids = list(set(all_route_ids).difference(set(self.small_routes_ids)))
+            route_id1 = random.sample(self.small_routes_ids, k=1)[0]
+            route_id2 = random.sample(big_route_ids, k=1)[0]
+            route_ids = [route_id1, route_id2]   
+        else:
+            route_ids = random.sample(all_route_ids, k=2)  
 
         route_1, cust_id, prec_cust1, post_cust1, cust = self._initialize_route(all_routes, route_ids[0])
         route_2 = self._initialize_route(all_routes, route_ids[1], custumer_on_route=False)
@@ -381,9 +383,9 @@ class TabuSearch():
         routed_cust = 0
         routing_done = False
         for cust in unrouted_customers:
-            distances  = np.array(dist_matrix[cust.id][1:-1])
+            distances  = np.array(dist_matrix[cust.id][1:])
             best_indexes = np.argpartition(distances, max_try) 
-            i = 0
+            i = 1
             found_route = False
             while i < max_try and not(found_route):
                 best_near_cust = best_indexes[i]+1
