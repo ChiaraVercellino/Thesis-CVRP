@@ -212,9 +212,12 @@ class TabuSearch():
         
         # select 2 random routes and 2 random customer
         if self.small_routes_ids:
-            big_route_ids = list(set(all_route_ids).difference(set(self.small_routes_ids)))
-            route_id1 = random.sample(self.small_routes_ids, k=1)[0]
-            route_id2 = random.sample(big_route_ids, k=1)[0]
+            #big_route_ids = list(set(all_route_ids).difference(set(self.small_routes_ids)))
+            route_id1 = 0
+            route_id2 = 0
+            while route_id1 == route_id2:
+                route_id1 = random.sample(self.small_routes_ids, k=1)[0]
+                route_id2 = random.sample(all_route_ids, k=1)[0]
             route_ids = [route_id1, route_id2]   
         else:
             route_ids = random.sample(all_route_ids, k=2)  

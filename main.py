@@ -84,7 +84,7 @@ import constant
 
 def main():
 
-    GAP_WORSE = [0.4, 0.5, 0.6, 0.7, 0.8]
+    GAP_WORSE = [0.2, 0.3, 0.4, 0.5, 0.6]
     TABU_LENGTH = [50, 60, 70, 80, 90, 100]
 
     for gap_worse in GAP_WORSE:
@@ -223,6 +223,7 @@ def main():
                             #print('Iter {}, Worse {}, Tabu {}, Best {}, Small {} -> {}'.format(ii, tabu_search.num_worse, \
                             #     tabu_search.num_tabu, tabu_search.num_best, len(clark_wright_sol.small_routes), \
                             #         len(tabu_search.small_routes_ids)))
+                                
                             
                             
                     if not(solution):
