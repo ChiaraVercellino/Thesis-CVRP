@@ -83,65 +83,7 @@ class ClarkWrightSolver():
                 else:
                     Route.delete_route()
         
-        '''
-        small_routes = []
-        big_routes = []
-        for k, v in self.routes.items():
-            if v.load_cust <= 2:
-                small_routes.append(k)
-            else:
-                big_routes.append(k)
-        
-        max_try = self.num_customers-1
-        for small_route_id in small_routes:
-            small_route = self.routes[small_route_id]
-            for cust_id in small_route.route[1:-1]:
-                cust = self.customers[cust_id]
-                distances  = np.array(self.distance_matrix[cust_id][1:])
-                best_indexes = np.argpartition(distances, max_try) 
-                i = 1
-                found_route = False
-                while i < max_try and not(found_route):
-                    best_near_cust = best_indexes[i]+1
-                    best_route = self.routes[self.route_of_customers[best_near_cust]]
-                    if best_route.load_cust+1<=best_route.cap_cust and best_route.load_kg+cust.demand<=best_route.cap_kg:
-                        idx_best_near = best_route.route.index(best_near_cust)
-                        prec_cust = best_route.route[idx_best_near-1]
-                        post_cust = best_route.route[idx_best_near+1]
-                        if self.distance_matrix[cust_id][post_cust] < self.distance_matrix[prec_cust][cust_id]:
-                            delta_load_min = self.distance_matrix[best_near_cust][post_cust] - self.distance_matrix[best_near_cust][cust_id] - self.distance_matrix[cust_id][post_cust]
-                            new_load_min = best_route.load_min - delta_load_min + cust.service_time
-                            new_route = best_route.route[:idx_best_near+1]+[cust_id]+best_route.route[idx_best_near+1:]
-                        else:
-                            delta_load_min = self.distance_matrix[prec_cust][best_near_cust] - self.distance_matrix[prec_cust][cust_id] - self.distance_matrix[cust_id][best_near_cust]
-                            new_load_min = best_route.load_min - delta_load_min + cust.service_time
-                            new_route = best_route.route[:idx_best_near]+[cust_id]+best_route.route[idx_best_near:]
-                        if new_load_min <= best_route.cap_min:
-                            best_route.load_min = new_load_min
-                            best_route.load_cust += 1
-                            best_route.load_kg += cust.demand
-                            best_route.route = new_route
-                            self.route_of_customers[cust_id] = best_route.id
-                            found_route = True
-                            small_route.load_cust -= 1
-                            if small_route.load_cust == 0:
-                                del self.routes[small_route_id]
-                                self.num_routes -= 1
-                            else:
-                                small_route.load_kg -= cust.demand
-                                idx_cust = small_route.route.index(cust_id)
-                                prec_cust_small = small_route.route[idx_cust-1]
-                                post_cust_small = small_route.route[idx_cust+1]
-                                delta_small_route = self.distance_matrix[prec_cust_small][cust_id] + self.distance_matrix[cust_id][post_cust_small] - \
-                                    self.distance_matrix[prec_cust_small][post_cust_small] + cust.service_time
-                                small_route.load_min -= delta_small_route
-                                small_route.route.remove(cust_id)
-                            
-                    i += 1
-        
-        '''
         if self.num_routes <= self.num_vehicles:
-            print('Route before: {}'.format(self.num_routes))
             for k, v in self.routes.items():
                 self.total_cost += v.load_min
                 feasible_solution = True
@@ -149,9 +91,7 @@ class ClarkWrightSolver():
                     self.small_routes.append(k)
         else:
             feasible_solution = False
-        return feasible_solution
-
-    
+        return feasible_solution    
 
 
     def print_solution(self, day, file_path='./Solution/routes.sol'):

@@ -80,6 +80,6 @@ threshold_1 = -0.12
 MAX_TIME = 30
 NUM_PERM = 30
 
-NUM_UNROUTED = 20
+GAP_WORSE = 0.6
 TABU_LENGTH = 70
 
