@@ -83,6 +83,7 @@ class ClarkWrightSolver():
                 else:
                     Route.delete_route()
         
+        
         if self.num_routes <= self.num_vehicles:
             for k, v in self.routes.items():
                 self.total_cost += v.load_min
