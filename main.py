@@ -84,8 +84,8 @@ import constant
 
 def main():
 
-    GAP_WORSE = [300]    
-    TABU_LENGTH = [55]
+    GAP_WORSE = [150, 300, 450, 600, 750]    
+    TABU_LENGTH = [40, 60, 80, 100, 120, 140]
 
     for gap_worse in GAP_WORSE:
         for tabu_len in TABU_LENGTH:
@@ -220,9 +220,9 @@ def main():
                                 elapsed_time = time.time()-start_tabu
                             tabu_search.final_optimization()
                             tabu_search_sol = tabu_search.current_solution
-                            print('Iter {}, Worse {}, Tabu {}, Best {}, Small {} -> {}'.format(ii, tabu_search.num_worse, \
-                                tabu_search.num_tabu, tabu_search.num_best, len(clark_wright_sol.small_routes), \
-                                    len(tabu_search.small_routes_ids)))
+                            #print('Iter {}, Worse {}, Tabu {}, Best {}, Small {} -> {}'.format(ii, tabu_search.num_worse, \
+                            #    tabu_search.num_tabu, tabu_search.num_best, len(clark_wright_sol.small_routes), \
+                            #        len(tabu_search.small_routes_ids)))
                             
                                 
                             
