@@ -14,7 +14,7 @@ class TabuSearch():
         # generate all possible permutation for local search step
         self.perms = {}
         for i in range(3, constant.CUSTOMER_CAPACITY+1):
-            perms = list(permutations(range(1, i+1))) 
+            perms = list(permutations(range(i))) 
             perms.pop(0)
             for p in perms:
                 # remove anti-clockwise permutations
@@ -269,23 +269,23 @@ class TabuSearch():
 
     def _find_best_permutation(self, route, final):
         service_times_routes = 0
-        route_list = route.route
-        for c in route_list[1:-1]:
+        route_list = route.route[1:-1]
+        for c in route_list:
             service_times_routes += self.current_solution.customers[c].service_time
         best_cost = route.load_min - service_times_routes
-        best_route = route_list
+        best_route = route.route
         dist_matrix = self.current_solution.distance_matrix
         
         if route.load_cust >= 3:
-            all_permutation = copy.copy(self.perms[route.load_cust])
+            all_permutation = self.perms[route.load_cust]
             if not final:
                 total_permutation = len(all_permutation)
                 if total_permutation >= constant.NUM_PERM:
                     all_permutation = random.sample(all_permutation, constant.NUM_PERM)
             for perm in all_permutation:
-                new_route = [0]+[route_list[i] for i in perm]+[0]
+                new_route = [0]+[route_list[x] for x in perm]+[0]
                 route_cost = 0
-                for i in range(len(new_route)-1):
+                for i in range(route.load_cust+1):
                     route_cost += dist_matrix[new_route[i]][new_route[i+1]]
                     if route_cost>=best_cost:
                         break

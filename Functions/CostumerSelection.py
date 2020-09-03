@@ -21,7 +21,7 @@ import constant
 #                  available day.
 num_postponed = 0
 
-def select_customers(day, min_capacity, kg_capacity, policy, compatibility, probabilities, compatibility_index, depot_distance):
+def select_customers(day, min_capacity, kg_capacity, policy, compatibility, probabilities, compatibility_index, depot_distance, m, thresh):
     '''
     Select the customers for CVRP given the chosen policy, time constraint and capacity contraint.
     INPUTS:
@@ -56,7 +56,7 @@ def select_customers(day, min_capacity, kg_capacity, policy, compatibility, prob
                                                                             num_deliveries)
     elif policy == "NP":
         selected_customers, selected_idx, new_customer_df = _neighbourhood_policy(day.customer_df, day.current_day,
-                                                                            num_deliveries, compatibility, probabilities)
+                                                                            num_deliveries, compatibility, probabilities, m, thresh)
     elif policy == "NP_1":
         selected_customers, selected_idx, new_customer_df = _neighbourhood_policy_1(day.customer_df, day.current_day,
                                                                             num_deliveries, compatibility, probabilities,
@@ -153,7 +153,7 @@ def _delayed_policy(customer_df, this_day, num_deliveries):
 
 
 # serve customers according to probability of future demands of neighbours
-def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, probabilities):
+def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, probabilities, m, thresh):
     '''
     Neighbourhood Policy: each day we select customers according to a index that expresses the reward of including a customer in
     the set of selected customer, given the set of pending customer, the presence/absence of other customers in the neighbourhood
@@ -172,11 +172,11 @@ def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, 
     # create a set containig all the cells of pending customers
     all_cells = set(customer_df['cell']-1)
     # add a column to customer_df containig the index for selection
-    customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell-1], this_day, all_cells, probabilities), axis=1)
+    customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell-1], this_day, all_cells, probabilities, m), axis=1)
     # sort customer_df according to the index
     customer_df = customer_df.sort_values(by=['index'], axis=0, ascending=[False], ignore_index=False)
     # calculate how many customers have index above a given threshold
-    num_convenient_deliveries = len(customer_df[customer_df['index']>=constant.threshold])
+    num_convenient_deliveries = len(customer_df[customer_df['index']>=thresh])
     # the number of deliveries must satisfy capacity constraints
     num_deliveries = min(num_deliveries, num_convenient_deliveries)
     # dataframe of selected customers
@@ -305,7 +305,7 @@ def _remove_client(selected_costumers, costumers, this_day, selected_indexes):
     return selected_indexes, selected_costumers, costumers
 
 
-def _index_selection(line, compatibility, day, all_cells, probabilities):
+def _index_selection(line, compatibility, day, all_cells, probabilities, m):
     '''
     Calculate index to associate to each customer for selection according to policy NP.
     Reference paper: https://www.sciencedirect.com/science/article/abs/pii/S0305054814000458
@@ -329,7 +329,7 @@ def _index_selection(line, compatibility, day, all_cells, probabilities):
     # cardinality of not active compatible cells
     cardinality = len(not_present_cell)
     # Compute index
-    M = constant.M
+    M =m
     gamma = constant.gamma
     if availability>0:
         if cardinality>0:
@@ -381,7 +381,7 @@ def _index_selection_1(line, compatibility, day, all_cells, probabilities, compa
     # compute expected future savings
     exp_future_savings = (1-(1-probabilities[list(future_costumers)])**(T*N)) @ compatibility_index[cell-1][list(future_costumers)]
     # percentage time distance considering both travel and service time
-    distance_perc = (depot_distance[cell]+line.service_time)/(max(depot_distance)+constant.BIG_TIME_MIN+constant.BIG_TIME_MAX)
+    distance_perc = (depot_distance[cell]+line.service_time)/(max(depot_distance)+constant.BIG_TIME_MAX)
     # Compute the index
     if T>0:
         line['index'] = 1/T*((1-distance_perc)*present_savings-distance_perc*exp_future_savings)
