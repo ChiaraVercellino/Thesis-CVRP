@@ -21,7 +21,7 @@ import constant
 #                  available day.
 num_postponed = 0
 
-def select_customers(day, min_capacity, kg_capacity, policy, compatibility, probabilities, compatibility_index, depot_distance, m, thresh):
+def select_customers(day, min_capacity, kg_capacity, policy, compatibility, probabilities, compatibility_index, depot_distance, thresh):
     '''
     Select the customers for CVRP given the chosen policy, time constraint and capacity contraint.
     INPUTS:
@@ -56,11 +56,11 @@ def select_customers(day, min_capacity, kg_capacity, policy, compatibility, prob
                                                                             num_deliveries)
     elif policy == "NP":
         selected_customers, selected_idx, new_customer_df = _neighbourhood_policy(day.customer_df, day.current_day,
-                                                                            num_deliveries, compatibility, probabilities, m, thresh)
+                                                                            num_deliveries, compatibility, probabilities)
     elif policy == "NP_1":
         selected_customers, selected_idx, new_customer_df = _neighbourhood_policy_1(day.customer_df, day.current_day,
                                                                             num_deliveries, compatibility, probabilities,
-                                                                            compatibility_index, depot_distance)
+                                                                            compatibility_index, depot_distance, thresh)
 
     # check if I've respected total capacities
     constraints_respected = _check_capacity_constraints(selected_customers, kg_capacity, perc*min_capacity)
@@ -153,7 +153,7 @@ def _delayed_policy(customer_df, this_day, num_deliveries):
 
 
 # serve customers according to probability of future demands of neighbours
-def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, probabilities, m, thresh):
+def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, probabilities):
     '''
     Neighbourhood Policy: each day we select customers according to a index that expresses the reward of including a customer in
     the set of selected customer, given the set of pending customer, the presence/absence of other customers in the neighbourhood
@@ -172,11 +172,11 @@ def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, 
     # create a set containig all the cells of pending customers
     all_cells = set(customer_df['cell']-1)
     # add a column to customer_df containig the index for selection
-    customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell-1], this_day, all_cells, probabilities, m), axis=1)
+    customer_df = customer_df.apply(lambda line: _index_selection(line, compatibility[line.cell-1], this_day, all_cells, probabilities), axis=1)
     # sort customer_df according to the index
     customer_df = customer_df.sort_values(by=['index'], axis=0, ascending=[False], ignore_index=False)
     # calculate how many customers have index above a given threshold
-    num_convenient_deliveries = len(customer_df[customer_df['index']>=thresh])
+    num_convenient_deliveries = len(customer_df[customer_df['index']>=constant.threshold])
     # the number of deliveries must satisfy capacity constraints
     num_deliveries = min(num_deliveries, num_convenient_deliveries)
     # dataframe of selected customers
@@ -188,7 +188,7 @@ def _neighbourhood_policy(customer_df, this_day, num_deliveries, compatibility, 
     return selected_customers, selected_indexes, customer_df
 
 
-def _neighbourhood_policy_1(customer_df, this_day, num_deliveries, compatibility, probabilities, compatibility_index, depot_distance):
+def _neighbourhood_policy_1(customer_df, this_day, num_deliveries, compatibility, probabilities, compatibility_index, depot_distance, thresh):
     '''
     Neighbourhood Policy 1: each day we select customers according to a index that expresses the reward of including a 
     customer in the set of selected customers, given the set of pending customers, the presence/absence of other customers 
@@ -215,7 +215,7 @@ def _neighbourhood_policy_1(customer_df, this_day, num_deliveries, compatibility
     # sort customer_df according to the index
     customer_df = customer_df.sort_values(by=['index'], axis=0, ascending=[False], ignore_index=False)
     # calculate how many customers have index above a given threshold
-    num_convenient_deliveries = len(customer_df[customer_df['index']>=constant.threshold_1])
+    num_convenient_deliveries = len(customer_df[customer_df['index']>=thresh])
     # the number of deliveries must satisfy capacity constraints
     num_deliveries = min(num_deliveries, num_convenient_deliveries)
     # dataframe of selected customers
@@ -305,7 +305,7 @@ def _remove_client(selected_costumers, costumers, this_day, selected_indexes):
     return selected_indexes, selected_costumers, costumers
 
 
-def _index_selection(line, compatibility, day, all_cells, probabilities, m):
+def _index_selection(line, compatibility, day, all_cells, probabilities):
     '''
     Calculate index to associate to each customer for selection according to policy NP.
     Reference paper: https://www.sciencedirect.com/science/article/abs/pii/S0305054814000458
@@ -330,7 +330,7 @@ def _index_selection(line, compatibility, day, all_cells, probabilities, m):
     # cardinality of not active compatible cells
     cardinality = len(not_present_cell)
     # Compute index
-    M =m
+    M =constant.M
     gamma = constant.gamma
     if availability>0:
         if cardinality>0:
