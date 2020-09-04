@@ -324,6 +324,7 @@ def _index_selection(line, compatibility, day, all_cells, probabilities, m):
     compatibility = set(compatibility)
     # compute set of compatible cells that have no pending costumer coming from (not active compatible cells)
     not_present_cell = compatibility.difference(all_cells)
+    
     # compute time distance
     availability = last_day-day
     # cardinality of not active compatible cells
