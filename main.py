@@ -84,7 +84,7 @@ import constant
 
 def main():
 
-    THRESHOLD = [0.0]
+    THRESHOLD = [0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.2, 2.3]
     
     for thresh in THRESHOLD:
 
