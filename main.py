@@ -85,11 +85,10 @@ import constant
 def main():
 
 # ------------------------------------------------ INITIALIZATION -------------------------------------------------------
-
-    for thresh in [-0.48, -0.46, -0.44, -0.42, -0.40, -0.38, -0.36, -0.34, -0.32]:
+    for seed in [145, 68, 999, 202, 7890, 11, 36, 322, 1, 17, 345, 100, 330, 499, 1000]:
         tabu_len = 60
         gap_worse = 300
-        np.random.seed(constant.SEED)
+        np.random.seed(seed)
         # starting time for simulation  
         start = time.time()
         # parse command line arguments:
@@ -165,11 +164,11 @@ def main():
             # selected_customers -> dataframe of selected customers
             # selected_indexes -> list of index of selected customers
             if first_day:
-                new_day = Day(new_customers[day], first_day, distribution_df)
+                new_day = Day(new_customers[day], seed, first_day, distribution_df)
                 first_day = False
             else:
                 # append new customers to the ones that were not served in the previous day
-                new_day = Day(new_customers[day], previous_df=new_day.customer_df)
+                new_day = Day(new_customers[day], seed, previous_df=new_day.customer_df)
 
             #print(f'Simulated day {new_day.current_day}')
 
@@ -182,7 +181,7 @@ def main():
             # updated_day: object of class Day with updates regarding attributes customer_df, selected_customers, selected_indexes
             # num_postponed: total number of customers postponed up to the current day
             updated_day, num_postponed = select_customers(new_day, min_capacity, kg_capacity, policy, compatibility_list,\
-                    distribution_df.probability, compatibility_index, depot_distance, thresh)
+                    distribution_df.probability, compatibility_index, depot_distance)
 
             # ---------------------------------------- CVRP optimization ---------------------------------------------------
             
@@ -272,8 +271,8 @@ def main():
         # ------------------------------------------------ STATISICS -------------------------------------------------------
 
         #print('Gap Worse {} Tabu Length {}'.format(gap_worse, tabu_len))
-        print('Threshold {}'.format(thresh))
         # Print on the standard output some statistics
+        print('Seed {}'.format(seed))
         print(f'Total objective function: {np.round(total_obj_fun,3)}')
         print(f'Total number of postponed costumers: {num_postponed}')
         print(f'Average of empty vehicles: {np.round(mean(num_empty_route[constant.NUM_DAYS-1:]),3)}')

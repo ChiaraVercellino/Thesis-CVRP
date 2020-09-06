@@ -48,7 +48,7 @@ class Day:
 
     # ------------------------------------------ CONSTRUCTOR ----------------------------------------------------------
 
-    def __init__(self, num_customers, first_day=False, df_distribution=[], previous_df=[]):
+    def __init__(self, num_customers, seed, first_day=False, df_distribution=[], previous_df=[]):
         '''
         Construction of class Day.
         INPUTS:
@@ -64,7 +64,7 @@ class Day:
             # Initialize cell's distribution dataframe
             Day.df_distribution = df_distribution            
             # Set seed for random generator (replicability)
-            np.random.seed(constant.SEED)
+            np.random.seed(seed)
             # Initialize counter of days in simulation
             Day.current_day = 0
         # each new day is a new day
