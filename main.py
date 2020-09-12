@@ -170,7 +170,7 @@ def main():
             # append new customers to the ones that were not served in the previous day
             new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
-        #print(f'Simulated day {new_day.current_day}')
+        print(f'Simulated day {new_day.current_day}')
 
         # save simulated clients' data
         new_day.save_data_costumers()
@@ -272,17 +272,18 @@ def main():
 
     #print('Gap Worse {} Tabu Length {}'.format(gap_worse, tabu_len))
     # Print on the standard output some statistics
-    print(f'Total objective function: {np.round(total_obj_fun,3)}')
-    print(f'Total number of postponed costumers: {num_postponed}')
-    print(f'Average of empty vehicles: {np.round(mean(num_empty_route[constant.NUM_DAYS-1:]),3)}')
-    print(f'Average of served customers: {np.round(mean(num_served_clients[constant.NUM_DAYS-1:]))}') 
-    print(f'Average of cycles: {mean(num_cycles)}') 
-    print(f'Average of travel cost: {np.round(mean(daily_obj[constant.NUM_DAYS-1:]))}') 
+    #print(f'Total objective function: {np.round(total_obj_fun,3)}')
+    #print(f'Total number of postponed costumers: {num_postponed}')
+    #print(f'Average of empty vehicles: {np.round(mean(num_empty_route[constant.NUM_DAYS-1:]),3)}')
+    #print(f'Average of served customers: {np.round(mean(num_served_clients[constant.NUM_DAYS-1:]))}') 
+    #print(f'Average of cycles: {mean(num_cycles)}') 
+    #print(f'Average of travel cost: {np.round(mean(daily_obj[constant.NUM_DAYS-1:]))}') 
+    print(list(daily_tabu[constant.NUM_DAYS-1:]))
     #print(f'Average of tabu search iterations: {mean(daily_tabu[constant.NUM_DAYS-1:])}') 
     # ending time for simulation  
-    end = time.time()
-    str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
-    print('Time for simlation: '+str_time+'\n')
+    #end = time.time()
+    #str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
+    #print('Time for simlation: '+str_time+'\n')
 
     return
 

@@ -55,7 +55,7 @@ def select_compatible_cells(df_distribution, depot, rho):
                                             /(2*(distance_matrix[0][i+1]+distance_matrix[0][j+1]))
             else:
                 # customers in the same cell are always compatible
-                compatibility_index[i][j] = 1
+                compatibility_index[i][j] = 0.5
         # select convenient cells according to threshold rho
         compatibility_list.append(np.where(compatibility_index[i] > rho)[0])
     return compatibility_list, compatibility_index, distance_matrix[0]
