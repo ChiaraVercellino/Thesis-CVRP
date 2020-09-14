@@ -77,9 +77,9 @@ threshold_1 = -0.4
 
 # ------------------------------------------------ TABU SEARCH PARAMETERS --------------------------------------------------------------------------
 
-MAX_TIME = 30
+MAX_TIME = 45
 NUM_PERM = 20
 
-GAP_WORSE = 0.4
-TABU_LENGTH = 100
+GAP_WORSE = 250
+TABU_LENGTH = 40
 

@@ -9,7 +9,7 @@ import constant
 
 class TabuSearch():
 
-    def __init__(self, initial_solution, max_time, tabu_len, gap_worse):    
+    def __init__(self, initial_solution, max_time):    
         random.seed(constant.SEED)
         # generate all possible permutation for local search step
         self.perms = {}
@@ -23,20 +23,13 @@ class TabuSearch():
             self.perms[i]=perms            
         self.current_solution = initial_solution
         self.tabu_list = []
-        self.tabu_lenght = tabu_len
         self.violate_tabu = False
         self.best_cost = initial_solution.total_cost
         self.best_routes = copy.copy(initial_solution.routes)
         self.eliminated_route = False
         self.no_improvement = 0
-        self.max_time = max_time
-        self.gap_worse = gap_worse        
+        self.max_time = max_time       
         self.small_routes_ids = initial_solution.small_routes
-
-        self.num_worse = 0
-        self.num_tabu = 0
-        self.num_best = 0
-
 
     def solve(self):                  
          
@@ -82,22 +75,17 @@ class TabuSearch():
         current_cost = self.current_solution.total_cost - diff_cost
         diff_cost_best = self.best_cost - current_cost
 
-        if self.violate_tabu:
-            self.num_tabu += 1
         # found a better solution: update solution
         if diff_cost >= 0 and not(self.violate_tabu) or self.eliminated_route: 
             self._accept_solution(all_routes, diff_cost, tabu_moves)
             if diff_cost_best > 0 or self.eliminated_route:
-                self.num_best += 1
                 self.best_cost = current_cost
                 self.best_routes = copy.copy(self.current_solution.routes)   
             
         elif diff_cost_best > 0 or self.eliminated_route:
-            self.num_best += 1
             self.small_routes_ids = copy.copy(current_small_routes_ids)
             self._accept_solution(all_routes, diff_cost, tabu_moves, best=True)                          
-        elif not(self.violate_tabu) and self.no_improvement >= self.gap_worse:
-            self.num_worse += 1
+        elif not(self.violate_tabu) and self.no_improvement >= constant.GAP_WORSE:
             self._accept_solution(all_routes, diff_cost, tabu_moves)
         
         else:
@@ -150,7 +138,7 @@ class TabuSearch():
 
     def _update_tabu_list(self, route):
         if route not in self.tabu_list:
-            if len(self.tabu_list) < self.tabu_lenght:            
+            if len(self.tabu_list) < constant.TABU_LENGTH:            
                 self.tabu_list.append(route)
             else:
                 self.tabu_list.pop(0)
