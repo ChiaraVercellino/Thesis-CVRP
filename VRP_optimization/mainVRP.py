@@ -28,7 +28,7 @@ def _create_data_model(select_clients_df, depot, vehicles, capacity_kg):
     """
     Stores the data for the CVRP problem: build the data structure to solve the optimization problem.
     INPUTS:
-        select_clients_df: dataframe containing in each row information that refers to a specific customer to be served
+        select_clients_df: dataframe containing in each row the information that refers to a specific customer to be served
         depot: numpy array containing (x,y) coordinates of the depot
         vehicles: number of available vehicles
         capacity_kg: capacity constraint in kg for a single vehicle
