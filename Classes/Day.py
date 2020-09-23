@@ -33,7 +33,7 @@ import numpy as np
 # To sample from a multinomial distribution
 from numpy.random import multinomial
 
-# import constant for seed of pseudo-random generator
+# import constant for fixed parameters
 import constant
 
 # deactivate chained warning
@@ -91,7 +91,7 @@ class Day:
         Simulate new costumers, starting from probability distribution of cells.
         INPUT:
             n_customers: number of customers to simulate
-        OUTPUT
+        OUTPUT:
             customers_data: dictionary containing for each simulated customer
                             'x' x-coordinate in the region
                             'y' y-coordinate in the region

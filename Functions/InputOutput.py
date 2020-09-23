@@ -62,7 +62,7 @@ def check_arguments(argv):
         else:
             sys.stderr.write("Error: number of days\n")
             error = True
-        if argv[6]=="-s" and (argv[7]=="ortools" or argv[7]=="tabu"):
+        if argv[6]=="-s" and (argv[7]=="ortools" or argv[7]=="cwts"):
             # choose the solver for CVRP problem
             solver = argv[7]
         else:
@@ -78,7 +78,7 @@ def check_arguments(argv):
         \t EP : early policy\n \t\t DP : delayed policy\n \t\t NP : neighbourhood policy\n \t\t NP_1 : neighbourhood policy 1\n\
         - days_simulation is the number of day you want to simulate\n\
         - solver is the solver to solve CVRP \n\
-        \t ortools: Google ORtools solver\n \t\t tabu: Tabù Seach algorithm\n")
+        \t ortools: Google ORtools solver\n \t\t cwts: CW-TS solver\n")
     return error, input_path, policy, n_days, solver
     
     

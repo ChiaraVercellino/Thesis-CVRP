@@ -75,11 +75,14 @@ M_1 = 8
 threshold_1 = -0.4
 
 
-# ------------------------------------------------ TABU SEARCH PARAMETERS --------------------------------------------------------------------------
+# ------------------------------------------------ CW-TS SOLVER'S PARAMETERS --------------------------------------------------------------------------
 
+# Time limit for the CW-TS solver
 MAX_TIME = 45
+# Maximum number of permutations that are tried in the Local Search step of the CW-TS solver
 NUM_PERM = 20
-
+# Number of non-improving iteartions before accepting a worsening solutions in the CW-TS solver
 GAP_WORSE = 250
+# Length of the Tabu List
 TABU_LENGTH = 40
 

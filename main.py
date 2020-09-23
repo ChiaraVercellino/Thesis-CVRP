@@ -166,7 +166,7 @@ def main():
             # append new customers to the ones that were not served in the previous day
             new_day = Day(new_customers[day], previous_df=new_day.customer_df)
 
-        #print(f'Simulated day {new_day.current_day}')
+        print(f'Simulated day {new_day.current_day}')
 
         # save simulated clients' data
         new_day.save_data_costumers()
@@ -187,6 +187,8 @@ def main():
         while not(solution):
             num_cycles[day] += 1
             # Solve CVRP
+
+            if solver == 'ortools':            
             # data: dictionary containig information about
             #      'distance_matrix' -> travel time + service time of selected customers
             #      'num_vehicles' -> number of available vehicles
@@ -196,32 +198,36 @@ def main():
             # manager: routing index manager
             # routing: routing model
             # solution: solution to CVRP
-
-            if solver == 'ortools':
                 data, manager, routing, solution, obj_value = VRP_optimization(updated_day.selected_customers, depot, vehicles, capacity)
 
-            elif solver == 'tabu':                                 
+            elif solver == 'cwts': 
+                # Starting time of the CW-TS algorithm                                
                 start_tabu = time.time()
+                # Initialize elapsed time
                 elapsed_time = 0
+                # Find an initial solution to the CVRP
                 clark_wright_sol = ClarkWrightSolver(updated_day.selected_customers, depot)
                 solution = clark_wright_sol.solve()
                 if solution:
-                    
-                    tabu_search = TabuSearch(clark_wright_sol, constant.MAX_TIME)                            
-                    ii=0
+                    # The initial solution is feasible, so we proceed with the Tabu Search step to improve the results
+                    tabu_search = TabuSearch(clark_wright_sol, constant.MAX_TIME)
+                    # Iterate until the time limit for the CW-TS solver is reached                           
                     while elapsed_time <= constant.MAX_TIME:
-                        ii+=1
+                        # Perform one iteration of CW-TS solver
                         tabu_search.solve()
+                        # Update the elapsed time
                         elapsed_time = time.time()-start_tabu
+                    # Perform the final optimization on all routes of the best solution found so far
                     tabu_search.final_optimization()
+                    # Save the best solution
                     tabu_search_sol = tabu_search.current_solution
+
+                    # If we want to consider only the first feasible solution
                     #tabu_search_sol = clark_wright_sol
-                    
-                        
                     
                     
             if not(solution):
-                # I've selected too many customers so the CVRP became unfeasible, so I remove one client from selected_customers,
+                # I've selected too many customers so the CVRP became unfeasible, so I remove one customer from selected_customers,
                 # selected_indexes and I put it again in customer_df to be served in the following days               
                 updated_day = remove_client_VRP(updated_day)
         # save number of served customers
@@ -234,7 +240,7 @@ def main():
         # save daily roads in Solution/routes.sol
         if solver == 'ortools':
             num_empty_route[day] = save_routes(updated_day, data, manager, routing, solution)
-        elif solver == 'tabu':
+        elif solver == 'cwts':
             num_empty_route[day] = tabu_search_sol.print_solution(updated_day)
         
         # --------------------------------------- Final updates -------------------------------------------------------
@@ -254,7 +260,7 @@ def main():
         # In the objective function I consider only the travel time, not the service one which cannot be optimized
         if solver == 'ortools':
             daily_obj[day] = obj_value-total_time
-        elif solver == 'tabu':
+        elif solver == 'cwts':
             daily_obj[day] = tabu_search_sol.total_cost-total_time
 
         if new_day.current_day >= constant.NUM_DAYS:
@@ -272,7 +278,7 @@ def main():
     # ending time for simulation  
     end = time.time()
     str_time = time.strftime("%H:%M:%S", time.gmtime(end-start))
-    print('Time for simlation: '+str_time+'\n')
+    print('Time for simulation: '+str_time+'\n')
 
     return
 
