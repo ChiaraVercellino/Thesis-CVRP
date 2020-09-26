@@ -4,9 +4,9 @@ We are addressing to a Multi-Period Capacitated Vehicles Routing Problem (CVRP) 
 
 The customers are simulated on a rectangular region 205x215 km<sup>2</sup>, the region is divided into cells of dimensions 5×5 km<sup>2</sup>, the probability of customers belonging to a cell and the cells' coordinates are defined by input file `grid.txt`. Each day we simulate the number of new customers using a Uniform distribution, whose parameters can be modified in file `constant.py`. Then their positions on the region of interest is performed by a Multinomial distribution, to assign the new customers to a certain cell; finally a Uniform distribution on both dimensions of each cell specify the coordinates of each new customer.
 
-Each day we select the custumers to serve, among the pending ones, and than we solve a CVRP with deterministic information about customers' positions, demands (kg) and service time (min) 
+Each day we select the custumers to serve, among the pending ones, and than we solve a CVRP with deterministic information about customers' positions, demands (kg) and service times (min).
 
-So the proposed algorithms solves the problem in 2 stages:
+So, the proposed algorithms solves the problem in 2 stages:
 - Selection of custumers to serve in the current day, in this step we propose four policies for customers' selection
 - Solution of deterministic CVRP, in this step both the Google OR-Tools solver and our CW-TS solver could be used
 
@@ -19,7 +19,7 @@ The *constraints* concern:
 - Number of customers for each vehicle
 - Total working time of each vehicle (travel time + service time)
 
-A more detailed description of the problem can be found in my [dissertation] https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/Thesis-CVRP.pdf .
+A more detailed description of the problem can be found in my dissertation: https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/Thesis-CVRP.pdf .
 
 ## Getting Started
 
@@ -31,7 +31,7 @@ git clone https://github.com/ChiaraVercellino/Thesis-CVRP.git
 
 To run on your local machine:
 ```
-python main.py input_file_path -p policy -d days_simulation - s solver
+python main.py input_file_path -p policy -d days_simulation -s solver
 ```
 
 WHERE:
@@ -84,8 +84,6 @@ python main.py grid.txt -p NP -d 100 -s ortools
 - With policy NP_1 and Google OR-Tools solver
 ```
 python main.py grid.txt -p NP_1 -d 100 -s ortools
-
-
 ```
 - With policy EP and CW-TS solver
 ```
@@ -104,13 +102,14 @@ python main.py grid.txt -p NP -d 100 -s cwts
 python main.py grid.txt -p NP_1 -d 100 -s cwts
 ```
 
-The following plots show a comparison of the four policies applied to customers' orders dataset simulated with different seeds: it can be noticed that the best policy, the one that minimizes the costs, to apply is NP_1.
+The following plots show a comparison of the four policies applied to customers' orders datasets, simulated with different seeds: it can be noticed that the best policy, the one that minimizes the costs, to apply is NP_1.
 
 ![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/obj_fun_daily_histogram_NS.png)
 ![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/obj_fun_histogram_NS.png)
 ![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/vehicles_daily_histogram_NS.png)
 
 A comparison between the solvers is shown in the following table: we compare the averages cost associated with a daily CVRP problem, we report the absolute reduction of travel cost (in km) brought by the CW-TS solver with respect to OR-Tools solver.
+
 ![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/solver.png)
 
 
