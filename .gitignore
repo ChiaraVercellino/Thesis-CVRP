@@ -3,4 +3,5 @@
 __pycache__/
 *.sol
 *.txt
+!requirements.txt
 Tuning_and_Results
