@@ -2,7 +2,7 @@
 
 We are addressing to a Multi-Period Capacitated Vehicles Routing Problem (CVRP) with customers' arrivals that are Stochastic over time.
 
-The customers are simulated on a rectangular region 205x215 km<sup>2</sup>, the region is divided into cells of dimensions 5×5 km<sup>2</sup>, the probability of customers belonging to a cell and the cells' coordinates are defined by input file `grid.txt`. Each day we simulate the number of new customers using a Uniform distribution, whose parameters can be modified in file `constant.py`. Then their positions on the region of interest is performed by a Multinomial distribution, to assign the new customers to a certain cell; finally a Uniform distribution on both dimensions of each cell specify the coordinates of each new customer.
+The customers are simulated on a rectangular region 205x215 km<sup>2</sup>, the region is divided into cells of dimensions 5×5 km<sup>2</sup>, the probability of customers belonging to a cell and the cells' coordinates are defined by input file `.Data\grid.txt`. Each day we simulate the number of new customers using a Uniform distribution, whose parameters can be modified in file `constant.py`. Then their positions on the region of interest is performed by a Multinomial distribution, to assign the new customers to a certain cell; finally a Uniform distribution on both dimensions of each cell specify the coordinates of each new customer.
 
 Each day we select the custumers to serve, among the pending ones, and than we solve a CVRP with deterministic information about customers' positions, demands (kg) and service times (min).
 
@@ -103,14 +103,12 @@ python main.py grid.txt -p NP_1 -d 100 -s cwts
 ```
 
 The following plots show a comparison of the four policies applied to customers' orders datasets, simulated with different seeds: it can be noticed that the best policy, the one that minimizes the costs, to apply is NP_1.
+In the same plots we show the further improvement due to the use of CW-TS solver. The application of policy NP_1, combined with the CW-TS solver lead to a costs' reduction of about 3.29%.
 
-![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/obj_fun_daily_histogram_NS.png)
-![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/obj_fun_histogram_NS.png)
-![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/vehicles_daily_histogram_NS.png)
+![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/obj_fun_daily_histogram_NS_all.png)
+![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/obj_fun_histogram_NS_all.png)
+![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/vehicles_daily_histogram_NS_all.png)
 
-A comparison between the solvers is shown in the following table: we compare the averages cost associated with a daily CVRP problem, we report the absolute reduction of travel cost (in km) brought by the CW-TS solver with respect to OR-Tools solver.
-
-![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/solver.png)
 
 
 ## Built With
