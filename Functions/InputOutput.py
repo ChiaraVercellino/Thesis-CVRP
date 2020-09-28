@@ -29,7 +29,7 @@ def check_arguments(argv):
         - days_simulation is the number of day you want to simulate
         - solver is the solver for CVRP
             ortools : Google ORtools solver
-            tabu : Tabù Search
+            cwts : CW-TS solver
     
     INPUT:
         argv: command line arguments
