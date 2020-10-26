@@ -19,7 +19,7 @@ The *constraints* concern:
 - Number of customers for each vehicle
 - Total working time of each vehicle (travel time + service time)
 
-A more detailed description of the problem can be found in my dissertation: https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/Thesis-CVRP.pdf .
+A more detailed description of the problem can be found in my dissertation: https://github.com/ChiaraVercellino/Thesis-CVRP/blob/master/Images_PDF/Thesis_CVRP.pdf .
 
 ## Getting Started
 
@@ -105,9 +105,9 @@ python main.py grid.txt -p NP_1 -d 100 -s cwts
 The following plots show a comparison of the four policies applied to customers' orders datasets, simulated with different seeds: it can be noticed that the best policy, the one that minimizes the costs, to apply is NP_1.
 In the same plots we show the further improvement due to the use of CW-TS solver. The application of policy NP_1, combined with the CW-TS solver lead to a costs' reduction of about 3.29%.
 
-![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/obj_fun_daily_histogram_NS_all.png)
-![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/obj_fun_histogram_NS_all.png)
-![alt text](https://github.com/ChiaraVercellino/Tesi-VRP/blob/master/Images_PDF/vehicles_daily_histogram_NS_all.png)
+![alt text](https://github.com/ChiaraVercellino/Thesis-CVRP/blob/master/Images_PDF/obj_fun_daily_histogram_NS_all.png)
+![alt text](https://github.com/ChiaraVercellino/Thesis-CVRP/blob/master/Images_PDF/obj_fun_histogram_NS_all.png)
+![alt text](https://github.com/ChiaraVercellino/Thesis-CVRP/blob/master/Images_PDF/vehicles_daily_histogram_NS_all.png)
 
 
 
