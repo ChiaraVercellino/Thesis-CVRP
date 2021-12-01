@@ -121,7 +121,7 @@ In the same plots we show the further improvement due to the use of CW-TS solver
 
 This code for CVRP simulation is written in Python. It was developed during my Master Thesis at the Politecnico di Torino with the supervisor Paolo Brandimarte.
 The author of the code is
-* [ChiaraVercellino](https://github.com/ChiaraVercellino) - *chia.vercellino@gmail.com*
+* [ChiaraVercellino](https://github.com/ChiaraVercellino) - *https://www.linkedin.com/in/chiara-vercellino-7b36a8199/*
 
 ## Acknowledgments
 
